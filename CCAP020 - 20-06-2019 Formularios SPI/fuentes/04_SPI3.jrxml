@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 5.5.0-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="04_SPI3" pageWidth="2835" pageHeight="2991" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="2835" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="562ad461-806a-4b89-be25-5288e45d80ca">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="ASCII"/>
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.character.encoding" value="ISO-8859-1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="com.fitbank.jasper.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<import value="com.fitbank.reports.*"/>
+	<import value="com.fitbank.common.*"/>
+	<parameter name="FCORTE" class="java.sql.Timestamp"/>
+	<parameter name="CORTE" class="java.lang.String"/>
+	<parameter name="FINGRESO" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+	NUMEROREFERENCIA, 
+	NUMERODOCUMENTO,
+	NUMEROUNICOORDEN, 
+	FCOMPENSACION, 
+    LTRIM(CESTATUSORDENPAGO,'0') CESTATUSORDENPAGO, 
+	CUENTABANCOORDENANTEBCE 
+from TGIROSTRANSFERENCIASAUTORIZADO
+where FINGRESO  =   $P{FINGRESO}  AND VERSIONCONTROL = 1
+AND TIPOTRANSFERENCIA = 'SPIR' AND NUMEROCORTEPROCESO =  $P{CORTE}
+UNION
+select 
+	NUMEROREFERENCIA, 
+	NUMERODOCUMENTO,
+	NUMEROUNICOORDEN, 
+	FCOMPENSACION, 
+    LTRIM(CESTATUSORDENPAGO,'0') CESTATUSORDENPAGO, 
+	CUENTABANCOORDENANTEBCE 
+from TGIROSTRANSFERENCIASAUTORIZADO
+where FINGRESO  =   $P{FINGRESO}  AND VERSIONCONTROL = 0
+AND TIPOTRANSFERENCIA = 'SPIR' AND NUMEROCORTEPROCESO =  $P{CORTE}
+AND SGIROTRANSFERENCIAAUTORIZADO NOT IN (select SGIROTRANSFERENCIAAUTORIZADO
+                                                from TGIROSTRANSFERENCIASAUTORIZADO
+                                                where FINGRESO  =   $P{FINGRESO}  AND VERSIONCONTROL = 1
+                                                AND TIPOTRANSFERENCIA = 'SPIR' AND NUMEROCORTEPROCESO =  $P{CORTE})]]>
+	</queryString>
+	<field name="NUMEROREFERENCIA" class="java.math.BigDecimal"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMEROUNICOORDEN" class="java.math.BigDecimal"/>
+	<field name="FCOMPENSACION" class="java.sql.Timestamp"/>
+	<field name="CESTATUSORDENPAGO" class="java.lang.String"/>
+	<field name="CUENTABANCOORDENANTEBCE" class="java.lang.String"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="20">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="120" height="20" uuid="ca941f7a-eff9-49e0-b6f5-8127af17ea0f"/>
+				<textElement>
+					<font size="10"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CABECERA"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField-1" x="0" y="0" width="120" height="20" uuid="0300866d-13ce-4914-ad6e-5e06839227d6"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMEROREFERENCIA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-3" x="692" y="0" width="204" height="20" uuid="efe2e3fb-a02c-4b11-b211-532495daf399"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTABANCOORDENANTEBCE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-4" x="534" y="0" width="158" height="20" uuid="647f3200-8e25-4ce0-941e-22fc141010da"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CESTATUSORDENPAGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-6" x="120" y="0" width="161" height="20" uuid="bbded5db-ddf0-4769-b3e8-0eed94b7c3b0"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMEROUNICOORDEN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="d/M/yyyy hh:mm:ss" isBlankWhenNull="false">
+				<reportElement key="textField" x="385" y="0" width="149" height="20" uuid="b5636292-ce95-485e-bce0-1269c15838cc"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FCOMPENSACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-17" x="281" y="0" width="100" height="20" uuid="2b76d1b5-6a59-462e-b363-e6f0840952d5"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band height="20">
+			<textField>
+				<reportElement x="120" y="0" width="161" height="20" uuid="26200c92-6cf0-42fe-9d65-5e9d8dda22f5"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},"select DISTINCT NUMEROTRANSFERENCIAS from TGIROSTRANSFERENCIASAUTORIZADO where FINGRESO  =?  AND ESTATUSGIROTRANSFERENCIA = 'AUT' AND TIPOTRANSFERENCIA = 'SPIR' AND NUMEROCORTEPROCESO =?", SQLUtil.getInstance().getParameters(new Object[]{$P{FINGRESO}, $P{CORTE} })).toString()]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="281" y="0" width="104" height="20" uuid="dca63cf6-5277-4119-baa5-44c66b2ddd3c"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CORTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="">
+				<reportElement x="385" y="0" width="149" height="20" uuid="4b0b2222-d687-4e33-a352-75e22f9c08d9"/>
+				<textElement>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["01700427"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="d/M/yyyy hh:mm:ss" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="120" height="20" uuid="92f35a10-2ad1-4497-8f9d-e1770c8e9ac0"/>
+				<textElement>
+					<font size="10"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FCORTE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
