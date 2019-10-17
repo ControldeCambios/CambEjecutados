@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties sub="06" tra="5127">
+    <title>CARTERA CONCEDIDA CREDI INVERSIONISTA</title>
+  </properties>
+  <containers>
+    <container cssClass="criteria-group">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha Desde" x="1" y="3"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f2_fechai"
+        w="100" x="2" y="3">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FINICIAL" type="REPORT"/>
+        <attribute nom="jvs">onchange="validarError2();"</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaValidator"
+            formula="=f2_fechai&lt;=f2_fechaf"
+            message="LA FECHA INICIAL NO PUEDE SER MAYOR A LA FECHA FINAL" validateEmpty="false"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="(*)"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha Hasta" x="1" y="4"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f2_fechaf"
+        w="100" x="2" y="4">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FFINAL" type="REPORT"/>
+        <attribute nom="jvs">onchange="validarError2();"</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaValidator"
+            formula="=f2_fechaf&lt;=f1_fcontable" message="LA FECHA FINAL NO PUEDE SER MAYOR A LA FECHA CONTABLE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fechainicial" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FDESDE" type="REPORT"/>
+        <attribute nom="val">=f2_fechai</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATE" transportFormat="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fechafinal" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FHASTAF" type="REPORT"/>
+        <attribute nom="val">=f2_fechaf</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATE" transportFormat="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="(*)"/>
+    </container>
+    <container cssClass="column-group">
+      <widget class="com.fitbank.webpages.widgets.Button" tex="reporte">
+        <attribute nom="dat">Reporte</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report"
+            downloadName="06_GARANTIAAUTOLIQ.XLSX" name="06_GARANTIAAUTOLIQ.XLSX"/>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=EMPTY(f2_fechai) || EMPTY(f2_fechaf)"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_fcontable" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FCONTABLE" type="REPORT"/>
+        <attribute nom="val">=$accountingDate</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="user" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUSUARIO" type="REPORT"/>
+        <attribute nom="val">=$user</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="subsistema" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="SUBSISTEMA" type="REPORT"/>
+        <attribute nom="val">=$subsystem</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="transaccion" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="TRANSACCION" type="REPORT"/>
+        <attribute nom="val">=$transaction</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>
