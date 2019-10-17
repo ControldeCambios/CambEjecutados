@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties sub="25" tra="5028">
+    <title>GENERACIÓN DE COMPROBANTES APROBADOS</title>
+    <references>
+      <reference alias="tcuenta"
+        class="com.fitbank.webpages.data.Reference" table="TCUENTA">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CCUENTA" fromAlias="tcspago" fromField="CCUENTA_PROVEEDOR"/>
+        </dependencies>
+      </reference>
+      <reference alias="tcspago"
+        class="com.fitbank.webpages.data.Reference" table="TCSOLICITUDPAGO">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CESTATUSDOCUMENTO" immediateValue="002"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CTIPODOCUMENTOINVENTARIO" immediateValue="SP"/>
+        </dependencies>
+      </reference>
+    </references>
+  </properties>
+  <containers>
+    <container cssClass="table-group">
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Fecha Desde:"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="c1_fDesde"
+        w="0" x="1">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource" comparator=">="
+          field="FSOLICITUDPAGO" type="CRITERION"/>
+        <attribute nom="jvs">onchange="Validar.ok(c.$('c1_fDesde',0));"</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaValidator"
+            formula="= (c1_fDesde&lt;=c1_fHasta) "
+            message="LA FECHA DESDE DEBE SER MENOR A LA FECHA HASTA" validateEmpty="false"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Fecha Hasta:" x="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="c1_fHasta"
+        w="0" x="3">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          comparator="&lt;=" field="FSOLICITUDPAGO" type="CRITERION"/>
+        <attribute nom="jvs">onchange="Validar.ok(c.$('c1_fHasta',0));"</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c1_subsistemaReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUBSISTEMA" type="REPORT"/>
+        <attribute nom="val">=$subsystem</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c1_transaccionReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTRANSACCION" type="REPORT"/>
+        <attribute nom="val">=$transaction</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c1_tituloReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="TITLE" type="REPORT"/>
+        <attribute nom="val">REPORTE DE COMPROBANTES CONTABLES AUTOMATICOS</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c1_companiaReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CIA" type="REPORT"/>
+        <attribute nom="val">=$company</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c1_usuarioReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUSUARIO" type="REPORT"/>
+        <attribute nom="val">=$user</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_nComprobanteReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CNUMEROCOMPROBANTE" type="REPORT"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_tipoDocReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTO" type="REPORT"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_dTipoDocReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="DTIPODOCUMENTO" type="REPORT"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_periodoReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO" type="REPORT"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="c2_botonImprimir">
+        <attribute nom="vis">0</attribute>
+        <attribute nom="dat">Imprimir</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report"
+            downloadName="25_COMPROBANTES_AUTOMATICOS" name="25_COMPROBANTES_AUTOMATICOS.pdf"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="20" win="20">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="buscar" tex="Buscar:"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_criNumDocumento" w="0">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="CRITERION"/>
+        <attribute nom="lon">30</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_criPeriodo" w="60">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="CRITERION"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_crProveedor" w="110">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="CRITERION"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Fecha Ingreso" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Número de Documento" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Periodo" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Proveedor"
+        x="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Impresión" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_fecha_registro" w="0">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource" field="FDESDE" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATETIME" transportFormat="DATETIME"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_numeroDocumento" w="0">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_periodo" w="60">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_proveedor" w="110">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_cuentaProveedor" w="0">
+        <dataSource alias="tcuenta"
+          class="com.fitbank.webpages.data.DataSource" field="CCUENTA" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_tipoDocumento" w="0">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_descDocumento" w="0">
+        <dataSource alias="TTIPOSDOCUMENTOINVENTARIO"
+          class="com.fitbank.webpages.data.DataSource"
+          field="DESCRIPCION" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CTIPODOCUMENTOINVENTARIO" fromAlias="tcspago" fromField="CTIPODOCUMENTOINVENTARIO"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="c2_proveedorName" w="300">
+        <dataSource alias="TPERSONA"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBRELEGAL" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tcuenta" fromField="CPERSONA_CLIENTE"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">250</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="c2_botonImprimir1">
+        <attribute nom="jvs">onclick="c.$('c2_nComprobanteReporte',0).changeValue(c.$('c2_numeroDocumento',this.registro).value);c.$('c2_periodoReporte',0).changeValue(c.$('c2_periodo',this.registro).value);c.$('c2_tipoDocReporte',0).changeValue(c.$('c2_tipoDocumento',this.registro).value);c.$('c2_dTipoDocReporte',0).changeValue(c.$('c2_descDocumento',this.registro).value);c.$('c2_botonImprimir',0).click();"</attribute>
+        <attribute nom="dat">Imprimir</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.FooterSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource alias="tcspago"
+          class="com.fitbank.webpages.data.DataSource" field="FDESDE" type="ORDER"/>
+        <attribute nom="val">-1</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

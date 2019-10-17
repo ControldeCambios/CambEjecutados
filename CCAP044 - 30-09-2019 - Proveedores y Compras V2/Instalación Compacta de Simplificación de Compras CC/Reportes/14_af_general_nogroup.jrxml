@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="14_af_general_nogroup" pageWidth="2900" pageHeight="2380" orientation="Landscape" columnWidth="2900" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="0d1ac288-762f-4286-8766-fa468cc5f7d6">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="FitDemo"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="2034"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA" class="java.sql.Timestamp"/>
+	<parameter name="FECHA1" class="java.sql.Timestamp"/>
+	<parameter name="NOMBRECOMPANIA" class="java.lang.String"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+ distinct(tc.ccuenta),
+ (select tsal.cestatuscuenta from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='ASSET' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and tsal.cgrupobalance='1' and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina) estatuscuenta,
+ tc.cestatuscuenta,
+ (select tec.descripcion from testatuscuenta tec where tec.csubsistema=tc.csubsistema and tec.cestatuscuenta=tc.cestatuscuenta and tec.fhasta=fncfhasta) destatuscuenta,
+ tc.csucursal,
+ (select tsuc.nombre from tsucursales tsuc where tsuc.csucursal=tc.csucursal and tsuc.cpersona_compania=tc.cpersona_compania and tsuc.fhasta=fncfhasta) dsucursal,
+ tc.coficina,
+ (select tof.nombre from toficinas tof where tof.coficina=tc.coficina and tof.cpersona_compania=tc.cpersona_compania and tof.fhasta=fncfhasta) doficina,
+ tc.cgrupoproducto,
+ (select tgp.descripcion from tgruposproducto tgp where tgp.cpersona_compania=tc.cpersona_compania and tgp.csubsistema=tc.csubsistema and tgp.cgrupoproducto=tc.cgrupoproducto and tgp.fhasta=fncfhasta) dgrupoproducto,
+ tc.cproducto,
+ (select tpr.descripcion from tproducto tpr where tpr.cpersona_compania=tc.cpersona_compania and tpr.csubsistema=tc.csubsistema and tpr.cgrupoproducto=tc.cgrupoproducto and tpr.cproducto=tc.cproducto and tpr.fhasta=fncfhasta) dproducto,
+ tcaf.cactivofijo,
+ (select tcodaf.descripcion from tcodigoactivosfijos tcodaf where tcodaf.cactivofijo=tcaf.cactivofijo and tcodaf.fhasta=fncfhasta) dactivofijo,
+ tc.nombrecuenta,
+ tcaf.modelo,
+ tcaf.marca,
+ tcaf.serieitem,
+ tcaf.costooriginal,
+ tcaf.fadquisicion,
+ tcaf.numeroperiodos,
+ tcaf.cfrecuencia_depreciacion,
+ round((select tsal.provisiondia from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and to_char(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina),6) provision,
+ (select tmon.valorresidual from tmonedaactivosfijos tmon where tmon.cpersona_compania=tc.cpersona_compania and tmon.csubsistema=tc.csubsistema and tmon.cgrupoproducto=tc.cgrupoproducto and tmon.cproducto=tc.cproducto and tmon.cmoneda=tc.cmoneda and tmon.fhasta=fncfhasta) vresidual,
+ (select round((tsal.saldomonedacuenta),2) from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='ASSET' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and tsal.cgrupobalance='1' and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina) saldoasset,
+ (select tsal.saldomonedacuenta from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and tsal.cgrupobalance='1' and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina) saldomon,
+ (select tcat.estructuracodigo from tcatalogocuentas tcat where tcat.fhasta=fncfhasta and tcat.codigocontable = (select tsal.codigocontable from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='ASSET' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina)) cuentacontable,
+ (select tsal.codigocontable from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='ASSET' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina) codigocontable,
+ (select tsal.fdesde from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) BETWEEN tsal.fdesde AND tsal.fhasta and TO_CHAR(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina) fdesde,
+ case when
+ (select tsal.fvencimiento from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) BETWEEN tsal.fdesde AND tsal.fhasta and TO_CHAR(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina)
+ >
+ (select tsal.fdesde from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) BETWEEN tsal.fdesde AND tsal.fhasta and TO_CHAR(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina)
+ then
+   case when
+   (select tsal.fvencimiento from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) BETWEEN tsal.fdesde AND tsal.fhasta and TO_CHAR(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina)
+   >
+   cast($P{FECHA1} as date)
+   then
+     round((select (coalesce(tsal.saldomonedacuenta,0) + coalesce(tsal.AJUSTEINTERES,0) - coalesce(tsal.montodescargaprovision,0) + (tsal.provisiondia * (cast($P{FECHA1} as date)+1 - tsal.fdesde)))*(-1) from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and to_char(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina),2)
+   else
+     round((select (coalesce(tsal.saldomonedacuenta,0) + coalesce(tsal.AJUSTEINTERES,0) - coalesce(tsal.montodescargaprovision,0) + (tsal.provisiondia * (tsal.fvencimiento-tsal.fdesde))) * (-1) from tsaldos tsal where tsal.ccuenta=tc.ccuenta and tsal.categoria='DEPACF' and tsal.principal='1' and cast($P{FECHA1} as date) between tsal.fdesde and tsal.fhasta and to_char(tsal.fvencimiento,'yyyy-mm') >= to_char(cast($P{FECHA1} as date)-1,'yyyy-mm') and tsal.cestatuscuenta in ('001','002') and tsal.csucursal=tc.csucursal and tsal.coficina=tc.coficina),2)
+   end
+ else
+   0
+ end depreciacion
+from tcuenta tc
+join tcuentaactivosfijos tcaf
+on tcaf.ccuenta = tc.ccuenta
+and tcaf.cpersona_compania = tc.cpersona_compania
+and $P{FECHA} between tcaf.fdesde and tcaf.fhasta
+and tcaf.fadquisicion <= cast($P{FECHA1} as date)
+where tc.csubsistema='14'
+and $P{FECHA} between tc.fdesde and tc.fhasta
+and tc.cestatuscuenta in ('002','001')
+order by tc.csucursal, tc.coficina, tc.cgrupoproducto, tc.cproducto, tcaf.cactivofijo, tc.cestatuscuenta]]>
+	</queryString>
+	<field name="CCUENTA" class="java.lang.String"/>
+	<field name="ESTATUSCUENTA" class="java.lang.String"/>
+	<field name="CESTATUSCUENTA" class="java.lang.String"/>
+	<field name="DESTATUSCUENTA" class="java.lang.String"/>
+	<field name="CSUCURSAL" class="java.math.BigDecimal"/>
+	<field name="DSUCURSAL" class="java.lang.String"/>
+	<field name="COFICINA" class="java.math.BigDecimal"/>
+	<field name="DOFICINA" class="java.lang.String"/>
+	<field name="CGRUPOPRODUCTO" class="java.lang.String"/>
+	<field name="DGRUPOPRODUCTO" class="java.lang.String"/>
+	<field name="CPRODUCTO" class="java.lang.String"/>
+	<field name="DPRODUCTO" class="java.lang.String"/>
+	<field name="CACTIVOFIJO" class="java.lang.String"/>
+	<field name="DACTIVOFIJO" class="java.lang.String"/>
+	<field name="NOMBRECUENTA" class="java.lang.String"/>
+	<field name="MODELO" class="java.lang.String"/>
+	<field name="MARCA" class="java.lang.String"/>
+	<field name="SERIEITEM" class="java.lang.String"/>
+	<field name="COSTOORIGINAL" class="java.math.BigDecimal"/>
+	<field name="FADQUISICION" class="java.sql.Timestamp"/>
+	<field name="NUMEROPERIODOS" class="java.math.BigDecimal"/>
+	<field name="CFRECUENCIA_DEPRECIACION" class="java.math.BigDecimal"/>
+	<field name="PROVISION" class="java.math.BigDecimal"/>
+	<field name="VRESIDUAL" class="java.math.BigDecimal"/>
+	<field name="SALDOASSET" class="java.math.BigDecimal"/>
+	<field name="SALDOMON" class="java.math.BigDecimal"/>
+	<field name="CUENTACONTABLE" class="java.lang.String"/>
+	<field name="CODIGOCONTABLE" class="java.lang.String"/>
+	<field name="FDESDE" class="java.sql.Timestamp"/>
+	<field name="DEPRECIACION" class="java.math.BigDecimal"/>
+	<variable name="days" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[($P{FECHA}.getTime() < $F{FDESDE}.getTime()) ? new BigDecimal(0) : new BigDecimal(($P{FECHA}.getTime()-$F{FDESDE}.getTime())/(24*3600*1000))]]></variableExpression>
+	</variable>
+	<variable name="porcentajeDep" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{NUMEROPERIODOS}.compareTo(new BigDecimal(0)) != 0 ? $F{CFRECUENCIA_DEPRECIACION}.compareTo(new BigDecimal(8)) == 0 ? new BigDecimal(100).divide($F{NUMEROPERIODOS},2,4) : $F{CFRECUENCIA_DEPRECIACION}.compareTo(new BigDecimal(5)) == 0 ? new BigDecimal(100).divide($F{NUMEROPERIODOS}.multiply(new BigDecimal(12)),2,4) : new BigDecimal(0) : new BigDecimal(0)]]></variableExpression>
+	</variable>
+	<variable name="bookValue" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{SALDOASSET}.subtract($F{DEPRECIACION})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement uuid="08bbba2e-3fcd-49ea-b5a3-62d6efb2e406" x="0" y="0" width="1300" height="20">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRECOMPANIA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7e6fd686-51bd-4d6e-8ef6-275a398465b3" x="0" y="20" width="100" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="85822f60-aa02-4b40-8180-252669eb3cd1" x="100" y="20" width="200" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CUSUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d83fa762-965c-4884-9031-f189dd58e309" x="800" y="20" width="400" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9d7b4ad7-1062-4171-bef1-2ad67190dc9d" x="0" y="40" width="1300" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE GENERAL DE ACTIVOS FIJOS]]></text>
+			</staticText>
+			<textField pattern="dd/MMM/yyyy">
+				<reportElement uuid="0e809ca2-bb81-48ca-8df9-138d57224953" x="1200" y="20" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="cb2b3362-e077-4976-8ffa-b0745c962462" x="0" y="60" width="100" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA CORTE:]]></text>
+			</staticText>
+			<textField pattern="dd/MMM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="8657d236-dc6c-414a-8c28-43c28a3e071d" x="100" y="60" width="200" height="20">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement uuid="36431bdd-befb-4148-81f0-5579beef5860" mode="Opaque" x="0" y="0" width="2900" height="20" backcolor="#BFBFBF"/>
+				<staticText>
+					<reportElement uuid="6c73a8b4-0673-4eff-8eb6-3f7e89038f86" key="group1" x="0" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="net.sf.jasperreports.export.xls.auto.filter" value="Start"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sucursal]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="f9986161-2d66-4a08-8455-f73a57dfe981" key="group2" x="100" y="0" width="200" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Oficina]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="215d91ec-cf55-4a0d-90b8-39134fcb7488" key="group3" x="300" y="0" width="250" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Grupo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="04f6eb33-7ea8-4d54-81fc-019efaa925de" key="group4" x="550" y="0" width="250" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Subgrupo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="12b95a8d-e78a-48ac-a811-f4e638ec3070" key="group5" x="800" y="0" width="400" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="7d3586f3-4357-4190-9ef1-cdb682901210" key="group6" x="1200" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Código]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="f282c147-f63b-4c97-b3a3-213d1262626a" key="group7" x="1300" y="0" width="500" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descripción del Activo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="7f79e281-13f6-4399-a2a0-bf711736c9bc" key="group7" x="1800" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Modelo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c50af821-c41a-42df-9a43-f94457df8473" key="group7" x="1900" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Marca]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="1f6a2a19-b8fb-4a93-98b4-ae7e945bd8ba" key="group7" x="2000" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Serie]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="3e915ab0-accd-4bc3-8e5b-368b4e4f4d7c" key="group7" x="2100" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a7f2af72-a5bb-4cbc-ab90-d36a8ab45d5f" key="group7" x="2200" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Compra]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ebd5578c-fe49-41e8-82ca-ca1148a7291e" key="group7" x="2300" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Porcentaje]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="56730240-10c5-4525-8b89-11572acc8e4b" key="group7" x="2400" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dep. Diaria]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="69c47583-4866-4e55-952f-cf46eaa7cbb8" key="group7" x="2500" y="0" width="100" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor Compra]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b5abc18e-8351-4d42-8571-a3e182d673dc" key="group7" x="2600" y="0" width="150" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Dep. Acumulada]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="1efcf6e9-60b7-4616-b01c-0cbefb4e564e" key="group7" x="2750" y="0" width="150" height="20">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="net.sf.jasperreports.export.xls.auto.filter" value="End"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor en Libros]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement uuid="5c13fa75-6157-48b3-ae7b-27a7f5544271" x="0" y="0" width="2900" height="20"/>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="7f277ca2-9ebd-4847-868b-264102f8cd97" x="0" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DSUCURSAL}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="e501f27f-3a1b-41e5-a66f-dedda2e2aaff" x="100" y="0" width="200" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DOFICINA}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="8acbb7f3-72dd-4b5b-9ee2-22c87887d5b2" x="300" y="0" width="250" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DGRUPOPRODUCTO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="3afdd7fc-10c3-4ccc-8cf7-363d97bbcd32" x="550" y="0" width="250" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DPRODUCTO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="0a0c483b-2a43-4d71-a792-fc8c242517ae" x="800" y="0" width="400" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DACTIVOFIJO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="cae7254f-6587-41d7-9b32-fe373433b95d" x="1200" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CCUENTA}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="d9575b91-b0b4-40ab-9029-0a50a6eedd68" x="1300" y="0" width="500" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{NOMBRECUENTA}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="11c29f49-6371-4104-be0c-748c0b0ef3a0" x="1800" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MODELO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="fc8c5092-8b51-4e69-8643-cff33ec33af0" x="1900" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="e445143f-e66f-456b-976c-82a71e6a8ee8" x="2000" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SERIEITEM}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement uuid="449ceab7-3c0a-4bb1-bfe1-0f726d707e18" x="2100" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DESTATUSCUENTA}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MMM/yyyy" isBlankWhenNull="true">
+					<reportElement uuid="357baaf5-b9a2-4dd2-ae53-33ebf2380179" x="2200" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FADQUISICION}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement uuid="625fea88-e175-4736-9ba8-8d555fc06b75" x="2300" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{porcentajeDep}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.00" isBlankWhenNull="true">
+					<reportElement uuid="169ba663-22f7-4464-9c76-035cff9b3883" x="2400" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PROVISION}.negate()]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement uuid="3a400096-6378-412b-8c53-4e4a06caee30" x="2500" y="0" width="100" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COSTOORIGINAL}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.00" isBlankWhenNull="true">
+					<reportElement uuid="124942f5-942d-43f1-b3dd-4e9bb95c6081" x="2600" y="0" width="150" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DEPRECIACION}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#0.00" isBlankWhenNull="true">
+					<reportElement uuid="ab333283-7462-4383-93bc-85d49cee4b80" x="2750" y="0" width="150" height="20">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{bookValue}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

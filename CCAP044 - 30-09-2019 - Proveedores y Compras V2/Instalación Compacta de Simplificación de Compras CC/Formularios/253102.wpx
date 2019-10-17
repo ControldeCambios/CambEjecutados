@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties postQuery="1" sub="25" tra="3102">
+    <initialJS>c.consultar();
+c.formulario.posMantener=function(){c.$('f2estadoMantenimiento', 0).changeValue('1');}
+c.formulario.preMantener=function(){var len = c.$N('f1solicitudpago').length;
+var isCheck = validateCheck();
+
+if(isCheck) {
+  return'SELECCIONE AL MENOS UN REGISTRO.';
+}
+
+for(var j = 0; j &lt; len; j++) {
+
+  if(c.$('f1solicitudpago', j).value != '' &amp;&amp; c.$('f1check', j).checked) {
+    c.$('f1estatuspago', j).changeValue('034');
+  }
+}}
+validateCheck=function(){var selectCheck = false;
+var lsCheck = c.$$('div.checkboxes input.check-box').pluck('value');
+
+if(!lsCheck.includes('1')) {
+  selectCheck = true;
+}
+return selectCheck;}</initialJS>
+    <title>CONTROL DE RECEPCIÓN DE DOCUMENTOS</title>
+    <references>
+      <reference alias="tcpagos0"
+        class="com.fitbank.webpages.data.Reference" table="TCPAGOS">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            comparator="IN ('033','018')" field="CESTATUSDOCUMENTO"/>
+        </dependencies>
+      </reference>
+      <reference alias="tdpagos0"
+        class="com.fitbank.webpages.data.Reference" table="TDPAGOS">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="NUMERODOCUMENTO" fromAlias="tcpagos0" fromField="NUMERODOCUMENTO"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERSONA_COMPANIA" fromAlias="tcpagos0" fromField="CPERSONA_COMPANIA"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERIODO" fromAlias="tcpagos0" fromField="CPERIODO"/>
+        </dependencies>
+      </reference>
+      <reference alias="tsolicitud0"
+        class="com.fitbank.webpages.data.Reference" table="TCSOLICITUDPAGO">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="NUMERODOCUMENTO" fromAlias="tdpagos0" fromField="NUMERODOCUMENTO_SOLICITUD"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERSONA_COMPANIA" fromAlias="tdpagos0" fromField="CPERSONA_COMPANIA"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERIODO" fromAlias="tdpagos0" fromField="CPERIODO_SOLICITUD"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERIODO" immediateValue="=f2periodo"/>
+        </dependencies>
+      </reference>
+      <reference alias="tdocumentos0"
+        class="com.fitbank.webpages.data.Reference" table="TESTATUSDOCUMENTO">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CIDIOMA" immediateValue="ES"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CTIPODOCUMENTOINVENTARIO" fromAlias="tcpagos0" fromField="CTIPODOCUMENTOINVENTARIO"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CESTATUSDOCUMENTO" fromAlias="tcpagos0" fromField="CESTATUSDOCUMENTO"/>
+        </dependencies>
+      </reference>
+    </references>
+  </properties>
+  <containers>
+    <container clo="T" cssClass="table-group checkboxes" max="15" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="buscar" tex="Buscar:" z="1"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1estatuspagoCriterion" w="50" z="1">
+        <dataSource alias="tcpagos0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CESTATUSDOCUMENTO" type="CRITERION"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" z="1"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1numerodocumentoCriterion" w="200" z="1">
+        <dataSource alias="tsolicitud0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="CRITERION"/>
+        <attribute nom="lon">30</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Estatus Pago" x="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Solicitud de Pago" x="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Documento Recibido" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Label"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1estatuspago" w="50">
+        <dataSource alias="tcpagos0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CESTATUSDOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1estatuspagoD">
+        <dataSource alias="tdocumentos0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="DESCRIPCION" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1solicitudpago" w="200">
+        <dataSource alias="tsolicitud0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1periodosolicitudpago" w="80">
+        <dataSource alias="tsolicitud0"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1fechadocrecibido" w="0">
+        <dataSource alias="tsolicitud0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FECHAENTREGACONTABILIDAD" type="RECORD"/>
+        <attribute nom="val">=IF(f1solicitudpago!='';$accountingDate;'')</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATE" transportFormat="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.CheckBox" tex="f1check">
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=f2estadoMantenimiento=='1'"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f2estadoMantenimiento" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f2periodo" w="0">
+        <attribute nom="val">=YEAR($accountingDate)</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

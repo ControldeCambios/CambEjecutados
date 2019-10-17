@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties query="0" sub="25" tra="3073">
+    <initialJS>c.formulario.preMantener=function(){if(c.$('fnc1estado2', 0).value != '1') {
+  return'POR FAVOR ESCOGA APROBAR O NEGAR';
+}
+var fechaContabilidad = c.$V('fnc0fechacontabilidad', 0);
+var fecha = c.$V('fnc0horacontabilidad', 0);
+
+if(c.$('fnc0fechacontabilidad', 0).value == '') {
+  Validar.error(c.$('fnc0fechacontabilidad', 0));
+  return'VALORES REQUERIDOS NO INGRESADOS';
+}
+
+if(c.$('fnc0horacontabilidad', 0).value == '') {
+  Validar.error(c.$('fnc0horacontabilidad', 0));
+  return'VALORES REQUERIDOS NO INGRESADOS';
+}
+fechaContabilidad.setHours(fecha.getHours());
+fechaContabilidad.setMinutes(fecha.getMinutes());
+c.$('fnc0fcontabilidad', 0).changeValue(fechaContabilidad);}
+c.formulario.posMantener=function(){c.$('fnc3BotonAprobar', 0).setDisabled(true);
+c.$('fnc3BotonNegar', 0).setDisabled(true);
+c.$('fnc1estadoPostMant', 0).changeValue('1');}</initialJS>
+    <title>APROBACIÓN MASIVA DE FACTURA DE PROVEEDORES</title>
+    <references>
+      <reference alias="TSOLPAGO"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TSOLPAGO"/>
+      <reference alias="TFINANCIAL"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TFINANCIAL"/>
+    </references>
+  </properties>
+  <containers>
+    <container cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha hora Recp. Contabilidad" x="1"
+        y="1" z="4"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0horacontabilidad" w="50" x="2" y="1" z="4">
+        <attribute nom="jvs">onchange="Validar.ok(c.$('fnc0horacontabilidad',0));"</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="cln">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="SHORT_TIME" transportFormat="DATETIME"/>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=fnc1estadoPostMant=='1'"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0fechacontabilidad" w="80" x="2" y="1" z="4">
+        <attribute nom="jvs">onchange="Validar.ok(c.$('fnc0fechacontabilidad',0));"</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="cln">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=fnc1estadoPostMant=='1'"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="(*)" x="2"
+        y="1" z="4"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0fcontabilidad" w="80" y="1" z="4">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FECHACONTABILIDAD" type="CONTROL"/>
+        <attribute nom="req">1</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATETIME" transportFormat="DATETIME"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="100" win="20">
+      <widget class="com.fitbank.webpages.widgets.Label" tex="N° Solicitud"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Período"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Cuenta Proveedor"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Nombre Proveedor" w="250"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Valor Factura"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Valor RIVA"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Valor RFuente"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Valor a Pagar"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1codsolicitud" w="0">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1periodo" w="0">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1ciproveedor" w="0">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1nombreproveedor" w="250">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1totalgeneral" w="0">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc1triva" w="0">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1trfuente" w="0">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1totalpagar" w="0">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc1cia" w="0">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1cformapago" w="0">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1detallefinanciero" w="0" z="14">
+        <attribute nom="val">='F#'+fnc4nestablecimiento+fnc4puntoemision+fnc4docfacturacion+' ' + fnc4nombreproveedor+ ' ' + fnc4observaciones</attribute>
+        <attribute nom="lon">400</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" max="100" visible="0" win="100">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2codigoimportacion" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CODIGOCONTABLE_IMPORTACION" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2valoriva" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORTOTALIVA" type="RECORD"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2ndocumento" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO_SP" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2ndocpago" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMDOCPAGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2estadoliquidacion" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTADOLIQUIDACION" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cformapago" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource" field="FORMAPAGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2masiva" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource" field="MASIVA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2periodo" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO_SP" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2fechacontable" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FECHACONTABLE" type="RECORD"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" transportFormat="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2observaciones" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="OBSERVACIONES" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cargoadicional" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CARGOSADICIONALES" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2disparafinanciero" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="DISPARAFINANCIERO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2importacion" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource"
+          field="IMPORTACION" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cestatusdocumento" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource" field="ESTADO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2provision" w="0">
+        <dataSource alias="TFINANCIAL"
+          class="com.fitbank.webpages.data.DataSource" field="PROVISION" type="RECORD"/>
+      </widget>
+    </container>
+    <container cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Button">
+        <attribute nom="dat">Regresar</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Link"
+            subsystem="25" transaction="4014"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button"
+        tex="fnc3BotonAprobar" y="1">
+        <attribute nom="jvs">onclick="var len=c.$N('fnc4codsolicitud').length;var nsolicitudes=0;c.$('fnc1estado2',0).changeValue('1');for(var j=0;j&amp;lt;len;j++){if(c.$('fnc4codsolicitud',j).value!=''){c.$('fnc2codigoimportacion',j).changeValue(c.$V('fnc4codigoimportacion',j));c.$('fnc2valoriva',j).changeValue(c.$V('fnc4valoriva',j));c.$('fnc2ndocumento',j).changeValue(c.$V('fnc4codsolicitud',j));c.$('fnc2estadoliquidacion',j).changeValue(c.$V('fnc4estadoliquidacion',j));c.$('fnc2cformapago',j).changeValue(c.$V('fnc4cformapago',j));c.$('fnc2masiva',j).changeValue(c.$V('fnc4masiva',j));c.$('fnc2periodo',j).changeValue(c.$V('fnc4periodo',j));c.$('fnc2fechacontable',j).changeValue(c.$V('fnc3fechacontable',0));c.$('fnc2observaciones',j).changeValue(c.$V('fnc1detallefinanciero',j));c.$('fnc2cargoadicional',j).changeValue(c.$V('fnc4cargoadicional',j));c.$('fnc2disparafinanciero',j).changeValue('1');c.$('fnc2importacion',j).changeValue(c.$V('fnc4importacion',j));c.$('fnc2cestatusdocumento',j).changeValue('002');c.$('fnc2provision',j).changeValue(c.$V('fnc4provision',j));nsolicitudes=j+1;}}rc=confirm(&amp;quot;VA A PROCESAR: &amp;quot;+nsolicitudes+&amp;quot; SOLICITUDES.&amp;quot;+&amp;quot;\n&amp;quot;+&amp;quot;DESEA CONTINUAR?&amp;quot;);if(rc){c.mantener();}"</attribute>
+        <attribute nom="dat">Aprobar</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button"
+        tex="fnc3BotonNegar" y="1">
+        <attribute nom="jvs">onclick="var len=c.$N('fnc4codsolicitud').length;var nsolicitudes=0;c.$('fnc1estado2',0).changeValue('1');for(var j=0;j&amp;lt;len;j++){if(c.$('fnc4codsolicitud',j).value!=''){c.$('fnc2codigoimportacion',j).changeValue(c.$V('fnc4codigoimportacion',j));c.$('fnc2valoriva',j).changeValue(c.$V('fnc4valoriva',j));c.$('fnc2ndocumento',j).changeValue(c.$V('fnc4codsolicitud',j));c.$('fnc2estadoliquidacion',j).changeValue(c.$V('fnc4estadoliquidacion',j));c.$('fnc2cformapago',j).changeValue(c.$V('fnc4cformapago',j));c.$('fnc2masiva',j).changeValue(c.$V('fnc4masiva',j));c.$('fnc2periodo',j).changeValue(c.$V('fnc4periodo',j));c.$('fnc2fechacontable',j).changeValue(c.$V('fnc3fechacontable',0));c.$('fnc2observaciones',j).changeValue(c.$V('fnc1detallefinanciero',j));c.$('fnc2cargoadicional',j).changeValue(c.$V('fnc4cargoadicional',j));c.$('fnc2importacion',j).changeValue(c.$V('fnc4importacion',j));c.$('fnc2cestatusdocumento',j).changeValue('019');c.$('fnc2provision',j).changeValue(c.$V('fnc4provision',j));if(c.$('fnc4activos',j).value=='3'){c.$('fnc2disparafinanciero',j).changeValue('1');}else{c.$('fnc2disparafinanciero',j).changeValue('0');}nsolicitudes=j+1;}}rc=confirm(&amp;quot;VA A PROCESAR: &amp;quot;+nsolicitudes+&amp;quot; SOLICITUDES.&amp;quot;+&amp;quot;\n&amp;quot;+&amp;quot;DESEA CONTINUAR?&amp;quot;);if(rc){c.mantener();}"</attribute>
+        <attribute nom="dat">Negar</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3fechacontable" w="0">
+        <attribute nom="val">=$accountingDate</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1estado2" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1estadoPostMant" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" cssClass="transportable" max="100" win="100">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4codsolicitud" w="135">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4ciproveedor" w="95">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4nombreproveedor" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4cia" w="95">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4periodo" w="53">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4cformapago">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4totalgeneral" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4triva" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4trfuente" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4totalpagar" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4nestablecimiento" w="35">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4puntoemision" w="35">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4docfacturacion" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4codigoimportacion">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4estadoliquidacion">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4masiva">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4observaciones">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4importacion">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4provision">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4valoriva" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4cargoadicional" w="70">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4cestatusdocumento">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4activos">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="25_PAGOPROVEEDORES" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="a52428cc-f6c1-4bd1-83a5-c159f6bc425b">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="67"/>
+	<property name="ireport.y" value="0"/>
+	<import value="com.fitbank.reports.SubReportCall"/>
+	<parameter name="CIA" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FHASTA" class="java.sql.Timestamp" isForPrompting="false"/>
+	<parameter name="CSUBSISTEMA" class="java.lang.String"/>
+	<parameter name="CTRANSACCION" class="java.lang.String"/>
+	<parameter name="FITBANK_HEADER_LOGO" class="java.lang.String"/>
+	<parameter name="TITLE" class="java.lang.String"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<parameter name="CSUCURSAL" class="java.lang.String"/>
+	<parameter name="CPUNTOTRABAJO" class="java.lang.String"/>
+	<parameter name="CFECHAPAGO" class="java.lang.String"/>
+	<parameter name="CBANCO" class="java.lang.String"/>
+	<parameter name="DBANCO" class="java.lang.String"/>
+	<parameter name="CNUMERODOCUMENTO" class="java.lang.String"/>
+	<parameter name="CFORMAPAGO" class="java.lang.String"/>
+	<parameter name="CPERIODO" class="java.lang.String"/>
+	<parameter name="OBSERVACIONES" class="java.lang.String"/>
+	<parameter name="CUENTAPRO" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    p.NUMERODOCUMENTO_SOLICITUD,
+    p.CUOTA,
+    p.VALOR,
+    (SELECT NOMBRE FROM TSUCURSALES WHERE CSUCURSAL = $P{CSUCURSAL} AND FHASTA = FNCFHASTA) DSUCURSAL,
+    (SELECT DESCRIPCION FROM TPUNTOSTRABAJO WHERE CSUCURSAL = $P{CSUCURSAL} AND CPUNTOTRABAJO = $P{CPUNTOTRABAJO} AND FHASTA = FNCFHASTA) DPUNTOTRABAJO,
+    (SELECT DESCRIPCION FROM TFORMASPAGOCOMPRAS WHERE CFORMAPAGOCOMPRAS = $P{CFORMAPAGO} AND FHASTA = FNCFHASTA) DFORMAPAGO,
+(select tpr.ccuenta||' ('||tpr.NOMBREtitular||') '||decode( CTIPOCUENTAREFERENCIA, 1,
+    'CTA. CORRIENTE', 2, 'CTA. AHORROS', '' )||' - '||tpr.NOMBREINSTITUCION
+    from TPERSONAREFERENCIASBANCARIAS tpr
+    where tpr.cpersona= ( select cpersona from tpersona where FHASTA > SYSDATE AND identificacion = ( select CCUENTA_PROVEEDOR from tcsolicitudpago where numerodocumento = p.NUMERODOCUMENTO and fhasta > SYSDATE ) ) and cuentapago='1' and fhastA > SYSDATE) CCUENTA
+FROM
+    TDPAGOS p
+WHERE
+    p.NUMERODOCUMENTO = $P{CNUMERODOCUMENTO}
+AND p.CPERSONA_COMPANIA = $P{CIA}
+AND p.CPERIODO = $P{CPERIODO}
+AND p.FHASTA = FHASTA]]>
+	</queryString>
+	<field name="NUMERODOCUMENTO_SOLICITUD" class="java.lang.String"/>
+	<field name="CUOTA" class="java.math.BigDecimal"/>
+	<field name="VALOR" class="java.math.BigDecimal"/>
+	<field name="DSUCURSAL" class="java.lang.String"/>
+	<field name="DPUNTOTRABAJO" class="java.lang.String"/>
+	<field name="DFORMAPAGO" class="java.lang.String"/>
+	<field name="CCUENTA" class="java.lang.String"/>
+	<variable name="SALDOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="COSTOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="TOTAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{TOTAL}.add($F{VALOR})]]></variableExpression>
+		<initialValueExpression><![CDATA[BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="CCUENTA_1" class="java.lang.Integer" resetType="Page" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{CCUENTA}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="100" uuid="b9300636-992e-4561-97cf-d7bf1deb35e9"/>
+				<subreportParameter name="NAME">
+					<subreportParameterExpression><![CDATA[$P{TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CUSUARIO">
+					<subreportParameterExpression><![CDATA[$P{CUSUARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CIA">
+					<subreportParameterExpression><![CDATA[$P{CIA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FITBANK_HEADER_LOGO">
+					<subreportParameterExpression><![CDATA[$P{FITBANK_HEADER_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FHASTA">
+					<subreportParameterExpression><![CDATA[$P{FHASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CTRANSACCION">
+					<subreportParameterExpression><![CDATA[$P{CTRANSACCION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CSUBSISTEMA">
+					<subreportParameterExpression><![CDATA[$P{CSUBSISTEMA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[SubReportCall.getReport($P{REPORT_CONNECTION},"23_HEADER")]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="97" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="15" width="114" height="15" uuid="3cf311f8-22bc-453c-8e96-d41a23991797"/>
+				<text><![CDATA[Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="114" height="15" uuid="a1bdc916-3467-47c0-baff-4702311ba110"/>
+				<text><![CDATA[Punto de Trabajo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="0" width="64" height="15" uuid="964f9bab-359e-4ee8-91f8-e0cf4cd0e8e9"/>
+				<text><![CDATA[Fecha Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="30" width="64" height="15" uuid="dffd180f-2ef7-41bb-af7a-7244d91eb2e1"/>
+				<text><![CDATA[Banco]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="114" height="15" uuid="c009a59b-033d-4cd8-8c97-81feb382f530"/>
+				<text><![CDATA[Número de Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="15" width="64" height="15" uuid="9851cb90-2a37-4df0-ad14-1c3f773b782b"/>
+				<text><![CDATA[Forma Pago]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="114" y="0" width="195" height="15" uuid="e13d06f4-bcd2-432d-b55d-5ab6645768a6"/>
+				<textFieldExpression><![CDATA[$P{CNUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="30" width="195" height="15" uuid="f14744cc-0069-4262-8dec-61f1785875d4"/>
+				<textFieldExpression><![CDATA[$P{CPUNTOTRABAJO} + "-" + $F{DPUNTOTRABAJO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="388" y="0" width="167" height="15" uuid="789040d7-64c0-43fb-951b-7fa3e550e3eb"/>
+				<textFieldExpression><![CDATA[$P{CFECHAPAGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="15" width="167" height="15" uuid="4f5575b5-0111-4a7e-897f-305ec4cb2ca0"/>
+				<textFieldExpression><![CDATA[$P{CFORMAPAGO} + "-" + $F{DFORMAPAGO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="81" width="309" height="15" uuid="1b64f846-125b-4ee6-bb26-4fd0d956849b"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Número de Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="81" width="100" height="15" uuid="92c5f4eb-9ed7-4e56-bd2b-d921a1a9dbdd"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Cuota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="409" y="81" width="146" height="15" uuid="86fb8ffa-8168-4814-b9b3-b15e56166270"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="114" y="15" width="195" height="15" uuid="393a4e25-af75-4f29-ab75-d75535e61ea6"/>
+				<textFieldExpression><![CDATA[$P{CSUCURSAL} + "-" + $F{DSUCURSAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="45" width="114" height="15" uuid="c03ee085-9a6e-4cb9-8427-ac2ac2369299"/>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="114" y="45" width="441" height="15" uuid="2d8099a2-c79b-484b-8f73-f31bd0087894"/>
+				<textFieldExpression><![CDATA[$P{OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="324" y="60" width="64" height="21" uuid="0e0029a7-69fc-48bd-8fd7-9af261908bb8"/>
+				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="388" y="60" width="167" height="21" uuid="3ac0edd9-780c-432e-b2b7-747956ec1840"/>
+				<textFieldExpression><![CDATA[$P{CUENTAPRO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="30" width="167" height="30" uuid="6be9e07b-dd89-4b2b-962d-7e7d71645d87"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DBANCO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="309" height="15" uuid="2df8b821-b055-43cb-acbe-45ddb73bb32e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO_SOLICITUD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="409" y="0" width="146" height="15" uuid="04d64946-c41b-4423-aa01-fc074a8082ad"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{VALOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="309" y="0" width="100" height="15" uuid="8193e1d3-5d6a-446a-9e1e-b1277a0b49b1"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CUOTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="409" y="0" width="146" height="15" uuid="ebcf5ca3-05ed-433c-b776-c51c867fdca3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{TOTAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="0" width="54" height="15" uuid="4495c79c-9e65-42af-ac3f-7c2a30b09fbd"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties sub="24" tra="4042">
+    <initialJS>c.formulario.preMantener=function(){var reenvioCorreos = c.$('f1_reenviarCorreo');
+
+for(var i = 0; i &lt; c.$('f1_noRetencion').length; i++) {
+
+  if(c.$('f1_noRetencion', i).value != '') {
+
+    if(c.$('f1_aprobar', i).checked) {
+      c.$('f1_estado', i).changeValue('P');
+    }
+
+    if(reenvioCorreos[i].checked) {
+      c.$('f1_estadoEnvioCorreo', i).changeValue('P');
+    }
+  }
+}}
+c.formulario.posMantener=function(){for(var i = 0; i &lt; c.$('f1_aprobar').length; i++) {
+  c.$('f1_aprobar', i).setChecked(false);
+  c.$('f1_reenviarCorreo', i).setChecked(false);
+}}
+c.consultar();</initialJS>
+    <title>APROBACIÓN DE COMPROBANTES DE RETENCIÓN ELECTRÓNICOS</title>
+    <references>
+      <reference alias="feret0"
+        class="com.fitbank.webpages.data.Reference" table="FERETENCION"/>
+    </references>
+  </properties>
+  <containers>
+    <container clo="T" cssClass="table-group" max="25" win="25">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_establecimientoCri" w="35">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="ESTAB" type="CRITERION"/>
+        <attribute nom="lon">3</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.RegexFormatter"
+            format="\d{3}|^$" partialFormat="\d*"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.InputLabel" w="0">
+        <attribute nom="val">-</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_puntoEmisionCri" w="35">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="PTOEMI" type="CRITERION"/>
+        <attribute nom="lon">3</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.RegexFormatter"
+            format="\d{3}|^$" partialFormat="\d*"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.InputLabel" w="0">
+        <attribute nom="val">-</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_secuencialCri" w="124">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="SECUENCIAL" type="CRITERION"/>
+        <attribute nom="lon">9</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.RegexFormatter"
+            format="\d{9}|^$" partialFormat="\d*"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_fechaEmisionCri" w="84">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FECHAEMISION" type="CRITERION"/>
+        <attribute nom="lon">10</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.ComboBox" tex="f1_tipoIdCri">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TIPOIDENTIFICACIONSUJETO" type="CRITERION"/>
+        <attribute nom="cho">04,05,06,07</attribute>
+        <attribute nom="dat">RUC,Cédula,Pasaporte,Venta a Consumidor Final</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_idCri" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="IDENTIFICACIONSUJETO" type="CRITERION"/>
+        <attribute nom="lon">13</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_razonSocialCri" w="300">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="RAZONSOCIALSUJETO" type="CRITERION"/>
+        <attribute nom="lon">300</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_periodoFiscalCri" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="PERIODOFISCAL" type="CRITERION"/>
+        <attribute nom="lon">7</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.RegexFormatter"
+            format="\d{2}/\d{4}|^$"
+            message="El formato del periodo es MM/aaaa" partialFormat=".*"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.ComboBox" tex="f1_estadoCri">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTATUSENVIO" type="CRITERION"/>
+        <attribute nom="cho">A,P,E,O</attribute>
+        <attribute nom="dat">Por Aprobar,Por Enviar,Error,Ok</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"/>
+      <widget class="com.fitbank.webpages.widgets.ComboBox" tex="f1_estadoEnvioCorreoCri">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTATUSENVIOCORREO" type="CRITERION"/>
+        <attribute nom="cho">A,P,E,O</attribute>
+        <attribute nom="dat">Por Aprobar,Por Enviar,Error,Ok</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Número Retención" x="5" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Fecha Emisión" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Sujeto Retenido" x="3" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Periodo Fiscal" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Estado Envío" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Aprobar"
+        y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Estado correo" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Reenviar correo" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Correo Electrónico" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Respuesta Envío" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Bitácora Correo" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Descargar PDF" y="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Tipo Identificación" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Identificación" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        tex="Razón Social" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FECHAEMISION" type="ORDER"/>
+        <attribute nom="val">-1</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" field="CCODIGO" type="ORDER"/>
+        <attribute nom="val">-1</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input" cssClass="link"
+        tex="f1_noRetencion" w="200" x="5">
+        <attribute nom="val">=IF(EMPTY(f1_ccodigo);'';f1_establecimiento+'-'+f1_puntoEmision+'-'+f1_secuencial)</attribute>
+        <attribute nom="jvs">onclick="if(c.$('f1_noRetencion',this.registro).value!=''&amp;amp;&amp;amp;c.$('f1_estado',this.registro).value!='O'){c.$('f1_link2011',this.registro).fireDOMEvent('click');}"</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_fechaEmision" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FECHAEMISION" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.ComboBox" tex="f1_tipoId">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TIPOIDENTIFICACIONSUJETO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="cho">04,05,06,07</attribute>
+        <attribute nom="dat">RUC,Cédula,Pasaporte,Venta a Consumidor Final</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_id" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="IDENTIFICACIONSUJETO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_razonSocial" w="300">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="RAZONSOCIALSUJETO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_periodoFiscal" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="PERIODOFISCAL" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.ComboBox" tex="f1_estado">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTATUSENVIO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="cho">A,P,E,O</attribute>
+        <attribute nom="dat">Por Aprobar,Por Enviar,Error,Ok</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.CheckBox" tex="f1_aprobar">
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=f1_estado!='A'"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.ComboBox"
+        tex="f1_estadoEnvioCorreo" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTATUSENVIOCORREO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="cho">A,P,E,O</attribute>
+        <attribute nom="dat">Por Aprobar,Por Enviar,Error,Ok</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.CheckBox" tex="f1_reenviarCorreo">
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=f1_estadoEnvioCorreo!='E'"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_correo" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CORREOSUJETO" type="RECORD"/>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler"
+            formula="=EMPTY(f1_estadoEnvioCorreo) || f1_estadoEnvioCorreo == 'O'" validateEmpty="false"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_resp" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" field="RESP" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.TextFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_logcorreo" w="100">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="LOGENVIOCORREO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button">
+        <attribute nom="jvs">onclick="var numeroAutorizacion=c.$('f1_numaut',this.registro).value;if(numeroAutorizacion){window.open(&amp;quot;proc/file?plainDownload=1&amp;amp;directDownload=0&amp;amp;path=/home/fitbank/facturacion-electronica/&amp;quot;+&amp;quot;&amp;amp;name=&amp;quot;+numeroAutorizacion+'.pdf');}"</attribute>
+        <attribute nom="dat">Descargar</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler" formula="=EMPTY(f1_numaut)"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_ccodigo" w="0">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" field="CCODIGO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_establecimiento" w="110">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" field="ESTAB" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_puntoEmision" w="110">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource" field="PTOEMI" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_secuencial" w="0">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="SECUENCIAL" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="f1_link2011">
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Link"
+            query="false" subsystem="24" transaction="2011">
+            <posLink class="com.fitbank.js.FuncionJS" valor="c.$('f2_ccodigo', 0).changeValue(c.$('f1_ccodigo', 0).value);&#xa;c.$('f4_ccodinfAd', 0).changeValue(c.$('f1_ccodigo', 0).value);&#xa;c.$('f1_getCode', 0).changeValue('0');&#xa;c.consultar.bind(c).defer(0);">
+              <parametros>
+                <item>options</item>
+              </parametros>
+            </posLink>
+            <values>
+              <item>
+                <key>f1_ccodigo</key>
+                <value>f1_ccodigo</value>
+              </item>
+            </values>
+          </item>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_numaut" w="0">
+        <dataSource alias="feret0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMEROAUTORIZACION" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

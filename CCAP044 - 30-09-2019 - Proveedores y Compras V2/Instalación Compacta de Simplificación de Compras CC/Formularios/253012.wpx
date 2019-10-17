@@ -1,0 +1,2647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties sub="25" tra="3012">
+    <initialJS>agregarCheques=function(){var q = 0;
+
+for(var p = 0; p &lt; c.$('fnc6valautoriza').length; p++) {
+
+  if(c.$('fnc6check', p).checked &amp;&amp; c.$V('fnc1codformapago', p) == '01') {
+    c.$('fnc12tipodocinvent', q).changeValue('CH');
+    c.$('fnc12codpuntotrab', q).changeValue(c.$V('fnc2puntotrabajo', 0));
+    c.$('fnc12numcuenta', q).changeValue(c.$V('fnc1numcuenta', p));
+    c.$('fnc12codbanco', q).changeValue(c.$V('fnc1codbanco', p));
+    c.$('fnc12codproveedor', q).changeValue(c.$V('fnc6codproveedor', p));
+    c.$('fnc12numdocpago', q).changeValue(c.$V('fnc11numdocp', q));
+    c.$('fnc12periodo', q).changeValue(c.$V('fnc4periodo', 0));
+    c.$('fnc12totalautorizado', q).changeValue(c.$V('fnc6valautoriza', p));
+    q++;
+  }
+}}
+agregarAutorizados=function(){var q = 0;
+
+for(var p = 0; p &lt; c.$('fnc6valautoriza').length; p++) {
+
+  if(c.$('fnc6check', p).checked) {
+    c.$('fnc4cpersona_compania', q).changeValue(c.$('fnc2cia', 0).value);
+    c.$('fnc4periodo_solicitud', q).changeValue(c.$('fnc6periodo', p).value);
+    c.$('fnc4codsolicitudpago', q).changeValue(c.$('fnc6codsolicitudpago', p).value);
+    c.$('fnc4cuota', q).changeValue(c.$('fnc6cuota', p).value);
+    c.$('fnc4valautoriza', q).changeValue(c.$V('fnc6valautoriza', p));
+    c.$('fnc10observaciones', q).changeValue('AUTORIZACION MASIVA.');
+    c.$('fnc2cia', q).changeValue(c.company);
+    c.$('fnc10codsucursal', q).changeValue(c.$V('fnc3codsucursal', 0));
+    c.$('fnc10codpuntotrab', q).changeValue(c.$V('fnc2puntotrabajo', 0));
+    c.$('fnc10tipodocinvent', q).changeValue('AP');
+    c.$('fnc10codbanco', q).changeValue(c.$V('fnc1codbanco', p));
+    c.$('fnc10numcuenta', q).changeValue(c.$V('fnc1numcuenta', p));
+    c.$('fnc10fechasolicitud', q).changeValue(c.$V('fnc1fechasolicitud', 0));
+    c.$('fnc10usuario', q).changeValue(c.$V('fnc2tcpersona', 0));
+    c.$('fnc10estatussolicitud', q).changeValue('010');
+    c.$('fnc10totalautorizado', q).changeValue(c.$V('fnc6valautoriza', p));
+    c.$('fnc11codformapago', q).changeValue(c.$V('fnc9codformapago', p));
+    c.$('fnc11tipodocinvent', q).changeValue('CP');
+    c.$('fnc11codpuntotrab', q).changeValue(c.$V('fnc2puntotrabajo', 0));
+    c.$('fnc11observaciones', q).changeValue('FACTURACION DIRECTA MASIVA.');
+    c.$('fnc11codbanco', q).changeValue(c.$V('fnc1codbanco', p));
+    c.$('fnc11numcuenta', q).changeValue(c.$V('fnc1numcuenta', p));
+    c.$('fnc11codsolicitudpago', q).changeValue(c.$V('fnc6codsolicitudpago', p));
+    c.$('fnc11periodo_solicitud', q).changeValue(c.$V('fnc6periodo', p));
+    c.$('fnc11totalautorizado', q).changeValue(c.$V('fnc6valautoriza', p));
+    c.$('fnc11proveedor', q).changeValue(c.$V('fnc6codproveedor', p));
+    q++;
+  }
+}}
+c.formulario.posMantener=function(){var len = c.$N('fnc6codproveedor').length;
+var cont2 = 0;
+c.$('fnc1fechasolicitud', 0).setDisabled(true);
+c.$('fnc0horatesoreria', 0).setDisabled(true);
+c.$('fnc0fechatesoreria', 0).setDisabled(true);
+c.$('fnc6fechaD', 0).setDisabled(true);
+c.$('fnc6fechaH', 0).setDisabled(true);
+c.$('btAutorizar', 0).setDisabled(true);
+
+for(var p = 0; p &lt; c.$('fnc6codsolicitudpago').length; p++) {
+  c.$('fnc6check', p).setDisabled(true);
+  c.$('fnc1codformapago', p).setDisabled(true);
+  c.$('fnc1codbanco', p).setDisabled(true);
+  c.$('fnc1numcuenta', p).setDisabled(true);
+}
+
+for(var j = 0; j &lt; len; j++) {
+
+  if(c.$('fnc6codproveedor', j).value != '' &amp;&amp; c.$('fnc6check', j).checked) {
+    c.$('fnc6numdocp', j).changeValue(c.$('fnc11numdocp', cont2).value);
+    cont2++;
+  }
+}}
+c.formulario.preMantener=function(){if(c.$('fnc1estado2', 0).value == '0') {
+  return'FORMULARIO NO APLICA MANTENIMIENTO. PRESIONAR BOT\xd3N AUTORIZAR.';
+}
+var prov = '';
+var mismoProv = true;
+var pos = 0;
+var formaPago = c.$V('fnc1codformapago', 0);
+var cont = 0;
+var cont2 = 0;
+var cont3 = 0;
+var cont4 = 0;
+var len = c.$N('fnc6codproveedor').length;
+var contCheque = 0;
+var contVCheque = 0;
+var contSPI = 0;
+var contVSPI = 0;
+var contInternas = 0;
+var contVInternas = 0;
+var fechaTesoreria = c.$V('fnc0fechatesoreria', 0);
+var fecha = c.$V('fnc0horatesoreria', 0);
+
+if(c.$('fnc0horatesoreria', 0).value == '') {
+  Validar.error(c.$('fnc0horatesoreria', 0));
+  return'VALORES REQUERIDOS NO INGRESADOS';
+}
+
+if(c.$('fnc0fechatesoreria', 0).value == '') {
+  Validar.error(c.$('fnc0fechatesoreria', 0));
+  return'VALORES REQUERIDOS NO INGRESADOS';
+}
+fechaTesoreria.setHours(fecha.getHours());
+fechaTesoreria.setMinutes(fecha.getMinutes());
+c.$('fnc0ftesoreria', 0).changeValue(fechaTesoreria);
+
+for(var j = 0; j &lt; len; j++) {
+
+  if(c.$('fnc6codproveedor', j).value != '') {
+
+    if(c.$V('fnc1codformapago', j) == '01' &amp;&amp; c.$('fnc6check', j).checked) {
+
+      if(c.$('fnc1codbanco', j).value == '') {
+        Validar.error(c.$('fnc1codbanco', j), 'SELECCIONE UN BANCO', 'required');
+        return'SELECCIONAR UN BANCO.';
+      }
+
+      if(c.$('fnc1numcuenta', j).value == '') {
+        Validar.error(c.$('fnc1numcuenta', j), 'SELECCIONE LA CUENTA DEL BANCO', 'required');
+        return'SELECCIONAR LA CUENTA DEL BANCO.';
+      }
+    }
+
+    if((c.$V('fnc1codformapago', j) == '02' || c.$V('fnc1codformapago', j) == '03') &amp;&amp; c.$('fnc6check', j).checked) {
+      c.$('fnc9cuentasproveedores', cont2).changeValue(c.$('fnc9cuentasproveedores', cont2).value + c.$('fnc6ccuentaproveedor', j).value + '-' + c.$('fnc6nomproveedor', j).value + '-' + c.$('fnc6cpersonaprov', j).value + ',');
+    }
+    c.$('fnc9codformapago', cont2).changeValue(c.$('fnc1codformapago', cont2).value);
+    cont2++;
+  }
+}
+
+for(var i = 0; i &lt; len; i++) {
+
+  if(c.$('fnc6check', i).checked &amp;&amp; c.$('fnc6codproveedor', i).value != '' &amp;&amp; c.$V('fnc1codformapago', i) == '03') {
+    c.$('F4TipTran', cont).changeValue('SPI');
+    c.$('F2comision', cont).changeValue('0');
+    c.$('F2dcliente', cont).changeValue('COOPERATIVA DE AHORRO Y CREDITO 29 DE OCTUBRE LTDA');
+    c.$('F4estatusGiroTransaferencia', cont).changeValue('AUT');
+    c.$('F2cuentamoneda', cont).changeValue('USD');
+    c.$('F2valor', cont).changeValue(c.$('fnc6valautoriza', i).value);
+    c.$('F3identificacionBeneficiario', cont).changeValue(c.$('fnc6codproveedor', i).value);
+    c.$('F3nombreBeneficiario', cont).changeValue(c.$('fnc6nomproveedor', i).value);
+    c.$('F3cuentaBeneficiario', cont).changeValue(c.$('fnc6ccuentaproveedor', i).value);
+    c.$('F3caplicacion', cont).changeValue(c.$V('fnc6tipocuentaprov', i));
+    c.$('F3observaciones', cont).changeValue('PAGO PROVEEDOR SPI');
+    c.$('F2cmotivoCodOrdenpago', cont).changeValue('14');
+    c.$('F2cmotivo', cont).changeValue('4109');
+    c.$('F2corigen', cont).changeValue('07');
+    c.$('F2ccliente', cont).changeValue('2');
+    c.$('F2cuenta', cont).changeValue(c.$('cuenta_debito', 0).value);
+    c.$('F2tipocordenante', cont).changeValue('01');
+    c.$('F4numdocumento', cont).changeValue(c.$V('fnc6codsolicitudpago', i));
+    c.$('F2cpersona_bancobeneficiario', cont).changeValue(c.$V('fnccpersona_empresabancaria', i));
+    c.$('F2cuentacredito', cont).changeValue('1700427');
+    c.$('F2cuentabce', cont).changeValue('1700427');
+    cont++;
+  }
+
+  if(c.$('fnc6check', i).checked) {
+
+    if(c.$('fnc6ccuentaproveedor', i).value == '' &amp;&amp; c.$V('fnc1codformapago', 0) != '01') {
+      Validar.error(c.$('fnc6ccuentaproveedor', i), 'PROVEEDOR DEBE CONTAR CON UNA REFERENCIA BANCARIA', 'required');
+      return'PROVEEDOR DEBE CONTAR CON UNA REFERENCIA BANCARIA';
+    }
+  }
+}
+c.$('fnc10usuario', 0).changeValue(c.user);
+agregarAutorizados();
+agregarCheques();
+
+for(var k = 0; k &lt; len; k++) {
+
+  if(c.$('fnc6codproveedor', k).value != '' &amp;&amp; c.$('fnc6check', k).checked) {
+
+    if(c.$V('fnc6valautoriza', k) &gt; 0) {
+
+      if(c.$('fnc1codformapago', k).value == '01') {
+        contCheque = contCheque + 1;
+        contVCheque = contVCheque + c.$V('fnc6valautoriza', k);
+        c.$('CODIGO', cont3).changeValue('11');
+      } else if(c.$('fnc1codformapago', k).value == '02') {
+        contInternas = contInternas + 1;
+        contVInternas = contVInternas + c.$V('fnc6valautoriza', k);
+        c.$('CODIGO', cont3).changeValue('21');
+      } else if(c.$('fnc1codformapago', k).value == '03') {
+        c.$('CODIGO', cont3).changeValue('1');
+        contSPI = contSPI + 1;
+        contVSPI = contVSPI + c.$V('fnc6valautoriza', k);
+      } else if(c.$('fnc1codformapago', k).value == '07') {
+        c.$('CODIGO', cont3).changeValue('23');
+      }
+      c.$('CUENTA', cont3).changeValue(c.$V('fnc6codproveedor', k));
+      c.$('COMPANIA', cont3).changeValue(c.company);
+      c.$('SUBCUENTA', cont3).changeValue('0');
+      c.$('MONEDACUENTA', cont3).changeValue(c.currency);
+      c.$('MONEDAORIGINAL', cont3).changeValue(c.currency);
+      c.$('VALOR', cont3).changeValue(c.$V('fnc6valautoriza', k));
+      cont3 = cont3 + 1;
+
+      if(c.$('fnc1codformapago', k).value == '01') {
+        c.$('CODIGO', cont3).changeValue('12');
+        c.$('CUENTA', cont3).changeValue(c.$('fnc1numcuenta', k).value);
+      } else if(c.$('fnc1codformapago', k).value == '02') {
+        c.$('CODIGO', cont3).changeValue('22');
+        c.$('CUENTA', cont3).changeValue(c.$('fnc6ccuentaproveedor', k).value);
+      } else if(c.$('fnc1codformapago', k).value == '03') {
+        c.$('CODIGO', cont3).changeValue('2');
+        c.$('CUENTA', cont3).changeValue('');
+      } else if(c.$('fnc1codformapago', k).value == '07') {
+        c.$('CODIGO', cont3).changeValue('24');
+        c.$('CUENTA', cont3).changeValue(c.$('fnc6ccuentaproveedor', k).value);
+      }
+      c.$('COMPANIA', cont3).changeValue(c.company);
+      c.$('SUBCUENTA', cont3).changeValue('0');
+      c.$('MONEDACUENTA', cont3).changeValue(c.currency);
+      c.$('MONEDAORIGINAL', cont3).changeValue(c.currency);
+      c.$('VALOR', cont3).changeValue(c.$V('fnc6valautoriza', k));
+      cont3 = cont3 + 1;
+    }
+  }
+}}
+c.$('fnc2tcpersona').hide();c.$('fnc2tcpersona').lv.consultar(0, {soloConsulta: true});c.$('fnc1periodocont', 0).changeValue(c.accountingDate.getFullYear());c.$('fnc1fechasolicitud', 0).changeValue(c.accountingDate);
+c.formulario.posConsultar=function(){for(var p = 0; p &lt; c.$('fnc6saldo').length; p++) {
+
+  if(c.$('fnc6saldo', p).value &gt; '') {
+    c.$('fnc6saldoref', p).changeValue(c.$V('fnc6saldo', p));
+  }
+}
+c.$('fnc1fechasolicitud', 0).changeValue(c.accountingDate);}
+habilitar=function(){for(var p = 0; p &lt; c.$('fnc3valautoriza').length; p++) {
+
+  if(c.$('fnc3check', p).checked) {
+    var saldoact = 0.00;
+    var saldoant = c.$V('fnc3saldoref', p);
+    var pagadoant = c.$V('fnc3pagadoref', p);
+    var autoriza = c.$V('fnc3valautoriza', p);
+    c.$('fnc3valautoriza', p).setDisabled(true);
+    c.$('fnc4cpersona_compania', p).changeValue(c.$('fnc2cia', 0).value);
+    c.$('fnc4periodo', p).changeValue(c.$('fnc2cperiodo', 0).value);
+    c.$('fnc4numdoc', p).changeValue(c.$('fnc1numdoc', 0).value);
+    c.$('fnc4periodo_solicitud', p).changeValue(c.$('fnc3periodo', p).value);
+    c.$('fnc4codsolicitudpago', p).changeValue(c.$('fnc3codsolicitudpago', p).value);
+    c.$('fnc4cuota', p).changeValue(c.$('fnc3cuota', p).value);
+    c.$('fnc4valautoriza', p).changeValue(c.$V('fnc3valautoriza', p));
+    c.$('fnc3valautoriza', p).changeValue(c.$('fnc3saldo', p).value);
+    saldoact = (saldoant - autoriza);
+  } else {
+    c.$('fnc3valautoriza', p).setDisabled(true);
+
+    if(c.$V('fnc3saldoref', p) &gt; 0) {
+      c.$('fnc3saldo', p).changeValue(c.$V('fnc3saldoref', p));
+    }
+    c.$('fnc3valautoriza', p).changeValue('');
+    c.$('fnc4cpersona_compania', p).changeValue('');
+    c.$('fnc4periodo', p).changeValue('');
+    c.$('fnc4numdoc', p).changeValue('');
+    c.$('fnc4periodo_solicitud', p).changeValue('');
+    c.$('fnc4codsolicitudpago', p).changeValue('');
+    c.$('fnc4cuota', p).changeValue('');
+    c.$('fnc4valautoriza', p).changeValue('');
+  }
+}}</initialJS>
+    <title>Autorizacion de Pagos</title>
+    <references>
+      <reference alias="tcautorizapago1"
+        class="com.fitbank.webpages.data.Reference" storeOnly="true" table="TCAUTORIZAPAGO"/>
+      <reference alias="tdautorizapago1"
+        class="com.fitbank.webpages.data.Reference" storeOnly="true" table="TDAUTORIZAPAGO"/>
+      <reference alias="tdsolicitudpagocuotas1"
+        class="com.fitbank.webpages.data.Reference" table="TDSOLICITUDPAGOCUOTAS">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERSONA_COMPANIA" fromAlias="tcsolicitudpago1" fromField="CPERSONA_COMPANIA"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="NUMERODOCUMENTO" fromAlias="tcsolicitudpago1" fromField="NUMERODOCUMENTO"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERIODO" fromAlias="tcsolicitudpago1" fromField="CPERIODO"/>
+        </dependencies>
+      </reference>
+      <reference alias="TSUC"
+        class="com.fitbank.webpages.data.Reference" table="TSUCURSALES"/>
+      <reference alias="tp0" class="com.fitbank.webpages.data.Reference" table="TPERIODO">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            comparator="IN {fnc2cia}" field="CPERSONA_COMPANIA"/>
+        </dependencies>
+      </reference>
+      <reference alias="tnaturaltrabajo1"
+        class="com.fitbank.webpages.data.Reference" table="TNATURALTRABAJO"/>
+      <reference alias="tpuntostrabajo1"
+        class="com.fitbank.webpages.data.Reference" table="TPUNTOSTRABAJO"/>
+      <reference alias="tpersona1"
+        class="com.fitbank.webpages.data.Reference" table="TPERSONA"/>
+      <reference alias="tusuarios1"
+        class="com.fitbank.webpages.data.Reference" table="TUSUARIOS"/>
+      <reference alias="tcsolicitudpago1"
+        class="com.fitbank.webpages.data.Reference" table="TCSOLICITUDPAGO">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERSONA_COMPANIA" immediateValue="=fnc2cia"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CESTATUSDOCUMENTO" immediateValue="009"/>
+        </dependencies>
+      </reference>
+      <reference alias="tcuentaspersona1"
+        class="com.fitbank.webpages.data.Reference" table="TCUENTASPERSONA">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CCUENTA" fromAlias="tcsolicitudpago1" fromField="CCUENTA_PROVEEDOR"/>
+        </dependencies>
+      </reference>
+      <reference alias="tcompaniausuarios1"
+        class="com.fitbank.webpages.data.Reference" table="TCOMPANIAUSUARIOS"/>
+      <reference alias="tpersonareferencias"
+        class="com.fitbank.webpages.data.Reference" table="TPERSONAREFERENCIASBANCARIAS"/>
+      <reference alias="tsolicitudes1"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TSOLICITUDES"/>
+      <reference alias="tpersona2"
+        class="com.fitbank.webpages.data.Reference" table="TPERSONA">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="IDENTIFICACION" fromAlias="tsolicitudes1" fromField="CCUENTA_PROVEEDOR"/>
+        </dependencies>
+      </reference>
+      <reference alias="tcps0"
+        class="com.fitbank.webpages.data.Reference" queryOnly="true" table="TCOMPANIAPARAMETROSSISTEMA">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPARAMETROSISTEMA" immediateValue="CUENTA_29_SPI"/>
+        </dependencies>
+      </reference>
+      <reference alias="tgirosTauto0"
+        class="com.fitbank.webpages.data.Reference" storeOnly="true" table="TGIROSTRANSFERENCIASAUTORIZADO"/>
+      <reference alias="tautorizaciones1"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TAUTORIZACIONES"/>
+      <reference alias="tpagos1"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TPAGOS"/>
+      <reference alias="ITEMSFINANCIERO"
+        class="com.fitbank.webpages.data.Reference" special="true" table="ITEMSFINANCIERO"/>
+      <reference alias="tcheques1"
+        class="com.fitbank.webpages.data.Reference" special="true" table="TCHEQUES"/>
+    </references>
+  </properties>
+  <containers>
+    <container clo="T" cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1fechasolicitud" w="80">
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1periodocont" w="80" x="3" z="2">
+        <attribute nom="req">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Sucursal" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3codsucursal" w="95" z="2">
+        <dataSource alias="TSUC"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="CRITERION"/>
+        <attribute nom="val">=$originBranch</attribute>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1sucursal" w="34" z="2">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUCURSAL" type="CONTROL"/>
+        <attribute nom="val">=fnc3codsucursal</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tsucursales1"
+              class="com.fitbank.webpages.data.Reference" table="TSUCURSALES">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="NOT IN('0')" field="CSUCURSAL"/>
+              </dependencies>
+            </item>
+          </references>
+          <fields>
+            <item alias="tsucursales1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1sucursalcri" field="CSUCURSAL"
+              type="CRITERION" visible="false"/>
+            <item alias="tsucursales1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1sucursal" field="CSUCURSAL"
+              title="Código" type="RECORD"/>
+            <item alias="tsucursales1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1sucursalnombre" field="NOMBRE"
+              title="Descripción" type="RECORD"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3sucursalnombre" w="200" z="2">
+        <dataSource alias="TSUC"
+          class="com.fitbank.webpages.data.DataSource" field="NOMBRE" type="RECORD"/>
+        <attribute nom="lon">50</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Pto. Trabajo" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cusuariocompania" w="0" z="3">
+        <dataSource alias="tcompaniausuarios1"
+          class="com.fitbank.webpages.data.DataSource" field="CUSUARIO" type="CRITERION"/>
+        <attribute nom="val">=$user</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2csucursalcompania" w="0" z="3">
+        <dataSource alias="tcompaniausuarios1"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="CRITERION"/>
+        <attribute nom="val">=fnc3codsucursal</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cia_compania" w="0" z="3">
+        <dataSource alias="tcompaniausuarios1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_COMPANIA" type="CRITERION"/>
+        <attribute nom="val">=fnc2cia</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2puntotrabajo" w="95" z="3">
+        <dataSource alias="tcompaniausuarios1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="cln">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2puntotrabajodescripcion" w="200" z="3">
+        <dataSource alias="TPUNTOSTRABAJO"
+          class="com.fitbank.webpages.data.DataSource"
+          field="DESCRIPCION" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPUNTOTRABAJO" fromAlias="tcompaniausuarios1" fromField="CPUNTOTRABAJO"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CSUCURSAL" fromAlias="tcompaniausuarios1" fromField="CSUCURSAL"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA_COMPANIA" fromAlias="tcompaniausuarios1" fromField="CPERSONA_COMPANIA"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">50</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="División" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2tnatcpersona" w="0" z="3">
+        <dataSource alias="tnaturaltrabajo1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERSONA" type="CRITERION"/>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2tnatcia" w="0" z="3">
+        <dataSource alias="tnaturaltrabajo1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_EMPLEADORA" type="CRITERION"/>
+        <attribute nom="val">=fnc2cia</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2coddivision" w="95" z="3">
+        <dataSource alias="tnaturaltrabajo1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CODIGODIVISION" type="RECORD"/>
+        <attribute nom="lon">80</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2desdivision" w="200" z="3">
+        <dataSource alias="TJURIDICODIVISIONES"
+          class="com.fitbank.webpages.data.DataSource" field="NOMBRE" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGODIVISION" fromAlias="tnaturaltrabajo1" fromField="CODIGODIVISION"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tnaturaltrabajo1" fromField="CPERSONA_EMPLEADORA"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2tcpersona" w="0" z="3">
+        <attribute nom="val">=$user</attribute>
+        <attribute nom="lon">8</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tusuarios1"
+              class="com.fitbank.webpages.data.Reference" table="TUSUARIOS"/>
+          </references>
+          <callback class="com.fitbank.js.FuncionJS" valor="c.consultar();">
+            <parametros>
+              <item>registro</item>
+              <item>values</item>
+            </parametros>
+          </callback>
+          <fields>
+            <item alias="tusuarios1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc2tcpersona" field="CUSUARIO" type="RECORD"/>
+            <item alias="tusuarios1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc2cpersona" field="CPERSONA" type="RECORD"/>
+            <item alias="tusuarios1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc2tnatcpersona" field="CPERSONA" type="RECORD"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaHider" formula="=(1==1)"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Departamento" z="4"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2coddepartamento" w="95" z="4">
+        <dataSource alias="tnaturaltrabajo1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CODIGODEPARTAMENTO" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="cln">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2desdepartamento" w="200" z="4">
+        <dataSource alias="TJURIDICODEPARTAMENTOS"
+          class="com.fitbank.webpages.data.DataSource" field="NOMBRE" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGODEPARTAMENTO" fromAlias="tnaturaltrabajo1" fromField="CODIGODEPARTAMENTO"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGODIVISION" fromAlias="tnaturaltrabajo1" fromField="CODIGODIVISION"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tnaturaltrabajo1" fromField="CPERSONA_EMPLEADORA"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Unidad    " z="4"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2codunidad" w="95" z="4">
+        <dataSource alias="tnaturaltrabajo1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CODIGOUNIDAD" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2desunidad" w="200" z="4">
+        <dataSource alias="TJURIDICOUNIDADES"
+          class="com.fitbank.webpages.data.DataSource" field="NOMBRE" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGODIVISION" fromAlias="tnaturaltrabajo1" fromField="CODIGODIVISION"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGOUNIDAD" fromAlias="tnaturaltrabajo1" fromField="CODIGOUNIDAD"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CODIGODEPARTAMENTO" fromAlias="tnaturaltrabajo1" fromField="CODIGODEPARTAMENTO"/>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tnaturaltrabajo1" fromField="CPERSONA_EMPLEADORA"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Solicitado por" z="5"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2cpersona" w="95" z="5">
+        <dataSource alias="tpersona1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERSONA" type="CRITERION"/>
+        <attribute nom="lon">8</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2nombrelegal" w="200" z="5">
+        <dataSource alias="tpersona1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBRELEGAL" type="RECORD"/>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha hora Recp. Tesorería" z="5"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0horatesoreria" w="95" z="5">
+        <attribute nom="jvs">onchange="Validar.ok(c.$('fnc0horatesoreria',0));"</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="cln">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="SHORT_TIME" transportFormat="DATETIME"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0fechatesoreria" w="80" z="5">
+        <attribute nom="jvs">onchange="Validar.ok(c.$('fnc0fechatesoreria',0))"</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="cln">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc0ftesoreria" w="80" x="2" z="5">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FECHATESORERIA" type="CONTROL"/>
+        <attribute nom="req">1</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATETIME" transportFormat="DATETIME"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="(*)" x="2" z="5"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1idioma" w="0" x="2" z="7">
+        <attribute nom="val">=$language</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2codperiodo" w="0">
+        <dataSource alias="tp0"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2codformapago" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="FORMAPAGO" type="CONTROL"/>
+        <attribute nom="val">=fnc1codformapago</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc2valorcero" w="0">
+        <dataSource alias="tdsolicitudpagocuotas1"
+          class="com.fitbank.webpages.data.DataSource" comparator=">"
+          field="SALDOCUOTA" type="CRITERION"/>
+        <attribute nom="val">=0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1fechah" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FECHAH" type="CONTROL"/>
+        <attribute nom="val">=fnc1fechasolicitud</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Label"/>
+    </container>
+    <container clo="T" cssClass="table-group" max="15"
+      title="Facturas pendientes de Pago" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Solicitud" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Proveedor" x="2" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Desde" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Hasta"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Cuota"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Valor"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Saldo"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Pagado"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Autorizar"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.CheckBox"
+        tex="fnc3check" w="30"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3codsolicitudpago" w="140">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3codproveedor" w="80">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3nomproveedor" w="255">
+        <dataSource alias="TPERSONA"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBRELEGAL" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tcuentaspersona1" fromField="CPERSONA"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc3fecha"
+        w="180" x="2">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FSOLICITUDPAGO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3periodo" w="0">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3sucursal" w="0">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc3cuota" w="50">
+        <dataSource alias="tdsolicitudpagocuotas1"
+          class="com.fitbank.webpages.data.DataSource" field="CUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3valorcuota" w="60">
+        <dataSource alias="tdsolicitudpagocuotas1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc3saldo" w="60">
+        <dataSource alias="tdsolicitudpagocuotas1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="SALDOCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3saldoref" w="60">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3pagado" w="60">
+        <dataSource alias="tdsolicitudpagocuotas1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="PAGADOCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3pagadoref" w="60">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3valautoriza" w="70">
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.FooterSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Total Autorizado" x="10"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc3valautorizatotal" w="70">
+        <attribute nom="val">=SUM(fnc3valautoriza)</attribute>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container cssClass="column-group" title="Facturas pendientes de Pago">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Desde"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6fechaD" w="70">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FSOLICITUDPAGOD" type="CONTROL"/>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="  " z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Hasta"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6fechaH" w="70">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          comparator="&lt;=" field="FSOLICITUDPAGOH" type="CONTROL"/>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="buscar" tex="Buscar:" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6numerodocumento" w="140" z="2">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTOB" type="CONTROL"/>
+        <attribute nom="lon">30</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6cuenta_proveedor" w="100" x="2" z="2">
+        <dataSource alias="tcsolicitudpago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="CONTROL"/>
+        <attribute nom="lon">30</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="  " z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Solicitud" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Proveedor" x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Cuenta" w="100" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Tipo Cuenta " x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Banco" w="100" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Forma de Pago" x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Fecha" x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Factura" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Estado" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Cuota" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Valor" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Saldo" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Saldo Ref" z="3">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Pagado" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Pagado Ref" z="3">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Autorizar" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Banco" x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Número de Cuenta" x="2" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="N° Confirmación de Pago" x="1" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="Reporte" x="1" z="3"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.CheckBox" tex="fnc6check">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CHECK" type="RECORD"/>
+        <attribute nom="jvs">onclick="if(c.$('fnc6check',this.registro).checked){c.$('fnc6valautoriza',this.registro).setDisabled(true);c.$('fnc6valautoriza',this.registro).changeValue(c.$('fnc6saldo',this.registro).value);}else{if(c.$V('fnc6saldoref',this.registro)&amp;gt;0){c.$('fnc6saldo',this.registro).changeValue(c.$V('fnc6saldoref',this.registro));}c.$('fnc6valautoriza',this.registro).setDisabled(true);c.$('fnc6valautoriza',this.registro).changeValue('');}"</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6codsolicitudpago" w="140">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6codproveedor" w="100">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6nomproveedor" w="250">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="PROVEEDOR" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6cpersonaprov" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERSONA" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6ccuentaproveedor" w="100">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CCUENTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6tipocuentaprov" w="35">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TIPOCUENTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6desctipocprov" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TIPOCUENTADESC" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6bancoprov" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="BANCO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1codformapago" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CFORMAPAGOCOMPRAS" type="RECORD"/>
+        <attribute nom="jvs">onchange="if(c.$V('fnc1codformapago',this.registro)=='01'){c.$('fnc1codbanco',this.registro).setDisabled(false);c.$('fnc1numcuenta',this.registro).setDisabled(false);}else{c.$('fnc1codbanco',this.registro).setDisabled(true);c.$('fnc1numcuenta',this.registro).setDisabled(true);}"</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tformaspago1"
+              class="com.fitbank.webpages.data.Reference" table="TFORMASPAGOCOMPRAS">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="IN ('01','02','03','07')" field="CFORMAPAGOCOMPRAS"/>
+              </dependencies>
+            </item>
+          </references>
+          <fields>
+            <item alias="tformaspago1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1idioma" field="CIDIOMA" type="CRITERION" visible="false"/>
+            <item alias="tformaspago1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1codformapago" field="CFORMAPAGOCOMPRAS"
+              title="Código" type="RECORD"/>
+            <item alias="tformaspago1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1nomformapago" field="DESCRIPCION" type="RECORD"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1nomformapago" w="200">
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc6desde"
+        w="122" x="2">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="FDESDE" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATETIME"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6periodo" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6sucursal" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6puntotrabajo" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6factura" w="120">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="FACTURA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6estado" w="100">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="DESCRIPCIONESTADO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc6cuota" w="50">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="CUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6valorcuota" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc6saldo" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="SALDOCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6saldoref" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="SALDOREF" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6pagado" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="PAGADOCUOTA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6pagadoref" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource" field="PAGADOREF" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6valautoriza" w="70">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALAUTORIZA" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnccpersona_empresabancaria" w="0">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_EMPRESABANCARIA" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1codbanco" w="78">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCODIGOBANCO" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues" title="Bancos">
+          <references>
+            <item alias="tbancos1"
+              class="com.fitbank.webpages.data.Reference" table="TBANCOS"/>
+          </references>
+          <fields>
+            <item alias="tbancos1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1codbanco" field="CCODIGOBANCO"
+              title="Código" type="RECORD"/>
+            <item alias="tbancos1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1desbanco" field="DESCRIPCION"
+              title="Descripción" type="RECORD"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1desbanco" w="200">
+        <attribute nom="mod">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1numcuenta" w="0" x="2">
+        <dataSource alias="tsolicitudes1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMEROCUENTA" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues" title="Numero de Cuenta">
+          <references>
+            <item alias="tcuentabancos1"
+              class="com.fitbank.webpages.data.Reference" table="TCUENTABANCOS"/>
+          </references>
+          <fields>
+            <item alias="tcuentabancos1" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1numcuenta" field="NUMEROCUENTA"
+              title="Código" type="RECORD"/>
+            <item alias="tcuentabancos1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc2cia" field="CPERSONA_COMPANIA"
+              type="CRITERION" visible="false"/>
+            <item alias="tcuentabancos1"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="fnc1codbanco" field="CCODIGOBANCO"
+              required="true" type="CRITERION" visible="false"/>
+          </fields>
+        </assistant>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1nombrecuenta" w="200">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6numdocp" w="140">
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="fncbotonImprimir1">
+        <attribute nom="jvs">onclick="c.$('fnc4CSucursal',0).changeValue(c.$('fnc3codsucursal',0).value);c.$('fnc4PTrabajo',0).changeValue(c.$('fnc2puntotrabajo',0).value);c.$('fnc4CFechaPago',0).changeValue(c.$('fnc1fechasolicitud',0).value);c.$('fnc4CCuentaBanco',0).changeValue(c.$('fnc1codbanco',this.registro).value);c.$('fnc4DCuentaBanco',0).changeValue(c.$('fnc6bancoprov',this.registro).value);c.$('fnc4CuentaProveedor',0).changeValue(c.$('fnc6ccuentaproveedor',this.registro).value);if(c.$('fnc1codformapago',this.registro).value=='01'){c.$('fnc4DCuentaBanco',0).changeValue(c.$('fnc1desbanco',this.registro).value);c.$('fnc4CuentaProveedor',0).changeValue(c.$('fnc1numcuenta',this.registro).value);}c.$('fnc4CNumeroDocumento',0).changeValue(c.$('fnc6numdocp',this.registro).value);c.$('fnc4CFormaPago',0).changeValue(c.$('fnc1codformapago',this.registro).value);c.$('fnc4CPeriodo',0).changeValue(c.$('fnc4periodo',0).value);c.$('fnc4Observaciones',0).changeValue(c.$('fnc11observaciones',0).value);c.$('c2_botonImprimir',0).click();"</attribute>
+        <attribute nom="dat">Imprimir</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaHider" formula="=fnc6numdocp == ''"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.FooterSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Total Autorizar" x="18"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc6valautorizatotal" w="78">
+        <attribute nom="val">=SUM(fnc6valautoriza)</attribute>
+        <attribute nom="mod">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container cssClass="criterios">
+      <widget class="com.fitbank.webpages.widgets.Button"
+        cssClass="criterios" x="1" y="1">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="REPORT"/>
+        <attribute nom="val">=fnc5nrodoc</attribute>
+        <attribute nom="vis">0</attribute>
+        <attribute nom="dat">Generar Reporte</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report" name="25_AUTORIZACION.pdf"/>
+          <item class="com.fitbank.webpages.behaviors.FormulaHider" formula="=(1==1)"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="btAutorizar">
+        <attribute nom="jvs">onclick="var len=c.$N('fnc6codproveedor').length;var contCheque=0;var contVCheque=0;var contSPI=0;var contVSPI=0;var contInternas=0;var contVInternas=0;var pagoTotal=0;var contTotal=0;for(var k=0;k&amp;lt;len;k++){if(c.$('fnc6codproveedor',k).value!=''&amp;amp;&amp;amp;c.$('fnc6check',k).checked){if(c.$V('fnc6valautoriza',k)&amp;gt;0){if(c.$('fnc1codformapago',k).value=='01'){contCheque=contCheque+1;contVCheque=contVCheque+c.$V('fnc6valautoriza',k);}else if(c.$('fnc1codformapago',k).value=='02'){contInternas=contInternas+1;contVInternas=contVInternas+c.$V('fnc6valautoriza',k);}else if(c.$('fnc1codformapago',k).value=='03'){contSPI=contSPI+1;contVSPI=contVSPI+c.$V('fnc6valautoriza',k);}else if(c.$('fnc1codformapago',k).value=='07'){}}}}pagoTotal=parseFloat(contVInternas+contVSPI+contVCheque).toFixed(2);contTotal=contSPI+contInternas+contCheque;rc=confirm(contTotal+&amp;quot; SOLICITUDES DE PAGO A PROCESAR: &amp;quot;+&amp;quot;\n&amp;quot;+contCheque+&amp;quot;  EMISI\xd3N DE CHEQUE: &amp;quot;+contVCheque+&amp;quot;        &amp;quot;+&amp;quot;\n&amp;quot;+contSPI+&amp;quot;  SPI - TRANSFERENCIAS OTROS BANCOS: &amp;quot;+contVSPI+&amp;quot;\n&amp;quot;+contInternas+&amp;quot;  TRANSFERENCIAS INTERNAS: &amp;quot;+contVInternas+&amp;quot;\n&amp;quot;+&amp;quot;    VALOR TOTAL A AUTORIZAR: &amp;quot;+pagoTotal);if(rc){c.$('fnc1estado2',0).changeValue('1');c.mantener();}"</attribute>
+        <attribute nom="dat">Autorizar</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc1estado2" w="0">
+        <attribute nom="val">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO" type="REPORT"/>
+        <attribute nom="val">=fnc2cperiodo</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUCURSAL" type="REPORT"/>
+        <attribute nom="val">=fnc2codsucursal</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="REPORT"/>
+        <attribute nom="val">=fnc2codpuntotrab</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUENTABANCO" type="REPORT"/>
+        <attribute nom="val">=fnc1ccuenta</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CIDIOMA" type="REPORT"/>
+        <attribute nom="val">=fnc1idioma</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUENTABANCONOM" type="REPORT"/>
+        <attribute nom="val">=fnc1nombrecuenta</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container cssClass="criterios" visible="0">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5puntoTrabajo" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="CONTROL"/>
+        <attribute nom="val">=fnc2puntotrabajo</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5cTipoDocInventario" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="CONTROL"/>
+        <attribute nom="val">=fnc2tipodocinvent</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5cPeriodo" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO" type="CONTROL"/>
+        <attribute nom="val">=fnc2cperiodo</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5nrodoc" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="CONTROL"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5secuencia" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="SECUENCIA" type="CONTROL"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5tablaCab" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="TABLACABECERA" type="CONTROL"/>
+        <attribute nom="val">TCAUTORIZAPAGO</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5tablaDet" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="TABLADETALLE" type="CONTROL"/>
+        <attribute nom="val">TDAUTORIZAPAGO</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc5FormaPago" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FORMAPAGO" type="CONTROL"/>
+        <attribute nom="val">=fnc1codformapago</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="cuenta_debito" w="0">
+        <dataSource alias="tcps0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORTEXTO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="10" visible="0" win="10">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="SGIROTRANSFERENCIAAUTORIZADO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="ESTATUSGIROTRANSFERENCIA"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="CCODIGOORIGENORDENPAGO" x="1"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="CPERSONA_ORDENANTE"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="NOMBREORDENANTE" x="1"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="CCUENTA_DEBITO"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="CTIPOCUENTAORDENPAGO_ORDENANTE"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="MONTO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="CODIGOORDENPAGO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="IDENTIFICACIONBENEFICIARIO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="NOMBRE BENEFICIARIO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="CUENTABANCOBENEFICIARIO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="TIPOCUENTAORDENPAGO"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="table-group" tex="DETALLE"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="MONEDA"/>
+      <widget class="com.fitbank.webpages.widgets.Label" tex="CPERSONA_BANCOBENEFICIARIO"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2solicitud" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="SGIROTRANSFERENCIAAUTORIZADO" type="RECORD"/>
+        <attribute nom="lon">20</attribute>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4estatusGiroTransaferencia" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="ESTATUSGIROTRANSFERENCIA" type="RECORD"/>
+        <attribute nom="lon">3</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="req">0</attribute>
+        <attribute nom="cln">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F2corigen" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCODIGOORIGENORDENPAGO" type="RECORD"/>
+        <attribute nom="lon">2</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="req">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tCodigoOrigenPagos0"
+              class="com.fitbank.webpages.data.Reference" table="TCODIGOSORIGENORDENPAGO"/>
+          </references>
+          <callback class="com.fitbank.js.FuncionJS" valor="c.$('F2cmotivoCodOrdenpago', 0).lv.consultar(0, {soloConsulta: true});">
+            <parametros>
+              <item>registro</item>
+              <item>values</item>
+            </parametros>
+          </callback>
+          <fields>
+            <item alias="tCodigoOrigenPagos0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2corigen" field="CCODIGOORIGENORDENPAGO"
+              title="Código" type="RECORD"/>
+            <item alias="tCodigoOrigenPagos0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2dorigen" field="DESCRIPCION"
+              title="Descripción" type="RECORD"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2ccliente" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_ORDENANTE" type="RECORD"/>
+        <attribute nom="lon">8</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2dcliente" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBREORDENANTE" type="RECORD"/>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="req">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F2cuenta" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_DEBITO" type="RECORD"/>
+        <attribute nom="jvs">onchange="Validar.ok(c.$('F2cuenta'));"</attribute>
+        <attribute nom="lon">19</attribute>
+        <attribute nom="req">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tcuentaspersona2"
+              class="com.fitbank.webpages.data.Reference" table="TCUENTASPERSONA"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.data.Reference" table="TCUENTA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" immediateValue="04"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="NOT IN('90')" field="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CCUENTA" fromAlias="tcuentaspersona2" fromField="CCUENTA"/>
+              </dependencies>
+            </item>
+            <item alias="tproductocaptacionesvista2"
+              class="com.fitbank.webpages.data.Reference"
+              joinType="LEFT_OUTER_JOIN" table="TPRODUCTOCAPTACIONESVISTA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+              </dependencies>
+            </item>
+            <item alias="tpersona2"
+              class="com.fitbank.webpages.data.Reference"
+              joinType="LEFT_OUTER_JOIN" table="TPERSONA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPERSONA" fromAlias="tcuentaspersona2" fromField="CPERSONA"/>
+              </dependencies>
+            </item>
+            <item alias="tp" class="com.fitbank.webpages.data.Reference" table="TPRODUCTO">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPERSONA_COMPANIA" fromAlias="tcuenta2" fromField="CPERSONA_COMPANIA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+              </dependencies>
+            </item>
+            <item alias="TCP"
+              class="com.fitbank.webpages.data.Reference" table="TCOMPANIATRANSACCIONESPRODUCTO">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CESTATUSCUENTA" fromAlias="TCP" immediateValue="002"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CTIPOBANCA" fromAlias="tcuenta2" fromField="CTIPOBANCA"/>
+              </dependencies>
+            </item>
+          </references>
+          <preQuery class="com.fitbank.js.FuncionJS" valor="if(c.$('F2cuenta', 0).value == '') {&#xa;  c.$('auxTitular', 0).changeValue('');&#xa;} else {&#xa;  c.$('auxTitular', 0).changeValue('TIT');&#xa;}">
+            <parametros>
+              <item>registro</item>
+            </parametros>
+          </preQuery>
+          <fields>
+            <item alias="tcuenta2" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuenta" field="CCUENTA" title="Cuenta" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuentanombre" field="NOMBRECUENTA"
+              title="Nombre De La Cuenta" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuentamoneda" field="CMONEDA" keep="true"
+              title="Moneda" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4subsistema" field="CSUBSISTEMA" type="CRITERION"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA_CLIENTE"
+              type="CRITERION" visible="false"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2tipocordenante" field="CGRUPOPRODUCTO"
+              type="RECORD" visible="false"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA_CLIENTE"
+              keep="true" type="RECORD" visible="false"/>
+            <item alias="tcuentaspersona2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              comparator="IN" elementName="auxTitular"
+              field="CRELACIONPRODUCTO" type="CRITERION"/>
+            <item alias="TCP"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4subsistema" field="CSUBSISTEMA_TRANSACCION" type="CRITERION"/>
+            <item alias="TCP"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4transaccion" field="CTRANSACCION" type="CRITERION"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F2cuentacredito" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_CREDITO" type="RECORD"/>
+        <attribute nom="jvs">onchange="Validar.ok(c.$('F2cuenta'));"</attribute>
+        <attribute nom="lon">19</attribute>
+        <attribute nom="req">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tcuentaspersona2"
+              class="com.fitbank.webpages.data.Reference" table="TCUENTASPERSONA"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.data.Reference" table="TCUENTA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" immediateValue="04"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="NOT IN('90')" field="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CCUENTA" fromAlias="tcuentaspersona2" fromField="CCUENTA"/>
+              </dependencies>
+            </item>
+            <item alias="tproductocaptacionesvista2"
+              class="com.fitbank.webpages.data.Reference"
+              joinType="LEFT_OUTER_JOIN" table="TPRODUCTOCAPTACIONESVISTA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+              </dependencies>
+            </item>
+            <item alias="tpersona2"
+              class="com.fitbank.webpages.data.Reference"
+              joinType="LEFT_OUTER_JOIN" table="TPERSONA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPERSONA" fromAlias="tcuentaspersona2" fromField="CPERSONA"/>
+              </dependencies>
+            </item>
+            <item alias="tp" class="com.fitbank.webpages.data.Reference" table="TPRODUCTO">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPERSONA_COMPANIA" fromAlias="tcuenta2" fromField="CPERSONA_COMPANIA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+              </dependencies>
+            </item>
+            <item alias="TCP"
+              class="com.fitbank.webpages.data.Reference" table="TCOMPANIATRANSACCIONESPRODUCTO">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CESTATUSCUENTA" fromAlias="TCP" immediateValue="002"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPRODUCTO" fromAlias="tcuenta2" fromField="CPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CGRUPOPRODUCTO" fromAlias="tcuenta2" fromField="CGRUPOPRODUCTO"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CSUBSISTEMA" fromAlias="tcuenta2" fromField="CSUBSISTEMA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CTIPOBANCA" fromAlias="tcuenta2" fromField="CTIPOBANCA"/>
+              </dependencies>
+            </item>
+          </references>
+          <preQuery class="com.fitbank.js.FuncionJS" valor="if(c.$('F2cuenta', 0).value == '') {&#xa;  c.$('auxTitular', 0).changeValue('');&#xa;} else {&#xa;  c.$('auxTitular', 0).changeValue('TIT');&#xa;}">
+            <parametros>
+              <item>registro</item>
+            </parametros>
+          </preQuery>
+          <fields>
+            <item alias="tcuenta2" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuenta" field="CCUENTA" title="Cuenta" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuentanombre" field="NOMBRECUENTA"
+              title="Nombre De La Cuenta" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cuentamoneda" field="CMONEDA" keep="true"
+              title="Moneda" type="RECORD"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4subsistema" field="CSUBSISTEMA" type="CRITERION"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA_CLIENTE"
+              type="CRITERION" visible="false"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2tipocordenante" field="CGRUPOPRODUCTO"
+              type="RECORD" visible="false"/>
+            <item alias="tcuenta2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA_CLIENTE"
+              keep="true" type="RECORD" visible="false"/>
+            <item alias="tcuentaspersona2"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              comparator="IN" elementName="auxTitular"
+              field="CRELACIONPRODUCTO" type="CRITERION"/>
+            <item alias="TCP"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4subsistema" field="CSUBSISTEMA_TRANSACCION" type="CRITERION"/>
+            <item alias="TCP"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F4transaccion" field="CTRANSACCION" type="CRITERION"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2tipocordenante" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPOCUENTAORDENPAGO_ORDENANTE" type="RECORD"/>
+        <attribute nom="lon">2</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F2valor" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="MONTO" type="RECORD"/>
+        <attribute nom="jvs">onchange="Validar.ok(c.$('F2cuenta'));if(c.$('F2cuenta').value!=&amp;quot;&amp;quot;){c.$('F2valor').lv.consultar(this.registro,{soloConsulta:true},'change');}else{Validar.error(c.$('F2cuenta'),&amp;quot;Ingresar Cuenta D&amp;eacute;bito&amp;quot;);c.$(&amp;quot;F2valor&amp;quot;).changeValue('');}"</attribute>
+        <attribute nom="lon">13</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues"
+          head="false" transaction="0041" visible="false">
+          <references>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.data.Reference" table="TCONSULTAREPORTEPARAMETROS"/>
+          </references>
+          <fields>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2comision" field="PARAMETRO1" type="RECORD" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F6iva1" field="PARAMETRO17" type="RECORD" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param1" field="PARAMETRO10" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param2" field="PARAMETRO11" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param3" field="PARAMETRO12" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param4" field="PARAMETRO13" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param5" field="PARAMETRO14" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param6" field="PARAMETRO15" type="CRITERION" visible="false"/>
+            <item alias="tconsultaReporteParame0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="Param7" field="PARAMETRO16" type="CRITERION" visible="false"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F2cmotivoCodOrdenpago" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CODIGOORDENPAGO" type="RECORD"/>
+        <attribute nom="lon">2</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="vcodigosordenpago0"
+              class="com.fitbank.webpages.data.Reference" table="VCODIGOSORDENPAGO"/>
+          </references>
+          <fields>
+            <item alias="vcodigosordenpago0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cmotivoCodOrdenpago"
+              field="CODIGOORDENPAGO" title="Orden Pago" type="RECORD"/>
+            <item alias="vcodigosordenpago0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2cmotivo" field="CCONCEPTO" title="Concepto" type="RECORD"/>
+            <item alias="vcodigosordenpago0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2dmotivo" field="DESCRIPCION"
+              title="Descripción" type="RECORD"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F3identificacionBeneficiario" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="IDENTIFICACIONBENEFICIARIO" type="RECORD"/>
+        <attribute nom="lon">19</attribute>
+        <attribute nom="req">1</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-left" tex="F3nombreBeneficiario" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBREBENEFICIARIO" type="RECORD"/>
+        <attribute nom="lon">100</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F3cuentaBeneficiario" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CUENTABANCONEBEFICIARIO" type="RECORD"/>
+        <attribute nom="lon">35</attribute>
+        <attribute nom="req">1</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F3caplicacion" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPOCUENTAORDENPAGO" type="RECORD"/>
+        <attribute nom="lon">2</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="ttipcuentpago0"
+              class="com.fitbank.webpages.data.Reference" table="TTIPOSCUENTAORDENPAGO"/>
+          </references>
+          <fields>
+            <item alias="ttipcuentpago0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F3caplicacion" field="CTIPOCUENTAORDENPAGO" type="RECORD"/>
+            <item alias="ttipcuentpago0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F3daplicacion" field="DESCRIPCION" type="RECORD"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F3observaciones" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="DETALLE" type="RECORD"/>
+        <attribute nom="lon">200</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2cuentamoneda" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="CMONEDA" type="RECORD"/>
+        <attribute nom="lon">3</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2cpersona_bancobeneficiario" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_BANCOBENEFICIARIO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2cuentabce" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CUENTABANCOORDENANTEBCE" type="RECORD"/>
+        <attribute nom="lon">35</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F2cmotivo" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="CCONCEPTO" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F4TipTran" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TIPOTRANSFERENCIA" type="RECORD"/>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="cln">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" h="1"
+        tex="F4subsistema" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CSUBSISTEMA" type="RECORD"/>
+        <attribute nom="val">=$subsystem</attribute>
+        <attribute nom="lon">2</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4transaccion" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTRANSACCION" type="RECORD"/>
+        <attribute nom="val">=$transaction</attribute>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F4version" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VERSIONTRANSACCION" type="RECORD"/>
+        <attribute nom="val">=$version</attribute>
+        <attribute nom="lon">2</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F4oficina" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="COFICINA" type="RECORD"/>
+        <attribute nom="val">=$originOffice</attribute>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4sucursal" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="RECORD"/>
+        <attribute nom="val">=$originBranch</attribute>
+        <attribute nom="lon">4</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4cpersonaCompaniDebito" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_COMPANIADEBITO" type="RECORD"/>
+        <attribute nom="val">=$company</attribute>
+        <attribute nom="lon">8</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4cpersonaCompania" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_COMPANIA" type="RECORD"/>
+        <attribute nom="val">=$company</attribute>
+        <attribute nom="lon">8</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4cusuario" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource" field="CUSUARIO" type="RECORD"/>
+        <attribute nom="val">=$user</attribute>
+        <attribute nom="lon">12</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F4numdocumento" w="0">
+        <dataSource alias="tgirosTauto0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="lon">12</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F1fecha" w="0">
+        <attribute nom="val">=$accountingDate</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            fireAlways="true" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2comisionRubro" w="0">
+        <attribute nom="val">1</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2comision" w="80">
+        <attribute nom="val">0</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2cuentanombre" w="200">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F2dmotivo" w="200">
+        <attribute nom="lon">2</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F3bancoBeneficiarioDescripcion" w="50">
+        <attribute nom="lon">100</attribute>
+        <attribute nom="req">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tjuriinformacionbasica0"
+              class="com.fitbank.webpages.data.Reference" table="TJURIDICOINFORMACIONBASICA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  field="CPERSONA" fromAlias="vperintfinan0" fromField="CPERSONA"/>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="is not null" field="CUENTABANCOINSTITUCION"/>
+              </dependencies>
+            </item>
+            <item alias="vperintfinan0"
+              class="com.fitbank.webpages.data.Reference" table="VPERSONASINSTITUCIONFINANCIERA"/>
+          </references>
+          <fields>
+            <item alias="tjuriinformacionbasica0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F3bancoBeneficiarioDescripcion"
+              field="CUENTABANCOINSTITUCION" title="Cuenta BCE" type="RECORD"/>
+            <item alias="vperintfinan0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F3bancoBeneficiarioNombre"
+              field="NOMBRELEGAL" title="Nombre Legal" type="RECORD"/>
+            <item alias="vperintfinan0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F3bancoBeneficiarioCpersona" field="CPERSONA"
+              type="RECORD" visible="false"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F3bancoBeneficiarioNombre" w="200">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F3daplicacion" w="200">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F4cadena" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2dinstitucion" w="200">
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F4cadena1" w="0">
+        <attribute nom="val">=$channel</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F2ctipopersona" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="auxTitular" w="0">
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        cssClass="text-align-right" tex="F2icliente" w="50">
+        <dataSource alias="TPERSONA"
+          class="com.fitbank.webpages.data.DataSource"
+          field="IDENTIFICACION" type="DESCRIPTION">
+          <dependencies>
+            <item class="com.fitbank.webpages.data.Dependency"
+              field="CPERSONA" fromAlias="tgirosTauto0" fromField="CPERSONA_ORDENANTE"/>
+          </dependencies>
+        </dataSource>
+        <attribute nom="lon">19</attribute>
+        <attribute nom="mod">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues">
+          <references>
+            <item alias="tpersona0"
+              class="com.fitbank.webpages.data.Reference" table="TPERSONA">
+              <dependencies>
+                <item class="com.fitbank.webpages.data.Dependency"
+                  comparator="=2" field="CPERSONA"/>
+              </dependencies>
+            </item>
+          </references>
+          <fields>
+            <item alias="tpersona0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2icliente" field="IDENTIFICACION"
+              title="Identificación" type="RECORD"/>
+            <item alias="tpersona0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2dcliente" field="NOMBRELEGAL"
+              title="Nombre Legal" type="RECORD"/>
+            <item alias="tpersona0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ctipopersona" field="CTIPOPERSONA"
+              type="RECORD" visible="false"/>
+            <item alias="tpersona0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA" keep="true"
+              type="RECORD" visible="false"/>
+            <item alias="tpersona0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F2ccliente" field="CPERSONA" type="CRITERION"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param1" w="0">
+        <attribute nom="val">=F4subsistema</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param2" w="0">
+        <attribute nom="val">=F4transaccion</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param3" w="0">
+        <attribute nom="val">=F4version</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param4" w="0">
+        <attribute nom="val">=F4cadena1</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param5" w="0">
+        <attribute nom="val">=F2cuenta</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param6" w="0">
+        <attribute nom="val">=F2comisionRubro</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="Param7" w="0">
+        <attribute nom="val">=F2valor</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F6cargo1" w="0">
+        <attribute nom="val">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F6iva1" w="0">
+        <attribute nom="val">0</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc9codformapago" w="70">
+        <dataSource alias="tautorizaciones1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CFORMAPAGOCOMPRAS" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc9cuentasproveedores" w="0">
+        <dataSource alias="tautorizaciones1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTAS_PROVEEDORES" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource alias="tautorizaciones1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="RECORD"/>
+        <attribute nom="val">='AP'</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="0">
+        <dataSource alias="tautorizaciones1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="val">=fnc2puntotrabajo</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" w="34" z="2">
+        <dataSource alias="tautorizaciones1"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="RECORD"/>
+        <attribute nom="val">=fnc3codsucursal</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label" cssClass="table-group"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4cpersona_compania" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_COMPANIA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4periodo" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERIODO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4numdoc" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4periodo_solicitud" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO_SOLICITUD" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4codsolicitudpago" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO_SOLICITUD" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc4cuota" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="CUOTA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4valautoriza" w="0">
+        <dataSource alias="tdautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="VALOR" type="RECORD"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label" cssClass="table-group"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10observaciones" w="670" x="5" z="9">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="OBSERVACIONES" type="RECORD"/>
+        <attribute nom="lon">200</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="fnc2cia" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERSONA_COMPANIA" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10codsucursal" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="CSUCURSAL" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10codpuntotrab" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10tipodocinvent" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="CRITERION"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10codbanco" w="78" z="7">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCODIGOBANCO" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10numcuenta" w="0" x="2" z="7">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMEROCUENTA" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10fechasolicitud" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="FAUTORIZAPAGO" type="RECORD"/>
+        <attribute nom="cln">0</attribute>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10usuario" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource" field="CUSUARIO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10estatussolicitud" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CESTATUSDOCUMENTO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc10totalautorizado" w="0">
+        <dataSource alias="tcautorizapago1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="TOTALAUTORIZACION" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label" cssClass="table-group"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11codformapago" w="70">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CFORMAPAGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11tipodocinvent" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11codpuntotrab" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11observaciones" w="670" x="5" z="9">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="OBSERVACIONES" type="RECORD"/>
+        <attribute nom="lon">200</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11codbanco" w="78" z="7">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCODIGOBANCO" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11numcuenta" w="0" x="2" z="7">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMEROCUENTA" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11codsolicitudpago" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="SOLICITUDPAGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11periodo_solicitud" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="PERIODOSOLICITUD" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11totalautorizado" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource" field="TOTALAUT" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11proveedor" w="0">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource" field="CPROV" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc11numdocp" w="140">
+        <dataSource alias="tpagos1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTOCP" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" cssClass="table-group" max="15" visible="0" win="15">
+      <widget class="com.fitbank.webpages.widgets.Label" cssClass="table-group"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12tipodocinvent" w="0">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CTIPODOCUMENTOINVENTARIO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12codpuntotrab" w="0">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12numcuenta" w="0" x="2" z="7">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMEROCUENTA" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12numdocp" w="140">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12codbanco" w="78" z="7">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCODIGOBANCO" type="RECORD"/>
+        <attribute nom="req">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12codproveedor" w="100">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CCUENTA_PROVEEDOR" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12periodo" w="0">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO_PAGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12numdocpago" w="140">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NUMERODOCUMENTO_PAGO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12observaciones" w="670" x="5" z="9">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="OBSERVACIONES" type="RECORD"/>
+        <attribute nom="lon">200</attribute>
+        <attribute nom="req">1</attribute>
+        <attribute nom="vis">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.LongText"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12totalautorizado" w="0">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORCHEQUE" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc12documentocheque" w="140">
+        <dataSource alias="tcheques1"
+          class="com.fitbank.webpages.data.DataSource" field="DOCUMENTO" type="RECORD"/>
+        <attribute nom="mod">0</attribute>
+      </widget>
+    </container>
+    <container clo="T" h="8" max="200" tab="19" visible="0" win="200">
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CODIGO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CODIGO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="DOCUMENTO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="DOCUMENTO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CUENTA" w="136">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CUENTA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="COMPANIA">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="COMPANIA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="SUBCUENTA">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="SUBCUENTA" type="RECORD"/>
+        <attribute nom="val">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="MONEDACUENTA" w="136">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="MONEDACUENTA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CODIGOCONTABLE">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CODIGOCONTABLE" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="SUCURSALDESTINO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="SUCURSALDESTINO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="OFICINADESTINO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="OFICINADESTINO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="MONEDAORIGINAL">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="MONEDAORIGINAL" type="RECORD"/>
+        <attribute nom="val">=$currency</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="VALOR" w="106">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="VALOR" type="RECORD"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0.00"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CONCEPTO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CONCEPTO" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="DESCRIPCION" w="136">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="DESCRIPCION" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="FECHAVENCIMIENTO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="FECHAVENCIMIENTO" type="RECORD"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="MISMORUBRO">
+        <dataSource alias="ITEMSFINANCIERO"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="MISMORUBRO" type="RECORD"/>
+        <attribute nom="val">1</attribute>
+      </widget>
+    </container>
+    <container visible="0">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4Subsistema" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUBSISTEMA" type="REPORT"/>
+        <attribute nom="val">=$subsystem</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4Transaccion" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTRANSACCION" type="REPORT"/>
+        <attribute nom="val">=$transaction</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CUsuario" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUSUARIO" type="REPORT"/>
+        <attribute nom="val">=$user</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4TituloReporte" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="TITLE" type="REPORT"/>
+        <attribute nom="val">='PAGO A PROVEEDORES'</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CSucursal" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CSUCURSAL" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4PTrabajo" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPUNTOTRABAJO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CFechaPago" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CFECHAPAGO" type="REPORT"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter"
+            format="DATE" transportFormat="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CCuentaBanco" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CBANCO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4DCuentaBanco" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="DBANCO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CNumeroDocumento" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CNUMERODOCUMENTO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CFormaPago" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CFORMAPAGO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CPeriodo" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CPERIODO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4Observaciones" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="OBSERVACIONES" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="fnc4CuentaProveedor" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUENTAPRO" type="REPORT"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="c2_botonImprimir">
+        <attribute nom="vis">0</attribute>
+        <attribute nom="dat">Imprimir</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report"
+            downloadName="25_PAGOPROVEEDORES.pdf" name="25_PAGOPROVEEDORES.pdf"/>
+        </behaviors>
+      </widget>
+    </container>
+  </containers>
+</webPage>
