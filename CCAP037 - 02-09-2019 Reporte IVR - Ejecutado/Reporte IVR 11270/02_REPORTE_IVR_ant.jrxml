@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="02_REPORTE_IVR" printOrder="Horizontal" pageWidth="1368" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1330" leftMargin="19" rightMargin="19" topMargin="20" bottomMargin="20" uuid="52005988-2693-4eee-b816-ed5b552621e8">
+	<property name="ireport.scriptlethandling" value="2"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0717944050000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<style name="IVR" forecolor="#000000" backcolor="#000000" fill="Solid" scaleImage="Clip" hAlign="Center" vAlign="Middle" markup="styled" isBlankWhenNull="false" fontName="SansSerif" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5" lineColor="#000000"/>
+		<box>
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0"/>
+			<leftPen lineWidth="1.0"/>
+			<bottomPen lineWidth="1.0"/>
+			<rightPen lineWidth="1.0"/>
+		</box>
+	</style>
+	<style name="IVR_1" forecolor="#000000" backcolor="#000000" fill="Solid" scaleImage="Clip" hAlign="Left" vAlign="Middle" markup="styled" isBlankWhenNull="false" fontName="SansSerif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<pen lineWidth="0.5" lineColor="#000000"/>
+		<box>
+			<pen lineWidth="1.0"/>
+			<topPen lineWidth="1.0"/>
+			<leftPen lineWidth="1.0"/>
+			<bottomPen lineWidth="1.0"/>
+			<rightPen lineWidth="1.0"/>
+		</box>
+	</style>
+	<parameter name="FECHAD" class="java.sql.Timestamp"/>
+	<parameter name="FECHAH" class="java.sql.Timestamp"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select  * from (select i.wiso_002_pan as CEDULA,
+b.ivr_nombres as NOMBRES,
+p.proccodedescription as TRANSACCION, p.proccodedesshort from FITSWITCHN.iso8583 i, FITSWITCHN.proccode_table p, FITSWITCHN.ivr_switch b
+where i.wiso_003_processingcode = p.proccode
+and i.wiso_002_pan = b.ivr_identificacion
+and i.wiso_003_processingcode not in ('360002','905000','312000','323005','321009','331009')
+and i.wiso_039p_responsedetail not like '%NO SE PUDO TENER CONEXION%REST PROSUPPLY%'
+and TRUNC(i.wiso_012_localdatetime) >=$P{FECHAD}
+and TRUNC(i.wiso_012_localdatetime) <=$P{FECHAH}
+group by p.proccode,P.PROCCODEDESSHORT,i.wiso_002_pan, i.WISO_012_LOCALDATETIME, b.ivr_nombres, p.proccodedescription)
+pivot (count(TRANSACCION) for proccodedesshort in (
+'CONINV' as CONSULTA_INVERSIONES_IVR,
+'MANWEB' as MANTENIMIENTO_WEB_BANKING,
+'SNDSMS' as ENVIO_NOTIFICACION_SMS,
+'SNDEML' as ENVIO_NOTIFICACION_MAIL,
+'PREENR' as PRE_ENROLAMIENTO_IVR,
+'ERLIVR' as ENROLAMIENTO_USUARIO_IVR,
+'PRGDS1' as PREGUNTA_IVR_DESAFIO_1,
+'PRGDS2' as PREGUNTA_IVR_DESAFIO_2,
+'PRGDS3' as PREGUNTA_IVR_DESAFIO_3,
+'PRGDS4' as PREGUNTA_IVR_DESAFIO_4,
+'PRGDS5' as PREGUNTA_IVR_DESAFIO_5,
+'PRGDS6' as PREGUNTA_IVR_DESAFIO_6,
+'PRGDS7' as PREGUNTA_IVR_DESAFIO_7,
+'MANVIS' as MANTE_CUENTAS_VISTA_IVR,
+'CONCLI' as CONSULTA_NOMBRES_CLIENTE,
+'ENBIMO' as ENROLAMIENTO_CUENTA_BIMO,
+'MNBIMO' as MANTENIMIENTO_BILLETERA,
+'CIBIMO' as CONSULTA_INTERNA_BIMO,
+'SLCIVR' as SOLIC_PREGUN_DESAFIO_IVR,
+'GENOTP' as GENERACION_CODIGO_OTP,
+'CONAHO' as CONSULTA_CUENTA_AHORROS,
+'VALOTP' as VALIDACION_OTP,
+'LOGIVR' as LOGIN_USUARIO_IVR,
+'CHPIVR' as CAMBIO_DE_PIN_IVR,
+'OLCIVR' as OLVIDO_DE_CLAVE_IVR,
+'NOTIVR' as NOTI_EVALUA_DESAFIOS_IVR,
+'BLQTDD' as BLOQUEO_DE_TARJETA_DEBITO))
+ORDER BY NOMBRES]]>
+	</queryString>
+	<field name="CEDULA" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="CONSULTA_INVERSIONES_IVR" class="java.math.BigDecimal"/>
+	<field name="MANTENIMIENTO_WEB_BANKING" class="java.math.BigDecimal"/>
+	<field name="ENVIO_NOTIFICACION_SMS" class="java.math.BigDecimal"/>
+	<field name="ENVIO_NOTIFICACION_MAIL" class="java.math.BigDecimal"/>
+	<field name="PRE_ENROLAMIENTO_IVR" class="java.math.BigDecimal"/>
+	<field name="ENROLAMIENTO_USUARIO_IVR" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_1" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_2" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_3" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_4" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_5" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_6" class="java.math.BigDecimal"/>
+	<field name="PREGUNTA_IVR_DESAFIO_7" class="java.math.BigDecimal"/>
+	<field name="MANTE_CUENTAS_VISTA_IVR" class="java.math.BigDecimal"/>
+	<field name="CONSULTA_NOMBRES_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="ENROLAMIENTO_CUENTA_BIMO" class="java.math.BigDecimal"/>
+	<field name="MANTENIMIENTO_BILLETERA" class="java.math.BigDecimal"/>
+	<field name="CONSULTA_INTERNA_BIMO" class="java.math.BigDecimal"/>
+	<field name="SOLIC_PREGUN_DESAFIO_IVR" class="java.math.BigDecimal"/>
+	<field name="GENERACION_CODIGO_OTP" class="java.math.BigDecimal"/>
+	<field name="CONSULTA_CUENTA_AHORROS" class="java.math.BigDecimal"/>
+	<field name="VALIDACION_OTP" class="java.math.BigDecimal"/>
+	<field name="LOGIN_USUARIO_IVR" class="java.math.BigDecimal"/>
+	<field name="CAMBIO_DE_PIN_IVR" class="java.math.BigDecimal"/>
+	<field name="OLVIDO_DE_CLAVE_IVR" class="java.math.BigDecimal"/>
+	<field name="NOTI_EVALUA_DESAFIOS_IVR" class="java.math.BigDecimal"/>
+	<field name="BLOQUEO_DE_TARJETA_DEBITO" class="java.math.BigDecimal"/>
+	<variable name="V1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_INVERSIONES_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTENIMIENTO_WEB_BANKING}]]></variableExpression>
+	</variable>
+	<variable name="V3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENVIO_NOTIFICACION_SMS}]]></variableExpression>
+	</variable>
+	<variable name="V4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENVIO_NOTIFICACION_MAIL}]]></variableExpression>
+	</variable>
+	<variable name="V5" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PRE_ENROLAMIENTO_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V6" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENROLAMIENTO_USUARIO_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V7" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_1}]]></variableExpression>
+	</variable>
+	<variable name="V8" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_2}]]></variableExpression>
+	</variable>
+	<variable name="V9" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_3}]]></variableExpression>
+	</variable>
+	<variable name="V10" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_4}]]></variableExpression>
+	</variable>
+	<variable name="V11" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_5}]]></variableExpression>
+	</variable>
+	<variable name="V12" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_6}]]></variableExpression>
+	</variable>
+	<variable name="V13" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_7}]]></variableExpression>
+	</variable>
+	<variable name="V14" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTE_CUENTAS_VISTA_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V15" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_NOMBRES_CLIENTE}]]></variableExpression>
+	</variable>
+	<variable name="V16" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENROLAMIENTO_CUENTA_BIMO}]]></variableExpression>
+	</variable>
+	<variable name="V17" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTENIMIENTO_BILLETERA}]]></variableExpression>
+	</variable>
+	<variable name="V18" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_INTERNA_BIMO}]]></variableExpression>
+	</variable>
+	<variable name="V19" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SOLIC_PREGUN_DESAFIO_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V20" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GENERACION_CODIGO_OTP}]]></variableExpression>
+	</variable>
+	<variable name="V21" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_CUENTA_AHORROS}]]></variableExpression>
+	</variable>
+	<variable name="V22" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VALIDACION_OTP}]]></variableExpression>
+	</variable>
+	<variable name="V23" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{LOGIN_USUARIO_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V24" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CAMBIO_DE_PIN_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V25" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{OLVIDO_DE_CLAVE_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V26" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOTI_EVALUA_DESAFIOS_IVR}]]></variableExpression>
+	</variable>
+	<variable name="V27" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{BLOQUEO_DE_TARJETA_DEBITO}]]></variableExpression>
+	</variable>
+	<variable name="V1_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_INVERSIONES_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V2_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTENIMIENTO_WEB_BANKING}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V3_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENVIO_NOTIFICACION_SMS}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V4_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENVIO_NOTIFICACION_MAIL}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V5_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PRE_ENROLAMIENTO_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V6_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENROLAMIENTO_USUARIO_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V7_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_1}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V8_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_2}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V9_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_3}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V10_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_4}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V11_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_5}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V12_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_6}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V13_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_7}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V14_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTE_CUENTAS_VISTA_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V15_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_NOMBRES_CLIENTE}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V16_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ENROLAMIENTO_CUENTA_BIMO}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V17_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MANTENIMIENTO_BILLETERA}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V18_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_INTERNA_BIMO}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V19_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{SOLIC_PREGUN_DESAFIO_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V20_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{GENERACION_CODIGO_OTP}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V21_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONSULTA_CUENTA_AHORROS}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V22_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VALIDACION_OTP}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V23_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{LOGIN_USUARIO_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V24_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CAMBIO_DE_PIN_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V25_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{OLVIDO_DE_CLAVE_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V26_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{NOTI_EVALUA_DESAFIOS_IVR}.signum()]]></variableExpression>
+	</variable>
+	<variable name="V27_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{BLOQUEO_DE_TARJETA_DEBITO}.signum()]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="116" splitType="Stretch">
+			<staticText>
+				<reportElement x="408" y="36" width="120" height="20" uuid="2305c157-8011-402b-923e-4d4b330476ad"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha desde: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="56" width="120" height="20" uuid="c46bfe25-b783-48e0-82d3-5026c008a92c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha hasta: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="528" y="56" width="120" height="20" uuid="3190140f-520d-41f5-97a1-ba9e24f2656a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy/MM/dd").format($P{FECHAH})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="528" y="36" width="120" height="20" uuid="d82f3193-a4d4-474e-a9a2-be1b9340d674"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy/MM/dd").format($P{FECHAD})]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.000000" isBlankWhenNull="true">
+				<reportElement x="528" y="76" width="120" height="20" uuid="1c3641ff-1b1f-4c8f-9c05-f7412d7085c2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CUSUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="408" y="76" width="120" height="20" uuid="801c963d-ed39-40bd-bcf0-d2e99dad8478"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="96" width="120" height="20" uuid="56ca5925-b992-4f1c-a5c6-28f306e3b9d3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Generación:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="528" y="96" width="120" height="20" uuid="176a3f4e-ce52-4132-9da9-7d2ad4297278"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="488" y="-1" width="480" height="37" uuid="bef6880e-b8e5-40f2-a9ed-fb1860ef4f2f"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE TRANSACCIONALIDAD DE IVR]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="1" width="408" height="115" uuid="190c889a-3ade-4877-9acd-524752d8fda7"/>
+				<imageExpression><![CDATA["https://www.29deoctubre.fin.ec/wp-content/uploads/2016/04/la_29_logo-1.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement style="IVR" x="368" y="0" width="40" height="72" uuid="9a6c3020-6a70-4a2e-81b7-f830c550fcc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[CONSULTA INVERSIONES IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="408" y="0" width="40" height="72" uuid="6aed1be4-e2f4-4b71-a585-ae5ed7b0f33f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[MANTENIMIENTO USUARIOS WEB BANKING]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="448" y="0" width="40" height="72" uuid="9ef99753-f1a9-4a27-a799-c8d52a6b086b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[ENVIO NOTIFICACION SMS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="488" y="0" width="40" height="72" uuid="9b1df373-58ab-420e-838b-4c818d9b8338"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[ENVIO NOTIFICACION MAIL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="528" y="0" width="40" height="72" uuid="064e270f-f627-4672-9a27-fb02910343fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PRE-ENROLAMIENTO IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="568" y="0" width="40" height="72" uuid="47e0b430-ac49-4219-950f-f8a4eebc4fef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[ENROLAMIENTO USUARIO IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="608" y="0" width="40" height="72" uuid="6bce3c28-106e-49a2-89a0-23e4cf425955"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="648" y="0" width="40" height="72" uuid="355eaa45-b470-4bba-bfc6-64e4c28d0c28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="688" y="0" width="40" height="72" uuid="de0a12d6-b2f8-4f8a-b086-fd12e5c26e8e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="728" y="0" width="40" height="72" uuid="cdd9fbd3-4e6f-4631-a351-57fb034d2a49"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="768" y="0" width="40" height="72" uuid="79d4936c-e22e-4fe8-a492-f92e0fbe0783"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="808" y="0" width="40" height="72" uuid="9fccae50-fb6d-4fa6-872e-d237f45e3189"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="848" y="0" width="40" height="72" uuid="77d046ea-3648-4d99-948d-558165b52cce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[PREGUNTA IVR DESAFIO 7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="888" y="0" width="40" height="72" uuid="a143e888-a3ae-4daf-b35d-afe8bec53d17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[MANTENIMIETNO DE CUENTAS VISTA IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="928" y="0" width="40" height="72" uuid="a284aa25-87cc-45f3-931a-8481de03d3fc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[CONSULTA NOMBRES CLIENTE DOCUMENTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="968" y="0" width="40" height="72" uuid="85893165-ce3a-4db6-addc-504ac111d8f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[SOLICITUD PREGUNTAS DESAFIO IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1008" y="0" width="40" height="72" uuid="ac83a117-9cf9-4d7b-b215-156f06f440be"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[GENERACION CODIGO OTP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1048" y="0" width="40" height="72" uuid="0e83b43b-d4c7-4441-9036-85bf530481c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[CONSULTA CUENTA AHORROS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1088" y="0" width="40" height="72" uuid="2499f532-170c-4288-b597-096a1f507e05"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[VALIDACION OTP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1128" y="0" width="40" height="72" uuid="5c9e62f2-16e9-407a-ae55-873238f6e69f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[LOGIN USUARIO IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1168" y="0" width="40" height="72" uuid="4170ca16-5aa0-4b66-8d63-3d70b011a90e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[CAMBIO DE PIN IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1208" y="0" width="40" height="72" uuid="6e83abce-5a22-49dc-8529-82f4501e0998"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[OLVIDO DE CLAVE IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1248" y="0" width="40" height="72" uuid="c49524c6-84fe-43d4-b613-5991951d776b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[NOTIFICAIÓN DE EVALUACION DE DESAFIOS IVR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="1288" y="0" width="40" height="72" uuid="132c14b4-0f27-4fca-9f15-d0c863bfbb90"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left"/>
+				<text><![CDATA[BLOQUEO DE TARJETA DEBITO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="0" y="0" width="125" height="72" uuid="0a9a7924-335a-4404-9aa7-ed1a6f3100c4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÉDULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="IVR" x="125" y="0" width="243" height="72" uuid="680a9f5e-b294-40f0-8d76-88b169925892"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement style="IVR_1" x="125" y="0" width="243" height="22" uuid="3371b620-bfc5-4f11-9beb-9bebbea40dbd"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="368" y="0" width="40" height="22" uuid="25457987-ad0e-4e35-ad59-d6d3b4fed9b8"/>
+				<textFieldExpression><![CDATA[$F{CONSULTA_INVERSIONES_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="408" y="0" width="40" height="22" uuid="5250c79d-e3aa-40c0-92a9-c9f9ebed9d2e"/>
+				<textFieldExpression><![CDATA[$F{MANTENIMIENTO_WEB_BANKING}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="448" y="0" width="40" height="22" uuid="e9853867-4534-465d-893e-de5f683a6a08"/>
+				<textFieldExpression><![CDATA[$F{ENVIO_NOTIFICACION_SMS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="488" y="0" width="40" height="22" uuid="1f5acc6e-1034-42e0-9483-b7187612e136"/>
+				<textFieldExpression><![CDATA[$F{ENVIO_NOTIFICACION_MAIL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="528" y="0" width="40" height="22" uuid="be1fd6ed-ff07-4f0f-b9d2-59fdbb870d04"/>
+				<textFieldExpression><![CDATA[$F{PRE_ENROLAMIENTO_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="568" y="0" width="40" height="22" uuid="18d4a1d0-67e5-42fa-be15-4fd7208db40d"/>
+				<textFieldExpression><![CDATA[$F{ENROLAMIENTO_USUARIO_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="608" y="0" width="40" height="22" uuid="19f9e99e-31b7-407e-b779-17c43809c3b2"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="648" y="0" width="40" height="22" uuid="a110f7bb-fcea-4436-b5b9-5a20f07ce9ba"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="688" y="0" width="40" height="22" uuid="0e711b0a-0b5e-451e-90ef-f8b988d485fa"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="728" y="0" width="40" height="22" uuid="4dd1dab7-8a40-4521-a327-281a38634a6d"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="768" y="0" width="40" height="22" uuid="81e41135-3c0c-46a2-8316-c6ca62bd7f2f"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="808" y="0" width="40" height="22" uuid="5756ca9b-3b69-43bf-aa00-63a2ce24659c"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_6}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="848" y="0" width="40" height="22" uuid="6edc589f-88a5-4a4a-a939-42c43ff25f5c"/>
+				<textFieldExpression><![CDATA[$F{PREGUNTA_IVR_DESAFIO_7}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="888" y="0" width="40" height="22" uuid="e8cbea92-cf70-419d-b9a3-e4ca62bc11aa"/>
+				<textFieldExpression><![CDATA[$F{MANTE_CUENTAS_VISTA_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="928" y="0" width="40" height="22" uuid="5c3d69e4-e435-4fda-a5ba-0c55ef2d7d65"/>
+				<textFieldExpression><![CDATA[$F{CONSULTA_NOMBRES_CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="968" y="0" width="40" height="22" uuid="d047eaa4-5cd9-4a77-a4be-3e01fa43d712"/>
+				<textFieldExpression><![CDATA[$F{SOLIC_PREGUN_DESAFIO_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1008" y="0" width="40" height="22" uuid="a783251c-ada8-43e8-aeaf-76fa153bfb1d"/>
+				<textFieldExpression><![CDATA[$F{GENERACION_CODIGO_OTP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1048" y="0" width="40" height="22" uuid="da5bd8ac-65dc-4610-9a71-d1611f2c4c42"/>
+				<textFieldExpression><![CDATA[$F{CONSULTA_CUENTA_AHORROS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1088" y="0" width="40" height="22" uuid="7ba59ed8-1389-4970-9a9a-8555eae6109e"/>
+				<textFieldExpression><![CDATA[$F{VALIDACION_OTP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1128" y="0" width="40" height="22" uuid="a96cf0e6-cbd1-4cb5-8c95-d515e9c77d18"/>
+				<textFieldExpression><![CDATA[$F{LOGIN_USUARIO_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1168" y="0" width="40" height="22" uuid="ade5815b-b166-41f2-82c9-8dc9ee966904"/>
+				<textFieldExpression><![CDATA[$F{CAMBIO_DE_PIN_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1208" y="0" width="40" height="22" uuid="61c81a9e-96f7-4bc0-9aac-8b204f90982f"/>
+				<textFieldExpression><![CDATA[$F{OLVIDO_DE_CLAVE_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1248" y="0" width="40" height="22" uuid="fa00b7e6-1eb7-4952-b94e-465b2c4294d8"/>
+				<textFieldExpression><![CDATA[$F{NOTI_EVALUA_DESAFIOS_IVR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1288" y="0" width="40" height="22" uuid="1a6f2175-670d-425f-8b0f-f5808226e13b"/>
+				<textFieldExpression><![CDATA[$F{BLOQUEO_DE_TARJETA_DEBITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR_1" x="0" y="0" width="125" height="22" uuid="11d01fc1-1cc9-4945-8d33-5234fee9d271"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<textField>
+				<reportElement x="1208" y="0" width="80" height="20" uuid="54443e00-973e-41be-8413-a5d54ceb5548"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="1288" y="0" width="40" height="20" uuid="085a65f5-9ebd-49b9-9689-bb869099c722"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="75">
+			<textField>
+				<reportElement style="IVR" x="368" y="0" width="40" height="22" uuid="cb1a1e2f-2ea6-4302-b094-dcd0cbbbdac4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="IVR" x="125" y="0" width="243" height="22" uuid="aae51a05-a74e-42da-8e45-e8172d75514a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font size="15" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[TOTAL TRANSACCIONES: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="IVR" x="408" y="0" width="40" height="22" uuid="3291b313-a3a1-4c62-9543-ecef79f62f3b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="448" y="0" width="40" height="22" uuid="52376a40-5aab-43be-baec-e2d942aebe77"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="528" y="0" width="40" height="22" uuid="28b2e064-2f95-4c65-ab98-9a76476695b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V5}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="488" y="0" width="40" height="22" uuid="5e93931b-98c6-43e5-9713-b92bc88fc18a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="608" y="0" width="40" height="22" uuid="9af30c46-1e42-4b13-a5e7-3e5322feafb3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V7}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="568" y="0" width="40" height="22" uuid="2e287b6a-d21a-43bf-9633-4ebcfcd4b39a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V6}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="648" y="0" width="40" height="22" uuid="ad35b4d0-3e81-4923-80f2-47f794b24823"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V8}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="688" y="0" width="40" height="22" uuid="c9862feb-9dfe-492c-879b-66ff9422b4e3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V9}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="728" y="0" width="40" height="22" uuid="cabcf467-1754-4c15-824c-2408a2f19520"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V10}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="768" y="0" width="40" height="22" uuid="a627ac88-00fe-4c9b-a1b7-18ac563a11e9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V11}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="808" y="0" width="40" height="22" uuid="fec41dae-be28-4bbe-aab1-5d0032195c47"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V12}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="848" y="0" width="40" height="22" uuid="66170e17-931d-4c30-9fcf-deab2f8ad68b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V13}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="0" y="22" width="125" height="22" uuid="f7552179-c811-44f2-86a3-aa0fcfbd3900"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="IVR" x="0" y="0" width="125" height="22" uuid="73529eea-bef0-412f-a1d2-fadc21b9c7b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font size="13" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Total Personas]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="IVR" x="728" y="22" width="40" height="22" uuid="05cf7651-baa0-4265-9430-169bd10eb066"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V10_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="568" y="22" width="40" height="22" uuid="5c836fb4-3d87-4015-94d0-762cbfa3cc44"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V6_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="488" y="22" width="40" height="22" uuid="df14594d-e8a9-46c9-971e-8e3bae3ceed7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V4_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="768" y="22" width="40" height="22" uuid="1d66fb1c-9f1e-4b0e-86a0-d0e893101fed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V11_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="408" y="22" width="40" height="22" uuid="1c3e47ad-7cb3-40f0-9f3a-2d239465ac0e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V2_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="648" y="22" width="40" height="22" uuid="4d91aabc-18ad-4c1a-92c1-f809c5afffa3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V8_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="528" y="22" width="40" height="22" uuid="c723f810-3eae-4f2c-8c0b-c9a7eeb8e0f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V5_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="688" y="22" width="40" height="22" uuid="12cb3a20-6522-41d2-bcae-86d67ab97871"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V9_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="808" y="22" width="40" height="22" uuid="2e5f5d56-952b-45bc-9aad-3e838eca036b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V12_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="448" y="22" width="40" height="22" uuid="c643db0f-5ee9-4d68-8379-4faf5240dbf8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V3_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="608" y="22" width="40" height="22" uuid="341799e5-dcbc-4fd5-afff-db4be5bf7f00"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V7_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="848" y="22" width="40" height="22" uuid="5da934cd-180c-453d-b754-9b14befebc32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V13_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="368" y="22" width="40" height="22" uuid="5225697a-d464-4300-a173-d937a9777ae6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V1_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="IVR" x="125" y="22" width="243" height="22" uuid="3b7429bd-47dc-4629-a63e-ba3b6c9ce70f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<font size="10" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Por Transacción]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="IVR" x="1008" y="22" width="40" height="22" uuid="be43452e-63ea-4928-aa68-4012ac97824d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V20_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1128" y="0" width="40" height="22" uuid="80ec931f-3c39-48e4-a801-219a2e8bfd2d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V23}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="888" y="0" width="40" height="22" uuid="bdc8e164-e699-4bf9-bddb-604735cc5a85"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V14}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1048" y="22" width="40" height="22" uuid="02b9add8-e39d-4775-9360-5b1666efe3bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V21_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1248" y="0" width="40" height="22" uuid="1727e111-9f5f-420d-8b50-bbb634423db1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V26}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="928" y="0" width="40" height="22" uuid="69e1792a-3eee-4f3c-8084-c85eb74e048b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V15}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="968" y="22" width="40" height="22" uuid="de389d43-5cf9-4670-b6fd-28fc28a2bd31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V19_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1088" y="0" width="40" height="22" uuid="fd5c086e-5daa-429a-95a2-b06fac569233"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V22}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1248" y="22" width="40" height="22" uuid="07256b12-b9bd-4260-a47d-0012e31c181d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V26_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1288" y="22" width="40" height="22" uuid="ab455adc-df05-4f4d-8408-f98d0b0adf5a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V27_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1088" y="22" width="40" height="22" uuid="faa7593a-ab31-4660-ab83-2c37a70c4f3a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V22_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1008" y="0" width="40" height="22" uuid="31f1517e-7e60-4a82-bef7-bdbf6327cedc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V20}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1048" y="0" width="40" height="22" uuid="71949013-d6de-4764-910a-12e1cb80f330"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V21}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="968" y="0" width="40" height="22" uuid="619c79be-c938-4532-a4e7-0ef68ed7e2fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V19}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="888" y="22" width="40" height="22" uuid="316dd24b-5e46-402d-b310-af300552a72c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V14_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1288" y="0" width="40" height="22" uuid="c6545ec7-648d-46d9-bbd9-39a0a6c576cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V27}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1168" y="0" width="40" height="22" uuid="41fafcbd-b1c1-4881-89ad-5ee01484ab9f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V24}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1168" y="22" width="40" height="22" uuid="27ba41ad-2cca-4eea-9d43-d6652a086791"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V24_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1208" y="0" width="40" height="22" uuid="f4ded206-5058-467a-a3c5-4f0c5028c60c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V25}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1208" y="22" width="40" height="22" uuid="71b26b63-3b18-4b0f-a335-9051de3f749f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{V25_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="928" y="22" width="40" height="22" forecolor="#000000" uuid="4554d3f1-5c03-4e40-8b8d-f6189b268b42"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{V15_1}.intValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="IVR" x="1128" y="22" width="40" height="22" forecolor="#000000" uuid="058b9757-1d8f-4939-8c4a-fbed5305cde1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{V23_1}.intValue()]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

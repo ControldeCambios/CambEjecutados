@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties joinQuirk="1" sub="04" tmo="600" tra="5009">
+    <initialJS>c.formulario.preMantener=function(){if(c.$('horas', 0).value == '') {
+  return'DEBE ESCOGER UNA HORA PARA EL PROCESO';
+}
+c.$('NAME').changeValue('habilitarSPI');}
+c.consultar();
+c.formulario.posMantener=function(){c.$('Rautorizacion').enable();}</initialJS>
+    <pmr>DESHABILITADA</pmr>
+    <title>GENERACIÓN DE ARCHIVOS SPI</title>
+    <references>
+      <reference alias="tcps0"
+        class="com.fitbank.webpages.data.Reference" queryOnly="true" table="TCOMPANIAPARAMETROSSISTEMA">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPARAMETROSISTEMA" immediateValue="HORASCORTESPI"/>
+        </dependencies>
+      </reference>
+    </references>
+  </properties>
+  <containers>
+    <container cssClass="column-group">
+      <widget class="com.fitbank.webpages.widgets.Label" tex="Hora:" y="1"/>
+      <widget class="com.fitbank.webpages.widgets.ComboBox"
+        cssClass="requiredable" tex="horas" w="100" y="1">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="HORA" type="CONTROL"/>
+        <attribute nom="req">1</attribute>
+        <attribute nom="cho">08:30,12:30,16:30</attribute>
+        <attribute nom="dat">08:30,12:30,16:30</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Square" h="15" x="1" y="2"/>
+      <widget class="com.fitbank.webpages.widgets.Button"
+        tex="Rautorizacion" y="3">
+        <attribute nom="jvs">onmouseover="c.$('NAME').changeValue('REPORTESPI1');"</attribute>
+        <attribute nom="dat">Generar Archivo SPI1</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report"
+            directDownload="true" name="REPORTESPI1.txt"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="parametro_horas" w="0">
+        <dataSource alias="tcps0"
+          class="com.fitbank.webpages.data.DataSource"
+          field="VALORTEXTO" type="RECORD"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+    <container>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="NAME" w="55">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          comparator="LIKE" field="NAME" type="CONTROL"/>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="TYPE" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          comparator="LIKE" field="TYPE" type="CONTROL"/>
+        <attribute nom="val">csv</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="BATCH" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="BATCH" type="CONTROL"/>
+        <attribute nom="val">false</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>
