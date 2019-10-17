@@ -1,0 +1,1839 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="25_BITACORADEPFINANCIERO" pageWidth="4900" pageHeight="842" columnWidth="4860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="51d2f11c-63de-4e2a-86b2-6273c9bf813a">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="5029"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="29OctSoporte"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="275"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<import value="com.fitbank.reports.SubReportCall"/>
+	<style name="color_filas">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 0 ? Boolean.TRUE:Boolean.FALSE]]></conditionExpression>
+			<style mode="Opaque" forecolor="#EEEEEE"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="FDESDE" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FHASTA" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+--SERVICIOS GENERALES
+TC.NUMERODOCUMENTO SOLICITUD_COMPROBANTE,
+(CASE
+WHEN TC.CFORMAPAGOCOMPRAS ='02' THEN
+    (CASE
+        WHEN (SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) = '007' THEN
+            (
+                CASE WHEN(
+                    SELECT NUMERODOCUMENTO_SOLICITUD FROM TDPAGOS
+                    WHERE FHASTA = FNCFHASTA
+                    AND NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO
+                    AND SUBSTR(NUMERODOCUMENTO, 0, 2) = 'CP'
+                    AND CPERSONA_COMPANIA = 2
+                    AND CPERIODO = TC.CPERIODO
+                ) = TC.NUMERODOCUMENTO THEN 'ACREDITACION INTERNA'
+                ELSE
+                    (NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+             END)
+        ELSE
+            (NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+        END)
+WHEN TC.CFORMAPAGOCOMPRAS ='03' THEN (
+    CASE WHEN (SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO)!= '008'
+    THEN (NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+    WHEN (SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO)= '008' THEN
+        (
+        CASE
+            WHEN (SELECT SGIROTRANSFERENCIAAUTORIZADO FROM TGIROSTRANSFERENCIASAUTORIZADO  WHERE VERSIONCONTROL = 0 AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND ROWNUM = 1) IS NOT NULL THEN (
+            NVL((SELECT
+            (DECODE(ESTATUSOPI, 1,'PAGO ACREDITADO EN EL BCE', 'PAGO RECHAZADO  BCE')) FROM TSPI4DETALLES
+            WHERE SGIROTRANSFERENCIAAUTORIZADO = (
+            SELECT SGIROTRANSFERENCIAAUTORIZADO FROM
+            TGIROSTRANSFERENCIASAUTORIZADO
+            WHERE VERSIONCONTROL = 0
+            AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+            AND ROWNUM = 1
+            )), 'PAGADO')
+            )
+            ELSE (NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+        END)
+    END
+)
+WHEN TC.CFORMAPAGOCOMPRAS ='01' OR TC.CFORMAPAGOCOMPRAS = '04' OR TC.CFORMAPAGOCOMPRAS = '05' OR TC.CFORMAPAGOCOMPRAS = '06' THEN (NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+ELSE
+(NVL((SELECT DESCRIPCION FROM TESTATUSDOCUMENTO WHERE CESTATUSDOCUMENTO = ( SELECT CESTATUSDOCUMENTO FROM TCSOLICITUDPAGO WHERE FHASTA = FNCFHASTA AND NUMERODOCUMENTO = TC.NUMERODOCUMENTO) AND CTIPODOCUMENTOINVENTARIO = 'SP' AND FHASTA = FNCFHASTA), 'ANULADO'))
+END)  ESTATUSDOCUMENTO,
+TRUNC(( SELECT UNIQUE FDESDE FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND VERSIONCONTROL = 0 AND CPERIODO = TC.CPERIODO )) FECHA_INGRESO_SSGG
+
+, TO_CHAR(( SELECT UNIQUE FDESDE FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND VERSIONCONTROL = 0 AND CPERIODO = TC.CPERIODO  ), 'HH24:MI:SS') HORA_INGRESO_SSGG
+
+, (SELECT NOMBRELEGAL FROM TPERSONA WHERE CPERSONA = ( SELECT CPERSONA FROM TUSUARIOS WHERE FHASTA > SYSDATE AND CUSUARIO =  (SELECT CUSUARIO FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND ROWNUM = 1 AND CPERIODO = TC.CPERIODO AND ROWNUM = 1 ) ) AND FHASTA > SYSDATE )
+
+RESPONSABLE_SSGG
+
+, TRUNC((
+
+SELECT FDESDE FROM TCSOLICITUDPAGO
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND FAPROBACION IS NOT NULL
+
+--and CESTATUSDOCUMENTO IN( '002', '033')
+
+AND CPERIODO = TC.CPERIODO AND ROWNUM = 1
+
+)) FECHA_APROBADO_CONTA
+
+, TO_CHAR(
+
+(
+
+SELECT FDESDE FROM TCSOLICITUDPAGO
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND FAPROBACION IS NOT NULL
+
+--and CESTATUSDOCUMENTO IN( '002', '033')
+
+AND ROWNUM = 1
+
+)
+
+, 'HH24:MI:SS') HORA_APROBADO_CONTA
+
+, NVL((
+
+SELECT NOMBRELEGAL FROM TPERSONA
+
+WHERE CPERSONA = (SELECT CPERSONA FROM TUSUARIOS WHERE FHASTA > SYSDATE AND CUSUARIO = (
+
+SELECT DISTINCT CUSUARIO_APROBADOR FROM TCSOLICITUDPAGO
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND CUSUARIO_APROBADOR <> '2065' AND ROWNUM = 1 AND CUSUARIO_APROBADOR IS NOT NULL AND CPERIODO = TC.CPERIODO )) AND FHASTA > SYSDATE  ), '') RESPONSABLE_CONTA
+
+, (SELECT NOMBRE FROM TOFICINAS WHERE FHASTA > SYSDATE AND COFICINA = ( SELECT CPUNTOTRABAJO FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND FHASTA > SYSDATE AND ROWNUM = 1 )) AGENCIA
+
+, ( SELECT IDENTIFICACION FROM TPERSONA WHERE FHASTA > SYSDATE AND IDENTIFICACION = TC.CCUENTA_PROVEEDOR  ) RUC
+
+, ( SELECT NOMBRELEGAL FROM TPERSONA WHERE FHASTA > SYSDATE AND IDENTIFICACION = TC.CCUENTA_PROVEEDOR  ) DATOS_DEL_PROVEEDOR
+
+, ( SELECT OBSERVACIONES FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND FHASTA > SYSDATE AND ROWNUM = 1 ) CONCEPTO
+
+, CASE
+
+WHEN  TFD.CPERIODO_SOLICITUD IS NULL THEN
+
+( SELECT NUMEROESTABLECIMIENTO||'-'||NUMEROPUNTOEMISION||'-'||NUMERODOCUMENTOFACTURACION FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND FHASTA > SYSDATE AND ROWNUM = 1 )
+
+WHEN  TFD.CPERIODO_SOLICITUD IS NOT NULL THEN
+
+(
+
+SELECT
+
+(NUMEROESTABLECIMIENTO||'-'||NUMEROPUNTOEMISION||'-'||NUMERODOCUMENTOFACTURACION)
+
+FROM TFACTURASDETALLE
+
+WHERE  FHASTA = FNCFHASTA
+
+AND NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO
+
+AND NUMEROESTABLECIMIENTO = TFD.NUMEROESTABLECIMIENTO
+
+AND NUMEROPUNTOEMISION = TFD.NUMEROPUNTOEMISION
+
+AND NUMERODOCUMENTOFACTURACION = TFD.NUMERODOCUMENTOFACTURACION
+
+)
+
+END NUMERO_FACTURA
+
+, TRUNC( TC.FECHADOCUMENTOFACTURACION ) FECHA_EMISION_FACTURA
+
+, '' FRECEPCION_FACT_S_GENERALES
+
+, CASE
+
+WHEN  TFD.CPERIODO_SOLICITUD IS NULL THEN
+
+( SELECT TOTALGENERAL FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND FHASTA > SYSDATE AND ROWNUM = 1 )
+
+WHEN  TFD.CPERIODO_SOLICITUD IS NOT NULL THEN
+
+(
+
+SELECT
+
+( BASETARIFAIVA + VALORIVA )
+
+FROM TFACTURASDETALLE
+
+WHERE  FHASTA = FNCFHASTA
+
+AND NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO
+
+AND NUMEROESTABLECIMIENTO = TFD.NUMEROESTABLECIMIENTO
+
+AND NUMEROPUNTOEMISION = TFD.NUMEROPUNTOEMISION
+
+AND NUMERODOCUMENTOFACTURACION = TFD.NUMERODOCUMENTOFACTURACION
+
+)
+
+END VALOR_TOTAL_FACTURA
+
+, '' AUTORIZACION
+
+, '' POLITICA_DE_PAGO
+
+, CASE
+
+WHEN TFD.CPERIODO_SOLICITUD IS NULL THEN
+
+(
+
+SELECT(
+
+(SELECT TOTALGENERAL FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND FHASTA > SYSDATE )
+
+-
+
+( SELECT SUM( VALORETENCIONFUENTE ) + SUM( VALORETENCIONIVA ) FROM TDSOLICITUDPAGORETENCION
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND FHASTA > SYSDATE )
+
+-
+
+NVL((SELECT SUM( TOTALGENERAL ) FROM TCNOTACREDITOPROVEEDOR
+
+WHERE NUMERODOCUMENTO_SOLPAG  = TC.NUMERODOCUMENTO
+
+AND FHASTA > SYSDATE), 0)
+
+) FROM DUAL
+
+)
+
+WHEN TFD.CPERIODO_SOLICITUD IS NOT NULL THEN
+
+(
+
+SELECT
+
+ROUND(SUM( BASETARIFAIVA + VALORIVA - VALORETENCIONIVA - VALORETENCIONFUENTE - VALORICE ), 2)
+
+FROM TFACTURASDETALLE
+
+WHERE  FHASTA = FNCFHASTA
+
+AND NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO
+
+AND NUMEROESTABLECIMIENTO = TFD.NUMEROESTABLECIMIENTO
+
+AND NUMEROPUNTOEMISION = TFD.NUMEROPUNTOEMISION
+
+AND NUMERODOCUMENTOFACTURACION = TFD.NUMERODOCUMENTOFACTURACION
+
+)
+
+END VALOR_A_PAGAR
+
+, TRUNC((
+
+SELECT FDESDE+1 FROM TCSOLICITUDPAGO
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND FAPROBACION IS NOT NULL
+
+AND CESTATUSDOCUMENTO = '002'
+
+AND ROWNUM = 1
+
+)) FECHA_ENTREGA_TESORERIA
+
+, TO_CHAR(
+
+(
+
+SELECT FDESDE+1 FROM TCSOLICITUDPAGO
+
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND FAPROBACION IS NOT NULL
+
+AND CESTATUSDOCUMENTO = '002'
+
+AND ROWNUM = 1
+
+), 'HH24:MI:SS') HORA_ENTREGA_TESORERIA
+
+--TESORERIA
+
+, '' FECHA_REC_SP_TESORERIA
+
+, '' HORA_RECEPCION_TESORERIA
+
+, (
+
+SELECT DESCRIPCION FROM TFORMASPAGOCOMPRAS
+WHERE FHASTA = FNCFHASTA
+AND CFORMAPAGOCOMPRAS = (
+SELECT CFORMAPAGOCOMPRAS FROM TCSOLICITUDPAGO
+WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+AND FHASTA = FNCFHASTA
+AND CPERIODO = TC.CPERIODO
+)
+) TIPO_DE_PAGO
+
+,
+
+(SELECT NOMBRELEGAL
+
+FROM TPERSONA
+
+WHERE CPERSONA =
+
+      (SELECT CPERSONA
+
+         FROM TUSUARIOS
+
+        WHERE FHASTA > SYSDATE
+
+              AND CUSUARIO =
+
+                     (SELECT CUSUARIO
+
+                        FROM TCAUTORIZAPAGO
+
+                       WHERE NUMERODOCUMENTO =
+
+                                (SELECT NUMERODOCUMENTO
+
+                                   FROM TDAUTORIZAPAGO
+
+                                  WHERE NUMERODOCUMENTO_SOLICITUD =
+
+                                           TC.NUMERODOCUMENTO AND CPERIODO = TC.CPERIODO )
+
+                             AND CESTATUSDOCUMENTO = '001' AND CPERIODO = TC.CPERIODO))
+
+   AND FHASTA > SYSDATE) USUARIO_PRIMER_PROCESO
+
+, TRUNC((
+
+SELECT FDESDE FROM TCAUTORIZAPAGO
+
+WHERE NUMERODOCUMENTO = ( SELECT NUMERODOCUMENTO FROM TDAUTORIZAPAGO
+
+WHERE NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO AND CPERIODO = TC.CPERIODO )
+
+AND CESTATUSDOCUMENTO = '001' AND CPERIODO = TC.CPERIODO
+
+)) FECHA_PRIMER_PROCESO
+
+, TO_CHAR((
+
+SELECT FDESDE FROM TCAUTORIZAPAGO
+
+WHERE NUMERODOCUMENTO = ( SELECT NUMERODOCUMENTO FROM TDAUTORIZAPAGO
+
+WHERE NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO AND CPERIODO = TC.CPERIODO )
+
+AND CESTATUSDOCUMENTO = '001' AND CPERIODO = TC.CPERIODO
+
+), 'HH24:MI:SS') HORA_PRIMER_PROCESO
+
+,(SELECT NOMBRELEGAL
+
+FROM TPERSONA
+
+WHERE CPERSONA =
+
+      (SELECT CPERSONA
+
+         FROM TUSUARIOS
+
+        WHERE FHASTA > SYSDATE
+
+              AND CUSUARIO =
+
+                     (SELECT CUSUARIO FROM TCPAGOS
+
+WHERE CESTATUSDOCUMENTO = '001'
+
+AND CTIPODOCUMENTOINVENTARIO = 'CP' AND CPERIODO = TC.CPERIODO
+
+AND ROWNUM = 1
+
+AND NUMERODOCUMENTO = (
+
+SELECT NUMERODOCUMENTO FROM TDPAGOS
+
+WHERE NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO  AND FDESDE = ( SELECT MAX(FDESDE) FROM TDPAGOS WHERE FHASTA > SYSDATE AND NUMERODOCUMENTO_SOLICITUD= TC.NUMERODOCUMENTO ) -- AND ROWNUM =1
+
+AND FHASTA > SYSDATE AND CPERIODO = TC.CPERIODO
+
+AND SUBSTR(NUMERODOCUMENTO, 0,2) = 'CP')))
+
+   AND FHASTA > SYSDATE) USUARIO_SEGUNDO_PROCESO
+
+, TRUNC((
+
+SELECT FDESDE FROM TCPAGOS
+
+WHERE CESTATUSDOCUMENTO = '001'
+
+AND CTIPODOCUMENTOINVENTARIO = 'CP'
+
+AND CPERIODO = TC.CPERIODO
+
+AND NUMERODOCUMENTO = (
+
+SELECT NUMERODOCUMENTO FROM TDPAGOS
+
+WHERE NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO  AND FDESDE = ( SELECT MAX(FDESDE) FROM TDPAGOS WHERE FHASTA > SYSDATE AND NUMERODOCUMENTO_SOLICITUD= TC.NUMERODOCUMENTO )  -- ROWNUM =1
+
+AND FHASTA > SYSDATE AND CPERIODO = TC.CPERIODO
+
+AND SUBSTR(NUMERODOCUMENTO, 0,2) = 'CP'
+
+) AND ROWNUM = 1
+
+)) FECHA_SEGUNDO_PROCESO
+
+, TO_CHAR((
+
+SELECT FDESDE FROM TCPAGOS
+
+WHERE CESTATUSDOCUMENTO = '001'
+
+AND CTIPODOCUMENTOINVENTARIO = 'CP'
+
+AND CPERIODO = TC.CPERIODO
+
+AND NUMERODOCUMENTO = (
+
+SELECT NUMERODOCUMENTO FROM TDPAGOS
+
+WHERE NUMERODOCUMENTO_SOLICITUD = TC.NUMERODOCUMENTO AND FDESDE = ( SELECT MAX(FDESDE) FROM TDPAGOS WHERE FHASTA > SYSDATE AND NUMERODOCUMENTO_SOLICITUD= TC.NUMERODOCUMENTO )  --AND ROWNUM = 1
+
+AND CPERIODO = TC.CPERIODO
+
+AND FHASTA > SYSDATE
+
+AND SUBSTR(NUMERODOCUMENTO, 0,2) = 'CP'
+
+) AND ROWNUM = 1
+
+), 'HH24:MI:SS') HORA_SEGUNDO_PROCESO
+
+, TRUNC((
+
+SELECT
+
+CASE WHEN TCSP.CESTATUSDOCUMENTO = '007'
+
+THEN TCP.FDESDE
+
+ELSE
+
+CASE WHEN TCSP.CESTATUSDOCUMENTO = '008'
+
+THEN TCSP.FDESDE
+
+END
+
+END FDESDE
+
+FROM TCSOLICITUDPAGO TCSP,
+
+TDPAGOS TDP, TCPAGOS TCP
+
+WHERE TCSP.NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND TCSP.FHASTA = FNCFHASTA
+
+AND TCP.NUMERODOCUMENTO = TDP.NUMERODOCUMENTO
+
+AND TDP.NUMERODOCUMENTO_SOLICITUD = TCSP.NUMERODOCUMENTO
+
+AND TDP.FHASTA = FNCFHASTA
+
+--AND
+
+AND TCP.VERSIONCONTROL = 1
+
+AND TCP.CESTATUSDOCUMENTO = '033'
+
+AND TDP.CPERIODO = TC.CPERIODO
+
+AND SUBSTR(TDP.NUMERODOCUMENTO, 0,2) = 'CP'))
+
+PAGADO_FECHA_CONFIRMADA
+
+, TO_CHAR((
+
+SELECT
+
+CASE WHEN TCSP.CESTATUSDOCUMENTO = '007'
+
+THEN TCP.FDESDE
+
+ELSE
+
+CASE WHEN TCSP.CESTATUSDOCUMENTO = '008'
+
+THEN TCSP.FDESDE
+
+END
+
+END FDESDE
+
+FROM TCSOLICITUDPAGO TCSP,
+
+TDPAGOS TDP, TCPAGOS TCP
+
+WHERE TCSP.NUMERODOCUMENTO = TC.NUMERODOCUMENTO
+
+AND TCSP.FHASTA = FNCFHASTA
+
+AND TCP.NUMERODOCUMENTO = TDP.NUMERODOCUMENTO
+
+AND TDP.NUMERODOCUMENTO_SOLICITUD = TCSP.NUMERODOCUMENTO
+
+AND TDP.FHASTA = FNCFHASTA
+
+AND TCP.VERSIONCONTROL = 1
+
+AND TCP.CESTATUSDOCUMENTO = '033'
+
+AND TDP.CPERIODO = TC.CPERIODO
+
+AND TDP.CPERIODO = TCP.CPERIODO
+
+AND SUBSTR(TDP.NUMERODOCUMENTO, 0,2) = 'CP'), 'HH24:MI:SS') PAGADO_HORA_CONFIRMADA
+,   TC.CCUENTA_PROVEEDOR
+,(SELECT
+NOMBRE FROM TNOMINABANCO
+WHERE CBANCO = (
+SELECT CPERSONA_EMPRESABANCARIA FROM TPERSONAREFERENCIASBANCARIAS
+WHERE CPERSONA = (
+SELECT  CPERSONA FROM TCUENTASPERSONA
+WHERE CCUENTA = TC.CCUENTA_PROVEEDOR
+AND FHASTA= FNCFHASTA)
+AND FHASTA = FNCFHASTA
+AND ROWNUM = 1)
+AND FHASTA = FNCFHASTA
+AND ROWNUM = 1
+)NOMBRE_INSTITUCION
+, '' NOVEDADES
+, '' FECHA_ENT_DOC_PAGADOS
+, '' ENTREGA_TESORERIA
+, '' RECIBE_CONTABILIDAD
+, TFD.NUMERODOCUMENTO_SOLICITUD
+FROM TCSOLICITUDPAGO TC
+LEFT JOIN TFACTURASDETALLE TFD
+ON TC.NUMERODOCUMENTO = TFD.NUMERODOCUMENTO_SOLICITUD
+AND TFD.FHASTA = FNCFHASTA
+WHERE  TC.VERSIONCONTROL = 0
+AND TRUNC(tc.FDESDE) BETWEEN $P{FDESDE} AND $P{FHASTA}
+AND TC.CTIPODOCUMENTOINVENTARIO IN('SP', 'AA')
+AND TC.FHASTA = ( SELECT MIN(FHASTA) FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO  )
+ORDER BY
+TO_CHAR(TRUNC(( SELECT UNIQUE FDESDE FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND VERSIONCONTROL = 0 AND CPERIODO = TC.CPERIODO )))||TO_CHAR(( SELECT UNIQUE FDESDE FROM TCSOLICITUDPAGO WHERE NUMERODOCUMENTO = TC.NUMERODOCUMENTO AND VERSIONCONTROL = 0 AND CPERIODO = TC.CPERIODO  ), 'HH24:MI:SS') ASC
+]]>
+	</queryString>
+	<field name="SOLICITUD_COMPROBANTE" class="java.lang.String"/>
+	<field name="ESTATUSDOCUMENTO" class="java.lang.String"/>
+	<field name="FECHA_INGRESO_SSGG" class="java.sql.Timestamp"/>
+	<field name="HORA_INGRESO_SSGG" class="java.lang.String"/>
+	<field name="RESPONSABLE_SSGG" class="java.lang.String"/>
+	<field name="FECHA_APROBADO_CONTA" class="java.sql.Timestamp"/>
+	<field name="HORA_APROBADO_CONTA" class="java.lang.String"/>
+	<field name="RESPONSABLE_CONTA" class="java.lang.String"/>
+	<field name="AGENCIA" class="java.lang.String"/>
+	<field name="RUC" class="java.lang.String"/>
+	<field name="DATOS_DEL_PROVEEDOR" class="java.lang.String"/>
+	<field name="CONCEPTO" class="java.lang.String"/>
+	<field name="NUMERO_FACTURA" class="java.lang.String"/>
+	<field name="FECHA_EMISION_FACTURA" class="java.sql.Timestamp"/>
+	<field name="FRECEPCION_FACT_S_GENERALES" class="java.lang.String"/>
+	<field name="VALOR_TOTAL_FACTURA" class="java.math.BigDecimal"/>
+	<field name="AUTORIZACION" class="java.lang.String"/>
+	<field name="POLITICA_DE_PAGO" class="java.lang.String"/>
+	<field name="VALOR_A_PAGAR" class="java.math.BigDecimal"/>
+	<field name="FECHA_ENTREGA_TESORERIA" class="java.sql.Timestamp"/>
+	<field name="HORA_ENTREGA_TESORERIA" class="java.lang.String"/>
+	<field name="FECHA_REC_SP_TESORERIA" class="java.lang.String"/>
+	<field name="HORA_RECEPCION_TESORERIA" class="java.lang.String"/>
+	<field name="TIPO_DE_PAGO" class="java.lang.String"/>
+	<field name="USUARIO_PRIMER_PROCESO" class="java.lang.String"/>
+	<field name="FECHA_PRIMER_PROCESO" class="java.sql.Timestamp"/>
+	<field name="HORA_PRIMER_PROCESO" class="java.lang.String"/>
+	<field name="USUARIO_SEGUNDO_PROCESO" class="java.lang.String"/>
+	<field name="FECHA_SEGUNDO_PROCESO" class="java.sql.Timestamp"/>
+	<field name="HORA_SEGUNDO_PROCESO" class="java.lang.String"/>
+	<field name="PAGADO_FECHA_CONFIRMADA" class="java.sql.Timestamp"/>
+	<field name="PAGADO_HORA_CONFIRMADA" class="java.lang.String"/>
+	<field name="CCUENTA_PROVEEDOR" class="java.lang.String"/>
+	<field name="NOMBRE_INSTITUCION" class="java.lang.String"/>
+	<field name="NOVEDADES" class="java.lang.String"/>
+	<field name="FECHA_ENT_DOC_PAGADOS" class="java.lang.String"/>
+	<field name="ENTREGA_TESORERIA" class="java.lang.String"/>
+	<field name="RECIBE_CONTABILIDAD" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO_SOLICITUD" class="java.lang.String"/>
+	<variable name="SALDOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="COSTOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="SOLICITUD_COMPROBANTE_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{SOLICITUD_COMPROBANTE}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="83a9190b-7e42-4191-8775-02afcade76e6" x="0" y="0" width="1000" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COOP. DE AHORRO Y CREDITO 29 DE OCTUBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0653df5-71cf-4573-afa8-72cfd5b92641" x="0" y="28" width="1000" height="23"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[BITACORA DEPARTAMENTO FINANCIERO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="b56584d0-e015-43e9-ad9b-551f8d0ffe04" x="102" y="70" width="120" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9fce7ec-297d-4510-a6bf-b5f92aafba70" x="222" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6e3d6119-bc05-42f1-89c8-b8d4f7b70f46" x="312" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40030ec2-9c10-4d75-83ea-20e43b235164" x="402" y="70" width="200" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE SSGG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4646d18b-3678-4f5a-a8ef-b16c7d1125e5" x="602" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="36f9ae54-c9b8-475f-8b1b-8782fb6b88bd" x="692" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f1f3397f-e04d-44d3-84d3-19d5405d5a3e" x="782" y="70" width="200" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESPONSABLE CONTABILIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d42a8c05-3993-4113-9cc8-72ff4f21c64c" x="982" y="70" width="172" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AGENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f744304c-248f-42cf-a3b0-80241aa85b85" x="1154" y="70" width="102" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ea62bc13-473f-463f-b176-0190e32e2c20" x="1256" y="70" width="255" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL PROVEEDOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ba20ca38-0cb1-4fa1-b80e-fb8a015d4082" x="1511" y="70" width="328" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4d8e59db-b29c-4f79-bb78-50f6bd01bc17" x="1839" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ad523f92-a50f-400d-87a2-891b29db1144" x="1939" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA EMISION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c923699e-e0e9-404e-928e-fe436c22ed5f" x="2039" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F.RECEPCION SS.GG.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dd4c269f-9589-4c28-891d-c7bdcffbd4ba" x="2139" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR TOTAL FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2a7afc8-90bd-440f-8958-f0c433f7d837" x="2239" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="cdf938b2-77ab-4d78-8d23-c99f9421f8ec" x="2339" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[POLÍTICA DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="26294c38-c35d-4495-b427-8e43d5be32c8" x="2439" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR A PAGAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="73d8455c-e8ba-4fdc-9775-5a26baf1155d" x="2539" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1ea593c-04f3-42b2-b97a-b14dba5097a9" x="2629" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="790e522c-ca52-4877-a4b5-966d9aff508c" x="2719" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[F.RECEPCION SP TESORERIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9508fa8e-30b7-4787-bfc8-ad773f3aeb2d" x="2819" y="70" width="100" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA RECEPCION SP TESORERIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="862cab1a-13c7-4e77-af19-382275d673a7" x="2919" y="70" width="180" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMA DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="54b624f9-7a51-4e65-a558-b3709405361b" x="3099" y="92" width="171" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a2ffb1a5-0355-47ba-8542-87d4f0c7e346" x="3270" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9cd950b7-a20e-4b77-870e-2631e3a9473e" x="3360" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7163d6c8-b87a-42e3-990a-e6121547e4b3" x="3450" y="92" width="171" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="be62bab2-d9ef-438b-8940-1a3d56054a26" x="3621" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f2a9728f-ae08-4751-959d-4faaf00e5f9f" x="3711" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="100592aa-9545-4a51-9d48-44f1283753f1" x="3801" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="07457552-c2b0-4db7-8279-cb99e8269def" x="3891" y="92" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9b913dba-bb7f-4919-a852-8c112957abf9" x="4409" y="70" width="178" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOVEDADES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="57864348-f333-45d8-b6f7-eafc1d1063cb" x="4587" y="70" width="90" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA ENTREGA DOCUMENTOS PAGADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="098d63fb-2a4a-4585-aa20-408e372662e4" x="4677" y="70" width="90" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTREGA TESORERIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bd41c9c3-a4c0-4315-ac22-2ed63437ae67" x="4767" y="70" width="92" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBE CONTABILIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a674ac25-f347-45d6-8b66-c57704653c10" x="222" y="70" width="180" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DE INGRESO EN SERVICIOS GENERALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dc897bb3-987e-41a3-8946-2d39f9078522" x="602" y="70" width="180" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DE APROBACION EN CONTABILIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9f2888b0-d1d2-42cd-bfad-ebd7c1da370f" x="0" y="70" width="102" height="42"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="79511d3d-fcde-4567-8657-38fd979c64e0" x="2539" y="70" width="180" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DE ENTREGA A TESORERIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5fdf70c0-f860-4bbe-9984-5de3d6fb0217" x="3099" y="70" width="351" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESO 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="876ae15f-6131-433f-840c-a9a1d836ed8d" x="3450" y="70" width="351" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PROCESO 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="284beeb0-fc9c-4d7f-8268-e86b48f26d01" x="3801" y="70" width="180" height="22"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGO CONFIRMADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f18f1127-837c-4274-a325-f46e9baabe8d" x="0" y="6" width="102" height="21"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA DESDE:  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6126e284-5292-40df-8674-0caa133b4fd0" x="0" y="39" width="102" height="21"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA HASTA:  ]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="cd0585d9-6f87-48e3-a603-c4d9bcfdc807" x="102" y="6" width="271" height="21"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{FDESDE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="72efe6a0-2c03-48e8-8160-41d85d300177" x="102" y="39" width="271" height="21"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{FHASTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1e00b79e-b58b-4ed8-a90e-bd2e4d57d923" x="3981" y="70" width="132" height="42"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f4723a5-9d15-42c1-89f5-de7ab70d9dc4" x="4113" y="70" width="296" height="42"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE INSTITUCIÓN]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="b07d2e42-ae82-4db6-bf89-4ca6f94c226c" x="102" y="0" width="120" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{SOLICITUD_COMPROBANTE}!= null)?$F{SOLICITUD_COMPROBANTE}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="b14b7d72-822d-41c1-a5ef-a2b152f7d172" x="222" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_INGRESO_SSGG}!= null)?$F{FECHA_INGRESO_SSGG}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="c80ab6ff-18c5-4a38-a266-27a6dff86185" x="312" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_INGRESO_SSGG}!= null)?$F{HORA_INGRESO_SSGG}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fbc41e5a-4296-4ebe-8d19-7d5b689ddb48" x="402" y="0" width="200" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{RESPONSABLE_SSGG}!= null)?$F{RESPONSABLE_SSGG}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="97eb81cb-fcc4-49bd-8979-b18c24381c13" x="602" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_APROBADO_CONTA}!= null)?$F{FECHA_APROBADO_CONTA}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="fb9af136-2ea9-4072-a9d8-5197baeafce9" x="692" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_APROBADO_CONTA}!= null)?$F{HORA_APROBADO_CONTA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fc17c91c-1122-4335-9b96-9143d0569846" x="782" y="0" width="200" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{RESPONSABLE_CONTA} != null) ? $F{RESPONSABLE_CONTA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="da582d5a-0ae0-47e3-ba00-6d48d8165c01" x="982" y="0" width="172" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{AGENCIA}!= null)?$F{AGENCIA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f4a26c87-221d-48da-b69f-2e24a3403fe8" x="1154" y="0" width="102" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{RUC}!= null) ? $F{RUC}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="acbdc445-1fff-4449-873e-413ddbcf4011" x="1256" y="0" width="255" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{DATOS_DEL_PROVEEDOR}!= null)?$F{DATOS_DEL_PROVEEDOR}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bce94586-206a-47a5-b107-04ff056cdce8" x="1511" y="0" width="328" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CONCEPTO}!= null)?$F{CONCEPTO}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="26e810ce-4d8f-4b95-9501-e6ae35444a45" x="1839" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{NUMERO_FACTURA}!= null)?$F{NUMERO_FACTURA}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="cb600fdd-f5b6-4ebf-b4af-81619ec43cd4" x="1939" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_EMISION_FACTURA}!= null)?$F{FECHA_EMISION_FACTURA}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="b8332c21-0164-4c9a-9e49-357f71d51cf6" x="2039" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FRECEPCION_FACT_S_GENERALES} != null) ? $F{FRECEPCION_FACT_S_GENERALES}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement uuid="983c4be4-7402-4b6f-ba0c-3f39a6b7f189" x="2139" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{VALOR_TOTAL_FACTURA}!= null)?$F{VALOR_TOTAL_FACTURA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d50f7a3d-cb7c-4d33-bb8d-55b606f48d0e" x="2239" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{AUTORIZACION} != null) ? $F{AUTORIZACION}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aeec4f96-e3cc-438a-9e18-7fe2b313fa52" x="2339" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{POLITICA_DE_PAGO} != null) ? $F{POLITICA_DE_PAGO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00">
+				<reportElement uuid="934ea83a-229a-429c-b8c9-1e5e78229a23" x="2439" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{VALOR_A_PAGAR}!= null)?$F{VALOR_A_PAGAR}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="ca154283-62d4-49da-bef8-c0f9b69b161c" x="2539" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_ENTREGA_TESORERIA}!= null)?$F{FECHA_ENTREGA_TESORERIA}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="41990a9a-c609-4d7e-bcd2-6b3f7f1fc645" x="2629" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_ENTREGA_TESORERIA}!= null)?"":""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a977910-86b5-463c-a6b0-105b15a27bbc" x="2719" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_REC_SP_TESORERIA} != null) ? $F{FECHA_REC_SP_TESORERIA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="daa6f7d8-1038-4405-9d36-30ad52275d52" x="2819" y="0" width="100" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_RECEPCION_TESORERIA} != null) ? $F{HORA_RECEPCION_TESORERIA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fee748dc-c718-4fab-9b94-3a1f365b89c6" x="2919" y="0" width="180" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TIPO_DE_PAGO} != null)?$F{TIPO_DE_PAGO}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="815e66fa-c3e4-4b3d-a6ed-0ec8ec27ddaf" x="3099" y="0" width="171" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{USUARIO_PRIMER_PROCESO} != null) ? $F{USUARIO_PRIMER_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="d5d6a9d2-6f8d-4fb1-8ca1-bbe7e6f5b9fe" x="3270" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_PRIMER_PROCESO}!= null) ? $F{FECHA_PRIMER_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement uuid="aa8dc3b0-eb8f-42c3-82c0-02faab8fb70d" x="3360" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_PRIMER_PROCESO}!=null)?$F{HORA_PRIMER_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5b70f90d-e5ec-4fd6-9867-161931f92b30" x="3450" y="0" width="171" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{USUARIO_SEGUNDO_PROCESO}!=null)?$F{USUARIO_SEGUNDO_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="a62e3de3-96a6-4133-9202-e82f08b97181" x="3621" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_SEGUNDO_PROCESO}!= null) ? $F{FECHA_SEGUNDO_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="632cea8b-2562-44ff-9f2d-e582e52fdbcf" x="3711" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{HORA_SEGUNDO_PROCESO}!= null) ? $F{HORA_SEGUNDO_PROCESO}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="ceae81ea-f086-4aa9-a7fb-417666595e5d" x="3801" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PAGADO_FECHA_CONFIRMADA} != null) ? $F{PAGADO_FECHA_CONFIRMADA}:""]]></textFieldExpression>
+			</textField>
+			<textField pattern="h.mm a">
+				<reportElement uuid="5d4e73d7-3bc7-46fb-a707-58f94d71d47f" x="3891" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PAGADO_HORA_CONFIRMADA} != null) ? $F{PAGADO_HORA_CONFIRMADA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fd3a885b-a62c-42e9-b26c-de034813ffd4" x="4409" y="0" width="178" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{NOVEDADES}!=null)?$F{NOVEDADES}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="301dcc9e-51a5-464a-9575-9ebded4c9c93" x="4587" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{FECHA_ENT_DOC_PAGADOS}!=null)?$F{FECHA_ENT_DOC_PAGADOS}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ed043f72-295a-494d-aed4-38c7ae9e817c" x="4677" y="0" width="90" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ENTREGA_TESORERIA}!=null)?$F{ENTREGA_TESORERIA}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dc52ed3a-b5a9-4952-bb62-bab95d4f4315" x="4767" y="0" width="92" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{RECIBE_CONTABILIDAD}!=null)?$F{RECIBE_CONTABILIDAD}:""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3da4dbf3-5d5b-4d5e-840a-ac72ff6278c3" x="0" y="0" width="102" height="20"/>
+				<box>
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{ESTATUSDOCUMENTO}!= null)?$F{ESTATUSDOCUMENTO}:""]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="23454db7-919b-4600-98bc-59825d0c72e1" x="3981" y="0" width="132" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{PAGADO_HORA_CONFIRMADA}.equals("") ? "" : $F{CCUENTA_PROVEEDOR} )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="069fc3d3-4196-4a39-9fdd-97977f5503a5" x="4113" y="0" width="296" height="20"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( $F{PAGADO_HORA_CONFIRMADA}.equals("")? "" : $F{NOMBRE_INSTITUCION} )]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="40" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
