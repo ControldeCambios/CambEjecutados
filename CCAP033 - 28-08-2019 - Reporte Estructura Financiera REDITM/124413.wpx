@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="7">
+  <properties sub="12" tra="4413">
+    <initialJS>generarReporte=function(){if(c.$('f1_formatoReporte').value == 0) {
+  c.$('f2_generarPDF', 0).fireDOMEvent('click');
+} else {
+  c.$('f2_generarXLS', 0).fireDOMEvent('click');
+}}</initialJS>
+    <title>REPORTE ESTRUCTURA FINANCIERA(REDITUM)</title>
+    <references>
+      <reference alias="tper1"
+        class="com.fitbank.webpages.data.Reference" table="TPERSONA"/>
+    </references>
+  </properties>
+  <containers>
+    <container class="com.fitbank.webpages.containers.ColumnsContainer">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha Desde" y="8"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_fechad"
+        w="84" x="2" y="8">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          comparator="" field="FECHAD" type="REPORT"/>
+        <attribute nom="lon">10</attribute>
+        <attribute nom="cln">0</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Fecha Hasta" y="9"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="f1_fechah"
+        w="84" x="2" y="9">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FECHAH" type="REPORT"/>
+        <assistant class="com.fitbank.webpages.assistants.Calendar"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaValidator"
+            formula="=f1_fechah &lt;= $accountingDate" message="La FECHA HASTA no puede ser mayor a la FECHA CONTABLE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f1_ccompania" w="0">
+        <attribute nom="val">=$company</attribute>
+        <attribute nom="vis">0</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Square" h="20" y="10"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="field-label" tex="Formato del reporte" y="11"/>
+      <widget class="com.fitbank.webpages.widgets.ComboBox"
+        tex="f1_formatoReporte" w="84" x="2" y="11">
+        <attribute nom="val">0</attribute>
+        <attribute nom="blk">0</attribute>
+        <attribute nom="cho">0,1</attribute>
+        <attribute nom="dat">PDF,XLS</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Square" h="20" y="12"/>
+    </container>
+    <container class="com.fitbank.webpages.containers.ColumnsContainer" cssClass="column-group">
+      <widget class="com.fitbank.webpages.widgets.Button">
+        <attribute nom="jvs">onclick="generarReporte();"</attribute>
+        <attribute nom="dat">Generar</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.FormulaDisabler"
+            fireAlways="true" formula="=EMPTY(CSUCURSAL) || CSUCURSAL=='all' || EMPTY(COFICINA) || EMPTY(CDEPARTAMENTO)"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="f2_generarPDF">
+        <attribute nom="vis">0</attribute>
+        <attribute nom="dat">Generar PDF</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report" name="12_ESTRUCTURA_B11.pdf"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Button" tex="f2_generarXLS">
+        <attribute nom="vis">0</attribute>
+        <attribute nom="dat">Generar XLS</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.behaviors.Report" name="12_ESTRUCTURA_B11.xls">
+            <posReport class="com.fitbank.js.FuncionJS" valor="if(c.$V('FILTROFECHA', 0) == 0) {&#xa;  c.$('f1_fecha', 0).changeValue();&#xa;}">
+              <parametros>
+                <item>options</item>
+              </parametros>
+            </posReport>
+          </item>
+        </behaviors>
+      </widget>
+    </container>
+    <container class="com.fitbank.webpages.containers.ColumnsContainer" visible="0">
+      <widget class="com.fitbank.webpages.widgets.Input" tex="NAME" w="0"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CIA" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CIA" type="REPORT"/>
+        <attribute nom="val">=$company</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CUSUARIO" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CUSUARIO" type="REPORT"/>
+        <attribute nom="val">=$user</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="FCONTABLE" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="FCONTABLE" type="REPORT"/>
+        <attribute nom="val">=$accountingDate</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.DateFormatter" format="DATE"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="NOMBRECOMPANIA" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="NOMBRECOMPANIA" type="REPORT"/>
+        <attribute nom="val">=f4_nombrecompania</attribute>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="CTIPO" w="0">
+        <dataSource class="com.fitbank.webpages.data.DataSource"
+          field="CTIPO" type="REPORT"/>
+      </widget>
+    </container>
+    <container class="com.fitbank.webpages.containers.ColumnsContainer" visible="0">
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f4_compania" w="0">
+        <dataSource alias="tper1"
+          class="com.fitbank.webpages.data.DataSource" field="CPERSONA" type="CRITERION"/>
+        <attribute nom="val">=$company</attribute>
+        <attribute nom="lon">8</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="f4_nombrecompania" w="0">
+        <dataSource alias="tper1"
+          class="com.fitbank.webpages.data.DataSource"
+          field="NOMBRELEGAL" type="RECORD"/>
+        <attribute nom="lon">100</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

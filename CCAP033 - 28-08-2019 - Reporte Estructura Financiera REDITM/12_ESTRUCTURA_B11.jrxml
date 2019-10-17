@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="12_ESTRUCTURA_B11" language="groovy" pageWidth="945" pageHeight="555" orientation="Landscape" columnWidth="945" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4f7b9146-ef6a-4907-82c8-da310dc0ba4e">
+	<property name="ireport.zoom" value="0.8264462809917354"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHAD" class="java.sql.Timestamp"/>
+	<parameter name="FECHAH" class="java.sql.Timestamp"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT FECHA, SUBSTR(CUENTA,1,1) AS PRODUCT, DESCRIPTION, CUENTA, SALDO
+FROM SIFCO_OWNER.T_B11AUXILIAR@SIFCO
+WHERE SALDO != '0' AND
+FECHA >= $P{FECHAD} AND
+FECHA <= $P{FECHAH}]]>
+	</queryString>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="PRODUCT" class="java.lang.String"/>
+	<field name="DESCRIPTION" class="java.lang.String"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="SALDO" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="78" height="20" uuid="90e6e87a-b485-4e90-94e8-86494d2798e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="0" width="401" height="20" uuid="bac9c159-7cc3-4aa0-bb0d-039641c19946"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="0" width="100" height="20" uuid="b68811e4-b783-4e56-af95-66f9daee6965"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[entity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="625" y="0" width="35" height="20" uuid="4c4b4d91-3c74-4388-890a-065578529464"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="0" width="46" height="20" uuid="5a1aa13c-5b8b-4131-bf35-5acc1942f9df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[product]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="0" width="92" height="20" uuid="2e3b4802-ff0b-4dab-8a43-98761461df43"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[product_2_code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="752" y="0" width="51" height="20" uuid="b17f779a-01cb-45cb-aca2-65c5591d43c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[db_code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="803" y="0" width="64" height="20" uuid="30887888-cb14-4392-a116-41641d8069c9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[value]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="867" y="0" width="78" height="20" uuid="f8d3615c-7f54-4be7-ab5b-74b68c37eadc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[tax_id]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="78" height="20" uuid="666b7923-d3a3-415d-b105-c712f3ca6ed1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy/MM/dd").format($F{FECHA})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="224" y="0" width="401" height="20" uuid="a0e727cc-0a7c-42b2-9a24-f69ce8d96fdc"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="78" y="0" width="100" height="20" uuid="219a407e-dcbb-4592-856d-985a6fc57a91"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<text><![CDATA[29 DE OCTUBRE LTDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="625" y="0" width="35" height="20" uuid="cab207b6-71ec-441d-9916-40665792d817"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="178" y="0" width="46" height="20" uuid="82621dc4-fc00-4470-9749-597d52f12181"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{PRODUCT}=="4" || $F{PRODUCT}=="5")? "P&G":"Balance"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="660" y="0" width="92" height="20" uuid="e71359f6-557a-46e5-97ff-2986a3ef7a36"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="752" y="0" width="51" height="20" uuid="139cdca0-357f-4a54-b121-2f94217c4c37"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="803" y="0" width="64" height="20" uuid="458590c1-e019-45ec-86cb-156072284a6d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="867" y="0" width="78" height="20" uuid="18ac46a6-379a-4b1f-8f79-a17e625ba9d5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<text><![CDATA[1790567699001]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>
