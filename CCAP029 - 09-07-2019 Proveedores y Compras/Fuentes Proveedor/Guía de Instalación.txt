@@ -1,0 +1,127 @@
+Guía de Instalación de Requerimiento de Sinplificación de Módulo de Compras
+
+1.- Subir en el ambiente, a través de la transacción 01-0002 los formularios adjuntos en la carpeta Formularios. 
+2.- Subir en el ambiente, a través de la transacción 01-0002 los reportes adjuntos en la carpeta Reportes.
+3.- Ejecutar el script sql adjunto en la carpeta Sql. 
+4.- Subir al servidor las clases: 
+	
+Jar: purchases-2.0-SNAPSHOT.jar
+
+Ruta:
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/purchases-2.0-SNAPSHOT.jar/com/fitbank/purchases/maintenance
+
+Clases:
+- FinancialPaymentRequest.class		- ok
+- FinancialPaymentMassive.class		- ok
+- FixedAssetsPaymentRequest.class	- ok
+- UpdatingStatusFundSolicitude.class - ok
+- VerifyAllFinantialInstitutions.class - ok
+
+
+Ruta:
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/purchases-2.0-SNAPSHOT.jar/com/fitbank/purchases/query
+
+Clases: 
+- GetListPaymentRequest.class - ok
+- PayablePaymentRequestQuery.class - ok
+- RetentionPaymentRequestQuery.class - ok
+
+Ruta:
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/purchases-2.0-SNAPSHOT.jar/com/fitbank/purchases/validate
+
+Clases: 
+- ValidateGeneratesRetention.class - ok
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Jar: inventory-2.0-SNAPSHOT.jar
+
+Ruta: 
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/inventory-2.0-SNAPSHOT.jar/com/fitbank/inventory/maintenance
+
+Clases: 
+- PayProviders.class - ok 
+- SolicitudDocumentTypeMassive.class
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Jar: billing-2.0-SNAPSHOT.jar
+
+Ruta: 
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/billing-2.0-SNAPSHOT.jar/com/fitbank/billing/maintenance
+
+Clases: 
+- ApprovalwithholdingsToSuppliers.class - ok
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Jar: general-2.0-SNAPSHOT.jar
+
+Ruta: 
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/general-2.0-SNAPSHOT.jar/com/fitbank/general/maintenance
+
+Clases: 
+- ElectronicVoucherSequence.class - ok 
+
+
+Jar: pgeneral-2.01.067.107-2.jar
+
+Ruta: 
+/home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/pgeneral-2.01.067.107-2.jar/com/fitbank/hb/persistence/gene
+
+Clases: 
+
+Tdepartment
+Tdepartment.hbm
+Tdepartmentid
+Tdepartmentid.hbm
+TdepartmentidKey
+TdepartmentKey
+
+Jar: pinventory-2.02.001.161.jar
+
+Ruta: /home/fitbank/jboss/server/core/deploy/CORE.war/WEB-INF/lib/pinventory-2.02.001.161.jar/com/fitbank/hb/persistence/inventory
+
+
+carpeta box:
+
+-Tcliquidationexpenses.hbm
+
+carpeta csPre:
+
+-TcsolPayReq
+-TcsolPayReq.hbm
+-TcsolPayReqid
+-TcsolPayReqid.hbm
+-TcsolPayReqidKey
+-TcsolPayReqKey
+
+carpeta dsPAF
+
+- Tdpayreqfixedassets
+- Tdpayreqfixedassets.hbm
+- TdpayreqfixedassetsKey
+
+
+carpeta payPo
+
+- TpaymentPol
+- TpaymentPol.hbm
+- TpaymentPolid
+- TpaymentPolid.hbm
+- TpaymentPolKey
+
+
+
+
+
+
+
+
+
+
+
+
+

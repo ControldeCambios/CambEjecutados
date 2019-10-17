@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.gene' auto-import='true'>
+<class name='Tdepartment' table='TDEPARTAMENTOS' >
+<composite-id name='pk' class='TdepartmentKey'>
+	<!-- CODIGO DEL IDIOMA-->
+	<key-property name='cidioma' column='CIDIOMA' type='java.lang.String'/>
+
+	<!-- CODIGO DE LA COMPANIA-->
+	<key-property name='cpersona_compania' column='CPERSONA_COMPANIA' type='java.lang.Integer'/>
+
+	<!-- CODIGO DEL DEPARTAMENTO -->
+	<key-property name='cdepartamento' column='CDEPARTAMENTO' type='java.lang.Integer'/>
+
+	<!-- FECHA HASTA LA QUE ESTA VIGENTE LA DESCRIPCION DE UN DEPARTAMENTO-->
+	<key-property name='fhasta' column='FHASTA' type='java.sql.Timestamp'/>
+
+</composite-id>
+<!-- OPTIMISTIC LOCKING-->
+<version name='versioncontrol' column='VERSIONCONTROL'/>
+	<!-- FECHA DESDE LA QUE ESTA VIGENTE LA DESCRIPCION DE UN DEPARTAMENTO-->
+	<property name='fdesde' column='FDESDE' type='java.sql.Timestamp'  not-null='true' />
+
+	<!-- NOMBRE DEL DEPARTAMENTO DE UNA COMPANIA COMO: CREDITO, VENTANILLAS-->
+	<property name='nombre' column='NOMBRE' type='java.lang.String'  not-null='true' />
+
+</class>
+</hibernate-mapping>

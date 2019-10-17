@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.inventory.payPo' auto-import='true'>
+<class name='TpaymentPol' table='TPOLITICASPAGO' >
+<composite-id name='pk' class='TpaymentPolKey'>
+	<!-- CODIGO DEL IDIOMA.-->
+	<key-property name='cidioma' column='CIDIOMA' type='java.lang.String'/>
+
+	<!-- CÓDIGO DE LA POLÍTICA DE PAGO.-->
+	<key-property name='cpoliticapago' column='CPOLITICAPAGO' type='java.lang.Integer'/>
+
+	<!-- FECHA HASTA LA QUE ESTA VIGENTE LA DESCRIPCION DE LA POLÍTICA DE PAGO.-->
+	<key-property name='fhasta' column='FHASTA' type='java.sql.Timestamp'/>
+
+</composite-id>
+<!-- OPTIMISTIC LOCKING-->
+<version name='versioncontrol' column='VERSIONCONTROL'/>
+	<!-- FECHA DESDE LA QUE ESTA VIGENTE LA DESCRIPCION DE LA POLÍTICA DE PAGO.-->
+	<property name='fdesde' column='FDESDE' type='java.sql.Timestamp'  not-null='true' />
+
+	<!-- DESCRIPCION LA POLÍTICA DE PAGO.-->
+	<property name='descripcion' column='DESCRIPCION' type='java.lang.String'  not-null='true' />
+
+</class>
+</hibernate-mapping>

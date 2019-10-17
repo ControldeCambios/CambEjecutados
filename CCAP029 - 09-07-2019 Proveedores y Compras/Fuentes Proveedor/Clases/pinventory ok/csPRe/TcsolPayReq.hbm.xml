@@ -1,0 +1,259 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.inventory.csPRe' auto-import='true'>
+<class name='TcsolPayReq' table='TCSOLICITUDPAGO' >
+<composite-id name='pk' class='TcsolPayReqKey'>
+	<!-- CODIGO DE PERSONA DE LA COMPANIA-->
+	<key-property name='cpersona_compania' column='CPERSONA_COMPANIA' type='java.lang.Integer'/>
+
+	<!-- NUMERO DE DOCUMENTO DE LA SOLICITUD DE PAGO-->
+	<key-property name='numerodocumento' column='NUMERODOCUMENTO' type='java.lang.String'/>
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE-->
+	<key-property name='cperiodo' column='CPERIODO' type='java.lang.String'/>
+
+	<!-- FECHA HASTA LA QUE ESTA VIGENTE LA SOLICITUD DE PAGO-->
+	<key-property name='fhasta' column='FHASTA' type='java.sql.Timestamp'/>
+
+</composite-id>
+<!-- OPTIMISTIC LOCKING-->
+<version name='versioncontrol' column='VERSIONCONTROL'/>
+	<!-- CODIGO DE LA SUCURSAL-->
+	<property name='csucursal' column='CSUCURSAL' type='java.lang.Integer'  not-null='true' />
+
+	<!-- CODIGO DEL PUNTO DE TRABAJO-->
+	<property name='cpuntotrabajo' column='CPUNTOTRABAJO' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DEL TIPO DOCUMENTO DE INVENTARIOS-->
+	<property name='ctipodocumentoinventario' column='CTIPODOCUMENTOINVENTARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- SECUENCIA NUMERICA DE LA SOLICITUD DE PAGO-->
+	<property name='secuencia' column='SECUENCIA' type='java.lang.Long'  not-null='true' />
+
+	<!-- FECHA DE LA SOLICITUD DE PAGO-->
+	<property name='fsolicitudpago' column='FSOLICITUDPAGO' type='java.sql.Date'  not-null='true' />
+
+	<!-- CODIGO DE USUARIO QUE EFECTUA LA SOLICITUD DE PAGO-->
+	<property name='cusuario' column='CUSUARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- FECHA DESDE LA QUE ESTA VIGENTE LA SOLICITUD DE PAGO-->
+	<property name='fdesde' column='FDESDE' type='java.sql.Timestamp'  not-null='true' />
+
+	<!-- CODIGO DE ESTATUS DEL TIPO DE DOCUMENTO DE INVENTARIO-->
+	<property name='cestatusdocumento' column='CESTATUSDOCUMENTO' type='java.lang.String'  not-null='true' />
+
+	<!-- OBSERVACIONES DE LA SOLICITUD DE PAGO-->
+	<property name='observaciones' column='OBSERVACIONES' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PROVEEDOR-->
+	<property name='ccuenta_proveedor' column='CCUENTA_PROVEEDOR' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DE LA FRECUENCIA 0 = VENCIMIENTO, 1 = DIARIO, 5 = MENSUAL -->
+	<property name='cfrecuencia' column='CFRECUENCIA' type='java.lang.Integer'  not-null='true' />
+
+	<!-- PLAZO ORIGINAL DE LA SOLICITUD DE PAGO-->
+	<property name='plazo' column='PLAZO' type='java.lang.Integer'  not-null='true' />
+
+	<!-- TOTAL TARIFA 0-->
+	<property name='tottarifacero' column='TOTTARIFACERO' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- TOTAL TARIFA IVA-->
+	<property name='tottarifaiva' column='TOTTARIFAIVA' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- VALOR DEL IVA-->
+	<property name='valoriva' column='VALORIVA' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- VALOR DEL DESCUENTO-->
+	<property name='valordescuento' column='VALORDESCUENTO' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- VALOR TOTAL GENERAL-->
+	<property name='totalgeneral' column='TOTALGENERAL' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- CODIGO DEL TIPO DOCUMENTO DE FACTURACION-->
+	<property name='ctipodocumentofacturacion' column='CTIPODOCUMENTOFACTURACION' type='java.lang.String'  not-null='true' />
+
+	<!-- NUMERO DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='numerodocumentofacturacion' column='NUMERODOCUMENTOFACTURACION' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE ESTABLECIMIENTO DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='numeroestablecimiento' column='NUMEROESTABLECIMIENTO' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE PUNTO DE EMISION DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='numeropuntoemision' column='NUMEROPUNTOEMISION' type='java.lang.String'  not-null='false' />
+
+	<!-- FECHA DE EMISION DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='fechadocumentofacturacion' column='FECHADOCUMENTOFACTURACION' type='java.sql.Date'  not-null='false' />
+
+	<!-- NUMERO DE AUTORIZACION DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='numeroautorizacion' column='NUMEROAUTORIZACION' type='java.lang.String'  not-null='false' />
+
+	<!-- FECHA DE VALIDEZ DEL DOCUMENTO SUSTENTO DE LA COMPRA-->
+	<property name='fechavalidezdocumento' column='FECHAVALIDEZDOCUMENTO' type='java.sql.Date'  not-null='false' />
+
+	<!-- VALOR DE CARGOS ADICIONALES-->
+	<property name='valorcargosfinancieros' column='VALORCARGOSFINANCIEROS' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- CODIGO DE USUARIO QUE APRUEBA LA SOLICITUD DE PAGO-->
+	<property name='cusuario_aprobador' column='CUSUARIO_APROBADOR' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DE LAS FORMA DE PAGO DE COMPRAS-->
+	<property name='cformapagocompras' column='CFORMAPAGOCOMPRAS' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PAIS-->
+	<property name='cpais' column='CPAIS' type='java.lang.String'  not-null='false' />
+
+	<!-- FECHA DE APROBACION DE LA SOLICITUD DE PAGO-->
+	<property name='faprobacion' column='FAPROBACION' type='java.sql.Date'  not-null='false' />
+
+	<!-- ESPECIFICA EL NUMERO DE TRAMITE DE IMPORTACION AL QUE SE CARGA LA COMPRA-->
+	<property name='numerodocumento_importacion' column='NUMERODOCUMENTO_IMPORTACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE DE LA IMPORTACION-->
+	<property name='cperiodo_importacion' column='CPERIODO_IMPORTACION' type='java.lang.String'  not-null='false' />
+
+	<!-- INDICA SI EL PAGO EFECTUADO ESTA SUJETO A ALGUN CONVENIO DE DOBLE TRIBUTACION. (SI / NO)-->
+	<property name='dobletributacion' column='DOBLETRIBUTACION' type='java.lang.String'  not-null='false' />
+
+	<!-- INDICAR SI EL PAGO REALIZADO AL EXTERIOR APLICA RETENCION EN APLICACION A LA NORMA LEGAL.  (SI / NO)-->
+	<property name='sujetoaretencion' column='SUJETOARETENCION' type='java.lang.String'  not-null='false' />
+
+	<!-- FECHA DE PAGO DEL DIVIDENDO-->
+	<property name='fpagodividendo' column='FPAGODIVIDENDO' type='java.sql.Date'  not-null='false' />
+
+	<!-- VALOR DEL IMPUESTO A LA RENTA PAGADO POR LA SOCIEDAD QUE CORRESPONDE AL DIVIDENDO REPORTADO-->
+	<property name='irdividendo' column='IRDIVIDENDO' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- REGISTRA EL ANO EN EL CUAL SE GENERARON LAS UTILIDADES SOBRE EL DIVIDENDO REPORTADO-->
+	<property name='aniodividendo' column='ANIODIVIDENDO' type='java.lang.String'  not-null='false' />
+
+	<!-- SI EL PAGO REALIZADO POR LA TRANSACCION INGRESADO  SE REALIZO DE MANERA LOCAL O AL EXTERIOR-->
+	<property name='tipopago' column='TIPOPAGO' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DE LA BODEGA-->
+	<property name='cbodega' column='CBODEGA' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DE TIPO DEL PRESUPUESTO QUE ES LA SOLICITUD DE PAGO-->
+	<property name='ctipopresupuesto' column='CTIPOPRESUPUESTO' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL TIPO DE LIQUIDACION (FONDOS ROTATIVOS FR, CAJA CHICA CC, ETC.) -->
+	<property name='ctipoliquidacion' column='CTIPOLIQUIDACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DE LA CUENTA CONTABLE AUXILIAR DE LA CUENTA MAYOR ESCOGIDA EN EL TIPO DE LIQUIDACION-->
+	<property name='ccuentaauxliquidacion' column='CCUENTAAUXLIQUIDACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CHEK, ESTADO QUE INDICA 2=LIQUIDADO, 1=EN PROCESO Y 0=NO LIQUIDADO.-->
+	<property name='estadoliquidacion' column='ESTADOLIQUIDACION' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE DOCUMENTO DEL INGRESO A BODEGA-->
+	<property name='numerodocumento_ajuste' column='NUMERODOCUMENTO_AJUSTE' type='java.lang.String'  not-null='false' />
+
+	<!-- PRIODO DEL INGRESO A BODEGA-->
+	<property name='cperiodo_ajuste' column='CPERIODO_AJUSTE' type='java.lang.String'  not-null='false' />
+
+	<!-- CHECK QUE INDICA NULL=NO ES SP DE PROVISION, 1=SI ES SP DE PROVISION, 2=LA SP FUE YA CRUZADA CON LA PROVISION-->
+	<property name='provision' column='PROVISION' type='java.lang.String'  not-null='false' />
+
+	<!-- MONEDA DEL TIPO DE CAMBIO-->
+	<property name='cmoneda_tipocambio' column='CMONEDA_TIPOCAMBIO' type='java.lang.String'  not-null='false' />
+
+	<!-- TIPO DE CAMBIO DE UNA MONEDA CONTRA LA MONEDA OFICIAL-->
+	<property name='ctipocambio' column='CTIPOCAMBIO' type='java.lang.String'  not-null='false' />
+
+	<!-- FECHA DE VIGENCIA DEL TIPO DE CAMBIO-->
+	<property name='fvigencia_tipocambio' column='FVIGENCIA_TIPOCAMBIO' type='java.sql.Timestamp'  not-null='false' />
+
+	<!-- CODIGO DE LA CUENTA CONTABLE DEL GASTO DE LA IMPORTACION-->
+	<property name='codigocontable_importacion' column='CODIGOCONTABLE_IMPORTACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CHECK QUE INDICA NULL=NO ES SP DE IMPORTACION, 1=SI ES SP DE IMPORTACION Y 2= SI ES UNA SP DE IMPORTACION DE LIQUIDACION.-->
+	<property name='importacion' column='IMPORTACION' type='java.lang.String'  not-null='false' />
+
+	<!-- ESPECIFICA EL NUMERO DE DOCUMENTO ANTERIOR A LA MIGRACION-->
+	<property name='numerodocumento_migracion' column='NUMERODOCUMENTO_MIGRACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE AL QUE PERTENECE EL DOCUMENTO MIGRADO.-->
+	<property name='cperiodo_migracion' column='CPERIODO_MIGRACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CAMPO QUE IDENTIFICA SI SE HIZO INGRESOS PARCIALES-->
+	<property name='parcial' column='PARCIAL' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DE LA CUENTA CONTABLE DE LA PROVISION-->
+	<property name='codigocontable_provision' column='CODIGOCONTABLE_PROVISION' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE DOCUMENTO DE LA SOLICITUD DE COMPRA-->
+	<property name='numerodocumento_solcomp' column='NUMERODOCUMENTO_SOLCOMP' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE DE LA SOLICITUD DE COMPRA-->
+	<property name='cperiodo_solcomp' column='CPERIODO_SOLCOMP' type='java.lang.String'  not-null='false' />
+
+	<!-- VALOR TOTAL DEL GASTO-->
+	<property name='valorgasto' column='VALORGASTO' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- CHECK QUE INDICA SI LA SOLICITUD SE INGRESARA A BODEGA O NO-->
+	<property name='ingresabodega' column='INGRESABODEGA' type='java.lang.String'  not-null='false' />
+
+	<!-- INDICA SI LA FACTURA DEL PROVEEDOR ES POR REEMBOLSO-->
+	<property name='reembolso' column='REEMBOLSO' type='java.lang.String'  not-null='false' />
+
+	<!-- TOTAL TARIFA IVA COMPENSACION SOLIDARIA-->
+	<property name='tottarifaivacompensacion' column='TOTTARIFAIVACOMPENSACION' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- VALOR DEL IVA COMPENSACION SOLIDARIA-->
+	<property name='valorivacompensacion' column='VALORIVACOMPENSACION' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- CONCEPTO DEL CHEQUE PARA GENERAR EL FINANCIERO-->
+	<property name='conceptocheque' column='CONCEPTOCHEQUE' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE DOCUMENTO DE LA PROFORMA-->
+	<property name='numerodocumento_proforma' column='NUMERODOCUMENTO_PROFORMA' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE DE LA PROFORMA-->
+	<property name='cperiodo_proforma' column='CPERIODO_PROFORMA' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE DOCUMENTO DEL INGRESO A BODEGA-->
+	<property name='numerodocumento_ingbodega' column='NUMERODOCUMENTO_INGBODEGA' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE DEL INGRESO A BODEGA-->
+	<property name='cperiodo_ingbodega' column='CPERIODO_INGBODEGA' type='java.lang.String'  not-null='false' />
+
+	<!-- NUMERO DE DOCUMENTO DEL CUADRO COMPARATIVO-->
+	<property name='numerodocumento_cuadro' column='NUMERODOCUMENTO_CUADRO' type='java.lang.String'  not-null='false' />
+
+	<!-- PERIODO DEL CUADRO COMPARATIVO-->
+	<property name='cperiodo_cuadro' column='CPERIODO_CUADRO' type='java.lang.String'  not-null='false' />
+
+	<!-- CHECK QUE INDICA SI EL DOCUMENTO REQUIERE UN BENEFICIARIO ADICIONAL AL DEL PROVEEDOR 0 O 1-->
+	<property name='beneficiario' column='BENEFICIARIO' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL BENEFICIARIO EN LUGAR DEL PROVEEDOR-->
+	<property name='ccuenta_beneficiario' column='CCUENTA_BENEFICIARIO' type='java.lang.String'  not-null='false' />
+
+	<!-- ESTABLECE SI EL PROVEEDOR PROPORCIONA O NO TRANSPORTE-->
+	<property name='transporte' column='TRANSPORTE' type='java.lang.String'  not-null='false' />
+
+	<!-- INDICA SI LA SOLICITUD DE PAGO ES UNA COMPRA EN TRANSITO =1 O NO =0-->
+	<property name='compratransito' column='COMPRATRANSITO' type='java.lang.String'  not-null='false' />
+
+	<!-- CHECK QUE VERIFICA SI SE DEBE HACER LA DISTRIBUCIÓN-->
+	<property name='distribucion' column='DISTRIBUCION' type='java.lang.String'  not-null='false' />
+
+	<!-- -->
+	<property name='fecharecepcionservicios' column='FECHARECEPCIONSERVICIOS' type='java.sql.Date'  not-null='false' />
+
+	<!-- -->
+	<property name='cdepartamentoautorizador' column='CDEPARTAMENTOAUTORIZADOR' type='java.lang.Integer'  not-null='false' />
+
+	<!-- -->
+	<property name='cpoliticapago' column='CPOLITICAPAGO' type='java.lang.Integer'  not-null='false' />
+
+	<!-- -->
+	<property name='frecepcioncontabilidad' column='FRECEPCIONCONTABILIDAD' type='java.sql.Timestamp'  not-null='false' />
+
+	<!-- -->
+	<property name='frecepciontesoreria' column='FRECEPCIONTESORERIA' type='java.sql.Timestamp'  not-null='false' />
+
+	<!-- -->
+	<property name='fechaentregacontabilidad' column='FECHAENTREGACONTABILIDAD' type='java.sql.Date'  not-null='false' />
+
+</class>
+</hibernate-mapping>

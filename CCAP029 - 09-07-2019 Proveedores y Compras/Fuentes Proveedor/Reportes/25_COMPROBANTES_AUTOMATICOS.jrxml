@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="25_COMPROBANTES_AUTOMATICOS" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" isIgnorePagination="true" uuid="51d2f11c-63de-4e2a-86b2-6273c9bf813a">
+	<property name="ireport.zoom" value="1.3310000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="83"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="29Octubre2050"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="275"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="719"/>
+	<import value="com.fitbank.reports.SubReportCall"/>
+	<style name="color_filas">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 0 ? Boolean.TRUE:Boolean.FALSE]]></conditionExpression>
+			<style mode="Opaque" forecolor="#EEEEEE"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="CIA" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FHASTA" class="java.sql.Timestamp" isForPrompting="false"/>
+	<parameter name="CSUBSISTEMA" class="java.lang.String"/>
+	<parameter name="CTRANSACCION" class="java.lang.String"/>
+	<parameter name="FITBANK_HEADER_LOGO" class="java.lang.String"/>
+	<parameter name="TITLE" class="java.lang.String"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<parameter name="CTIPODOCUMENTO" class="java.lang.String"/>
+	<parameter name="DTIPODOCUMENTO" class="java.lang.String"/>
+	<parameter name="CNUMEROCOMPROBANTE" class="java.lang.String"/>
+	<parameter name="CPERIODO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    (
+        SELECT
+            tcs.cusuario
+        FROM
+            TCSOLICITUDPAGO tcs,
+            tusuarios tu,
+            tpersona tp
+        WHERE
+            tp.cpersona= tu.cpersona
+        AND tu.cusuario = tcs.cusuario
+        AND tcs.NUMERODOCUMENTO= $P{CNUMEROCOMPROBANTE}
+        AND tcs.CESTATUSDOCUMENTO = '001'
+        AND rownum<2) UELABORA,
+    (
+        SELECT
+            tp.nombrelegal
+        FROM
+            TCSOLICITUDPAGO tcs,
+            tusuarios tu,
+            tpersona tp
+        WHERE
+            tp.cpersona= tu.cpersona
+        AND tu.cusuario = tcs.cusuario
+        AND tcs.NUMERODOCUMENTO=$P{CNUMEROCOMPROBANTE}
+        AND tcs.CESTATUSDOCUMENTO = '001'
+        AND rownum<2) NELABORA,
+    (
+        SELECT
+            tcs.CUSUARIO_APROBADOR
+        FROM
+            TCSOLICITUDPAGO tcs,
+            tusuarios tu,
+            tpersona tp
+        WHERE
+            tp.cpersona= tu.cpersona
+        AND tu.cusuario = tcs.CUSUARIO_APROBADOR
+        AND tcs.NUMERODOCUMENTO=$P{CNUMEROCOMPROBANTE}
+        AND tcs.CESTATUSDOCUMENTO = '002'
+        AND rownum<2) UAPRUEBA,
+    (
+        SELECT
+            DESCRIPCION
+        FROM
+            TOCUPACIONES
+        WHERE
+            COCUPACION =
+            (
+                SELECT
+                    COCUPACION
+                FROM
+                    TNATURALTRABAJO
+                WHERE
+                    cocupacion=31
+                AND cpersona =
+                    (
+                        SELECT
+                            tp.cpersona
+                        FROM
+                            TCSOLICITUDPAGO tcs,
+                            tusuarios tu,
+                            tpersona tp
+                        WHERE
+                            tp.cpersona= tu.cpersona
+                        AND tu.cusuario = tcs.cusuario
+                        AND tcs.NUMERODOCUMENTO=$P{CNUMEROCOMPROBANTE}
+                        AND tcs.CESTATUSDOCUMENTO = '001'
+                        AND rownum<2)
+                AND fhasta = fncfhasta
+                AND strabajo =1)
+        AND fhasta = fncfhasta)ocupacion1,
+    (
+        SELECT
+            DESCRIPCION
+        FROM
+            TOCUPACIONES
+        WHERE
+            COCUPACION =
+            (
+                SELECT
+                    COCUPACION
+                FROM
+                    TNATURALTRABAJO
+                WHERE
+                    cocupacion=279
+                AND cpersona =
+                    (
+                        SELECT
+                            tp.cpersona
+                        FROM
+                            TCSOLICITUDPAGO tcs,
+                            tusuarios tu,
+                            tpersona tp
+                        WHERE
+                            tp.cpersona= tu.cpersona
+                        AND tu.cusuario = tcs.CUSUARIO_APROBADOR
+                        AND tcs.NUMERODOCUMENTO=$P{CNUMEROCOMPROBANTE}
+                        AND tcs.CESTATUSDOCUMENTO = '002'
+                        AND rownum<2)
+                AND fhasta = fncfhasta)
+        AND fhasta = fncfhasta)ocupacion2,
+    (
+        SELECT
+            tp.nombrelegal
+        FROM
+            TCSOLICITUDPAGO tcs,
+            tusuarios tu,
+            tpersona tp
+        WHERE
+            tp.cpersona= tu.cpersona
+        AND tu.cusuario = tcs.CUSUARIO_APROBADOR
+        AND tcs.NUMERODOCUMENTO=$P{CNUMEROCOMPROBANTE}
+        AND tcs.CESTATUSDOCUMENTO = '002'
+        AND rownum<2) NAPRUEBA,
+    csucursal_cuenta,
+    nombresucursal,
+    coficina_cuenta,
+    nombreoficina,
+    codigocontable,
+    nombrecuenta,
+    NOMBREP,
+    NUMEROFACTURA,
+    RUC,
+    CCUENTA,
+    CONCEPTO,
+    CASE
+        WHEN valordc>0
+        THEN 'D'
+        ELSE 'C'
+    END debitocredito,
+    CASE
+        WHEN valordc>0
+        THEN valordc
+        ELSE NULL
+    END debitos,
+    CASE
+        WHEN valordc<0
+        THEN valordc*-1
+        ELSE NULL
+    END creditos,
+    cmoneda_oficial,
+    CASE
+        WHEN valordcme>0
+        THEN valordcme
+        ELSE NULL
+    END debitosme,
+    CASE
+        WHEN valordcme<0
+        THEN valordcme*-1
+        ELSE NULL
+    END creditosme,
+    cmoneda_movimiento,
+    detalle,
+    fcontable
+FROM
+    (
+        SELECT
+            csucursal_cuenta,
+            nombresucursal,
+            coficina_cuenta,
+            nombreoficina,
+            codigocontable,
+            nombrecuenta,
+            SUM(valordc) valordc,
+            cmoneda_oficial,
+            SUM(valordcme) valordcme,
+            cmoneda_movimiento,
+            detalle,
+            fcontable ,
+            NOMBREP,
+            NUMEROFACTURA,
+            RUC,
+            CCUENTA,
+            CONCEPTO
+        FROM
+            (
+                SELECT
+                    m.csucursal_cuenta,
+                    (
+                        SELECT
+                            s.nombre
+                        FROM
+                            tsucursales s
+                        WHERE
+                            s.cpersona_compania = $P{CIA}
+                        AND s.csucursal = '1'
+                        AND s.fhasta = fncfhasta) nombresucursal,
+                    m.coficina_cuenta,
+                    (
+                        SELECT
+                            o.nombre
+                        FROM
+                            toficinas o
+                        WHERE
+                            o.cpersona_compania = $P{CIA}
+                        AND o.coficina = m.coficina_cuenta
+                        AND o.fhasta = fncfhasta) AS nombreoficina,
+                    m.codigocontable,
+                    (
+                        SELECT
+                            cc.nombrecuenta
+                        FROM
+                            tcuentacontable cc
+                        WHERE
+                            cc.cpersona_compania = $P{CIA}
+                        AND cc.codigocontable = m.codigocontable
+                        AND cc.fhasta = fncfhasta) AS nombrecuenta,
+                    CASE
+                        WHEN m.debitocredito='D'
+                        THEN m.valormonedaoficial
+                        ELSE m.valormonedaoficial*-1
+                    END valordc,
+                    m.cmoneda_oficial,
+                    CASE
+                        WHEN m.debitocredito='D'
+                        THEN m.valormonedamovimiento
+                        ELSE m.valormonedamovimiento*-1
+                    END valordcme,
+                    m.cmoneda_movimiento,
+                    m.detalle,
+                    m.fcontable,
+                    (
+                        SELECT
+                            OBSERVACIONES
+                        FROM
+                            TCSOLICITUDPAGO
+                        WHERE
+                            NUMERODOCUMENTO = m.NUMEROCOMPROBANTE
+                        and cperiodo = $P{CPERIODO}
+                        AND fhasta=fncfhasta) CONCEPTO,
+                    (
+                        SELECT
+                            NOMBRELEGAL
+                        FROM
+                            TPERSONA
+                        WHERE
+                            FHASTA > SYSDATE
+                        AND IDENTIFICACION =
+                            (
+                                SELECT
+                                    ccuenta_proveedor
+                                FROM
+                                    TCSOLICITUDPAGO
+                                WHERE
+                                    fhasta > SYSDATE
+                                AND NUMERODOCUMENTO = m.numerocomprobante
+                                 and cperiodo = $P{CPERIODO}
+                               AND fhasta=fncfhasta)) NOMBREP,
+                    (
+                        SELECT
+                            NUMEROESTABLECIMIENTO||'-'||NUMEROPUNTOEMISION||'-'||
+                            NUMERODOCUMENTOFACTURACION
+                        FROM
+                            TCSOLICITUDPAGO
+                        WHERE
+                            NUMERODOCUMENTO = m.NUMEROCOMPROBANTE
+                        and cperiodo = $P{CPERIODO}
+                        AND fhasta=fncfhasta) NUMEROFACTURA,
+                    (
+                        SELECT
+                            CCUENTA_PROVEEDOR
+                        FROM
+                            tcsolicitudpago
+                        WHERE
+                            numerodocumento = m.NUMEROCOMPROBANTE
+                        and cperiodo = $P{CPERIODO}
+                        AND fhasta=fncfhasta) RUC,
+                    (
+                        SELECT
+                            tpr.ccuenta
+                        FROM
+                            TPERSONAREFERENCIASBANCARIAS tpr
+                        WHERE
+                            tpr.cpersona=
+                            (
+                                SELECT
+                                    cpersona
+                                FROM
+                                    tpersona
+                                WHERE
+                                    fhasta > SYSDATE
+                                AND identificacion =
+                                    (
+                                        SELECT
+                                            CCUENTA_PROVEEDOR
+                                        FROM
+                                            tcsolicitudpago
+                                        WHERE
+                                            numerodocumento = $P{CNUMEROCOMPROBANTE}
+                                        and cperiodo = $P{CPERIODO}
+                                        AND fhasta > SYSDATE ) )
+                        AND cuentapago='1'
+                        AND fhasta= fncfhasta) CCUENTA
+                FROM
+                    tmovimientos m
+                WHERE
+                    m.cpersona_compania = $P{CIA}
+                AND m.numerocomprobante = $P{CNUMEROCOMPROBANTE}
+                AND m.valormonedaoficial!=0
+                AND SUBSTR(TO_CHAR(m.freal,'dd-MM-yyyy'),7,4) = $P{CPERIODO} )
+        GROUP BY
+            csucursal_cuenta,
+            nombresucursal,
+            coficina_cuenta,
+            nombreoficina,
+            codigocontable,
+            nombrecuenta,
+            cmoneda_oficial,
+            cmoneda_movimiento,
+            detalle,
+            fcontable,
+            NOMBREP,
+            NUMEROFACTURA,
+            RUC,
+            CCUENTA,
+            CONCEPTO)
+ORDER BY
+    debitocredito DESC,
+    codigocontable ASC]]>
+	</queryString>
+	<field name="NELABORA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NELABORA"/>
+	</field>
+	<field name="OCUPACION1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OCUPACION1"/>
+	</field>
+	<field name="OCUPACION2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OCUPACION2"/>
+	</field>
+	<field name="NAPRUEBA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NAPRUEBA"/>
+	</field>
+	<field name="CSUCURSAL_CUENTA" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CSUCURSAL_CUENTA"/>
+	</field>
+	<field name="NOMBRESUCURSAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRESUCURSAL"/>
+	</field>
+	<field name="COFICINA_CUENTA" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="COFICINA_CUENTA"/>
+	</field>
+	<field name="NOMBREOFICINA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBREOFICINA"/>
+	</field>
+	<field name="CODIGOCONTABLE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CODIGOCONTABLE"/>
+	</field>
+	<field name="NOMBRECUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRECUENTA"/>
+	</field>
+	<field name="NOMBREP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBREP"/>
+	</field>
+	<field name="NUMEROFACTURA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NUMEROFACTURA"/>
+	</field>
+	<field name="RUC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RUC"/>
+	</field>
+	<field name="CCUENTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CCUENTA"/>
+	</field>
+	<field name="CONCEPTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CONCEPTO"/>
+	</field>
+	<field name="DEBITOCREDITO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DEBITOCREDITO"/>
+	</field>
+	<field name="DEBITOS" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DEBITOS"/>
+	</field>
+	<field name="CREDITOS" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CREDITOS"/>
+	</field>
+	<field name="CMONEDA_OFICIAL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CMONEDA_OFICIAL"/>
+	</field>
+	<field name="DEBITOSME" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DEBITOSME"/>
+	</field>
+	<field name="CREDITOSME" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CREDITOSME"/>
+	</field>
+	<field name="CMONEDA_MOVIMIENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CMONEDA_MOVIMIENTO"/>
+	</field>
+	<field name="DETALLE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DETALLE"/>
+	</field>
+	<field name="FCONTABLE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FCONTABLE"/>
+	</field>
+	<variable name="SALDOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="COSTOINICIAL" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="SUMA_DEBITOS" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{DEBITOS}]]></variableExpression>
+	</variable>
+	<variable name="SUMA_CREDITOS" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CREDITOS}]]></variableExpression>
+	</variable>
+	<variable name="DIFERENCIA" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{SUMA_CREDITOS}.subtract($V{SUMA_DEBITOS})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="147" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="77a0688d-fd92-41f1-8ee1-24ea22498533" x="0" y="0" width="555" height="119"/>
+				<subreportParameter name="NAME">
+					<subreportParameterExpression><![CDATA[$P{TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CUSUARIO">
+					<subreportParameterExpression><![CDATA[$P{CUSUARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CIA">
+					<subreportParameterExpression><![CDATA[$P{CIA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FHASTA">
+					<subreportParameterExpression><![CDATA[$P{FHASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FITBANK_HEADER_LOGO">
+					<subreportParameterExpression><![CDATA[$P{FITBANK_HEADER_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CTRANSACCION">
+					<subreportParameterExpression><![CDATA[$P{CTRANSACCION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CSUBSISTEMA">
+					<subreportParameterExpression><![CDATA[$P{CSUBSISTEMA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[SubReportCall.getReport($P{REPORT_CONNECTION},"12_HEADERCA")]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="164" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="48bfd5c7-50f9-452c-b6eb-1e058e474c5a" x="153" y="146" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Cód Contable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0e447101-f79c-499d-8391-8e497b9c88eb" x="229" y="146" width="174" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[ Descripción Cód. Contable 	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6f3e8194-b79a-4814-b0eb-f0fea3057926" x="403" y="146" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Débito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="999bef37-1976-41fb-a64c-0111c6a25339" x="479" y="146" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Crédito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="64442a6e-9b85-46c5-9ead-8b02b514ebad" x="1" y="146" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<text><![CDATA[ Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9d067640-b113-4813-ab9a-5a9d6a17b61b" x="77" y="146" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[Oficina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="787f03fe-a382-47ac-93ef-0b381c61f777" x="10" y="45" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUC]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="167af42c-03dc-47ed-ae42-c9d15a1fb534" x="151" y="45" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{RUC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="79bba363-638d-4e1a-8925-54409bb84454" x="10" y="60" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f3cb7467-1a60-42f6-800e-f48f356175e8" x="151" y="60" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NOMBREP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ef8f7bb0-2afe-4a7b-868c-4359c4810144" x="10" y="0" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Documento]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="77bfdfde-e55c-48dc-becf-eaa88f5393c4" x="151" y="0" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{CTIPODOCUMENTO} + '-' + $P{DTIPODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7205b6b0-eaf1-40e1-9186-64bb2838cbf6" x="151" y="15" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{CNUMEROCOMPROBANTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="3b2e8f94-249e-4a13-b720-ec550c806315" x="10" y="15" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f0f5154d-430f-4445-95ff-51e112f65502" x="10" y="75" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° de Factura]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="dfbf5097-71a6-49e4-a738-804147722b70" x="151" y="75" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NUMEROFACTURA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8996eba2-3960-49fe-ace0-7fe04c88668a" x="10" y="30" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Contable]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="27a3e861-7867-4e65-91a1-f1b5a9784966" x="151" y="30" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FCONTABLE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="58c98d9c-4e4d-43e7-a4cf-b612d4f6b82e" x="10" y="105" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Concepto]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="3352e15b-85a8-47ef-ade7-34849b9b29ac" x="151" y="105" width="404" height="27"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CONCEPTO}==null || String.valueOf($F{CONCEPTO}).equals("null"))?"":$F{CONCEPTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="59a2351e-0d46-4db9-a0b3-dd7367c9eea3" x="10" y="90" width="141" height="15"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="29b5418c-3d7f-460e-afd2-bf94d4aa0a16" x="151" y="90" width="404" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CCUENTA}==null?"NO REGISTRA CUENTA":$F{CCUENTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="25c505c7-8b72-4725-8af6-3f8b8cdd5409" x="1" y="0" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="754d9b51-53fc-4fb0-9fec-e3af47ce1283" x="77" y="0" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COFICINA_CUENTA}+" "+$F{NOMBREOFICINA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="2aeced7f-33ed-4d07-b5b8-7be89a19768b" x="153" y="0" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="1"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODIGOCONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="667400a4-8892-41aa-a49e-6bf87b72708d" x="229" y="0" width="174" height="18">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph leftIndent="2" rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECUENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="4267eaa6-661a-4cd5-8c05-abcc7dec5c8b" x="479" y="0" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+					<paragraph rightIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{CREDITOS}==null || String.valueOf($F{CREDITOS}).equals("null"))?"":$F{CREDITOS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 " isBlankWhenNull="true">
+				<reportElement uuid="2feca1e7-f558-4452-8f12-f0b4465d53c5" x="403" y="0" width="76" height="18">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{DEBITOS}==null || String.valueOf($F{DEBITOS}).equals("null"))?"":$F{DEBITOS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="180" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="d424ac4e-842e-48b8-9838-031ecf6d2c50" x="154" y="32" width="75" height="15">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Débitos ME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c78279f3-12ff-4d98-9b14-bd4e67f7e7b5" x="154" y="47" width="75" height="15">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Créditos ME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="86aa8897-22f9-496a-ab9b-0921fc1ec687" x="154" y="62" width="75" height="15">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<text><![CDATA[Diferencia ME]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="633da6ef-bcfb-4193-a3a2-60bd99e6c40c" x="229" y="32" width="188" height="15"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{SUMA_DEBITOS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="cc73b5f3-01a0-4a61-b1ed-8ace673fe151" x="229" y="47" width="188" height="15"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{SUMA_CREDITOS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="9f11e3ae-994b-41de-a7ac-c52f7b17d920" x="229" y="62" width="188" height="15"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{DIFERENCIA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e86c4f22-79e3-454d-ae5e-e26121f22f5f" x="59" y="133" width="150" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement uuid="081261af-b27f-4514-a691-e67b35ffd176" x="341" y="130" width="150" height="1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement uuid="aefca93b-732b-428b-a5c6-4e7bd386ae05" x="96" y="134" width="80" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Elaborado por:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="2d050043-67b9-4530-851d-1edd93e88aa5" x="271" y="147" width="284" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{NAPRUEBA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4dddfb6b-4f4e-4526-b3d8-4eaedc30afcd" x="378" y="133" width="82" height="15"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aprobado por:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="3621e673-d455-441f-a00b-dff78485f93f" x="1" y="147" width="270" height="15"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{NELABORA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5ebacb25-5988-469c-ac5a-236d633fb964" x="1" y="164" width="270" height="16"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{OCUPACION1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="aba76756-c513-46f4-a9b6-151ef383ddac" x="271" y="162" width="283" height="16"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{OCUPACION2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement uuid="18005e5c-b5b9-4056-946f-cb5ccdc54973" x="435" y="20" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="cee139ca-9887-42cd-85e3-ff6da815c84e" x="515" y="20" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

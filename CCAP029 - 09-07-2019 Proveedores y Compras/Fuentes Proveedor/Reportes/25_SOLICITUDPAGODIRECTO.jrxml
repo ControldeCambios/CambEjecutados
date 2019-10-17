@@ -1,0 +1,991 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="25_SOLICITUDPAGODIRECTO" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="822" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isFloatColumnFooter="true" uuid="11d6eb77-860d-4eec-9431-3409d56b4323">
+	<property name="ireport.zoom" value="1.6500000000000026"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="com.fitbank.jasper.*"/>
+	<import value="com.fitbank.reports.*"/>
+	<import value="com.fitbank.common.*"/>
+	<style name="fondofila" mode="Opaque" backcolor="#CCCCCC"/>
+	<parameter name="FHASTA" class="java.sql.Timestamp"/>
+	<parameter name="CIA" class="java.lang.String"/>
+	<parameter name="CUSUARIO" class="java.lang.String"/>
+	<parameter name="CSUBSISTEMA" class="java.lang.String"/>
+	<parameter name="CTRANSACCION" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/diego/fitbank/reportes/25/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<parameter name="CSUCURSAL" class="java.lang.String"/>
+	<parameter name="CBODEGA" class="java.lang.String"/>
+	<parameter name="CCUENTA" class="java.lang.String"/>
+	<parameter name="CTIPODOCUMENTOFACTURACION" class="java.lang.String"/>
+	<parameter name="FRECUENCIA" class="java.lang.String"/>
+	<parameter name="AUTORIZACION" class="java.lang.String"/>
+	<parameter name="NDOCUMENTO" class="java.lang.String"/>
+	<parameter name="CARGOSADICIONALES" class="java.lang.String"/>
+	<parameter name="FECHA" class="java.util.Date"/>
+	<parameter name="PTO_TRABAJO" class="java.lang.String"/>
+	<parameter name="CPERSONA" class="java.lang.String"/>
+	<parameter name="FITBANK_HEADER_LOGO" class="java.lang.String"/>
+	<parameter name="CPERIODO" class="java.lang.String"/>
+	<parameter name="PLAZO" class="java.lang.String"/>
+	<parameter name="IDM" class="java.lang.String"/>
+	<parameter name="CFORMAPAGOCOMPRAS" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    TC.CSUCURSAL||' '||( SELECT NOMBRE FROM TSUCURSALES WHERE FHASTA = $P{FHASTA} AND CPERSONA_COMPANIA = $P{CIA} AND CSUCURSAL = TC.CSUCURSAL ) CSUCURSAL_VAR,
+    TC.CPUNTOTRABAJO||' '||( SELECT DESCRIPCION FROM TPUNTOSTRABAJO WHERE CPERSONA_COMPANIA = $P{CIA} AND FHASTA = $P{FHASTA} AND CMODULO = '25' AND CPUNTOTRABAJO = TC.CPUNTOTRABAJO ) CPUNTOTRABAJO_VAR,
+    DET.NUMERODOCUMENTO,
+    DET.CCUENTA,
+    CUE.DESCRIPCION,
+    DET.OBSERVACIONES,
+    UNI.DESCRIPCION UNIDAD,
+    MAR.DESCRIPCION MARCA,
+    DET.CANTIDAD,
+    DET.PRECIOUNITARIO,
+    DET.DESCUENTO,
+    DET.PRECIOUNITARIO PRECIO,
+    DET.TOTAL,
+    ICE.PORCENTAJEICE PICE,
+    SPR.VALORICE ICE,
+    RF.PORCENTAJERETENCIONFUENTE PRF,
+    SPR.VALORETENCIONFUENTE RF,
+    RIVA.PORCENTAJERETENCIONIVA PRIVA,
+    SPR.VALORETENCIONIVA RIVA
+FROM
+    TDSOLICITUDPAGO DET,
+    TCUENTAINVENTARIO CUE,
+    TUNIDADES UNI,
+    TMARCAS MAR,
+    TDSOLICITUDPAGORETENCION SPR,
+    TTARIFAICE ICE,
+    TPORCENTAJERETENCIONTARIFAIVA RIVA,
+    TCONCEPTORETENCIONFUENTE RF,
+    TCSOLICITUDPAGO TC
+WHERE
+TC.FHASTA =$P{FHASTA}
+AND TC.NUMERODOCUMENTO = $P{NUMERODOCUMENTO}
+AND DET.CPERSONA_COMPANIA = $P{CIA}
+AND DET.CPERSONA_COMPANIA=CUE.CPERSONA_COMPANIA
+AND DET.CPERSONA_COMPANIA=SPR.CPERSONA_COMPANIA
+AND DET.NUMERODOCUMENTO = $P{NUMERODOCUMENTO}
+AND DET.NUMERODOCUMENTO=SPR.NUMERODOCUMENTO
+AND DET.CPERIODO = $P{CPERIODO}
+AND DET.CPERIODO=SPR.CPERIODO
+AND DET.CCUENTA=CUE.CCUENTA
+AND CUE.CUNIDAD=UNI.CUNIDAD
+AND CUE.CMARCA=MAR.CMARCA
+AND CUE.CTIPOITEM=SPR.CTIPOITEM
+AND CUE.CTARIFAICE=ICE.CTARIFAICE
+AND CUE.CTARIFAIVA=RIVA.CTARIFAIVA
+AND SPR.CPORCENTAJERETENCIONIVA=RIVA.CPORCENTAJERETENCIONIVA
+AND SPR.CCONCEPTORF=RF.CCONCEPTORF
+AND DET.FHASTA=$P{FHASTA}
+AND DET.FHASTA=CUE.FHASTA
+AND DET.FHASTA=UNI.FHASTA
+AND DET.FHASTA=MAR.FHASTA
+AND DET.FHASTA=SPR.FHASTA
+AND DET.FHASTA=ICE.FHASTA
+AND DET.FHASTA=RIVA.FHASTA
+AND DET.FHASTA=RF.FHASTA]]>
+	</queryString>
+	<field name="CSUCURSAL_VAR" class="java.lang.String"/>
+	<field name="CPUNTOTRABAJO_VAR" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="CCUENTA" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="OBSERVACIONES" class="java.lang.String"/>
+	<field name="UNIDAD" class="java.lang.String"/>
+	<field name="MARCA" class="java.lang.String"/>
+	<field name="CANTIDAD" class="java.math.BigDecimal"/>
+	<field name="PRECIOUNITARIO" class="java.math.BigDecimal"/>
+	<field name="DESCUENTO" class="java.math.BigDecimal"/>
+	<field name="PRECIO" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="PICE" class="java.math.BigDecimal"/>
+	<field name="ICE" class="java.math.BigDecimal"/>
+	<field name="PRF" class="java.math.BigDecimal"/>
+	<field name="RF" class="java.math.BigDecimal"/>
+	<field name="PRIVA" class="java.math.BigDecimal"/>
+	<field name="RIVA" class="java.math.BigDecimal"/>
+	<variable name="PORCDESC" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="CSUCURSAL_VAR_1" class="java.lang.Integer" resetType="Page" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{CSUCURSAL_VAR}]]></variableExpression>
+	</variable>
+	<group name="totales">
+		<groupFooter>
+			<band height="110">
+				<textField pattern="#,##0.00">
+					<reportElement uuid="c5934acd-8c18-4989-8cf3-a53ff7d56a16" x="756" y="15" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select valordescuento from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="bb4e9d0a-312f-48c6-9b1b-cabb9508b7dc" x="656" y="0" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Total Sin Desc.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0806322f-7aa4-44db-b805-aeed9bc326c4" x="656" y="30" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Base 0]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0f415900-b503-452f-a4d7-fa16b056d040" x="656" y="45" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Base IVA]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="7d9e369a-b7e7-40c3-9cbb-8e138f9c6f37" x="756" y="60" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select valoriva from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="7ecc49a1-e468-41f0-abd3-1458b6e9418d" x="656" y="15" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Descuento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="76443b84-85aa-4c32-90d6-4f367135f086" x="656" y="60" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[IVA]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="6ab84cc6-3b14-4597-9908-5b6d110d29e2" x="756" y="30" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select TOTTARIFACERO from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="bbbdaf41-10d8-46f8-9158-482a540f91e4" x="756" y="45" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select TOTTARIFAIVA from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="93f1e4ee-47c3-4a7f-b090-be2208998d0e" x="656" y="75" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Cargos Adicionales]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="e5181ed1-0b87-4059-80df-60234d98ee7f" x="756" y="90" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select totalgeneral from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="43f12a99-ca89-4429-906d-d21f54f4d7d9" x="656" y="90" width="100" height="15"/>
+					<textElement>
+						<font pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="808f88b1-222d-4d8a-bb6a-13476e5ae787" x="756" y="75" width="66" height="15"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[(Number)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select VALORCARGOSFINANCIEROS from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+				</textField>
+				<frame>
+					<reportElement uuid="d3f11708-e5a8-4d4f-a3ba-363a80652a10" style="fondofila" x="657" y="105" width="166" height="5"/>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="a52ca019-ba2a-4940-a7a1-60846ceab9e2" x="121" y="0" width="555" height="100"/>
+				<subreportParameter name="NAME">
+					<subreportParameterExpression><![CDATA["SOLICITUD DE PAGO"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CUSUARIO">
+					<subreportParameterExpression><![CDATA[$P{CUSUARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CIA">
+					<subreportParameterExpression><![CDATA[$P{CIA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FHASTA">
+					<subreportParameterExpression><![CDATA[$P{FHASTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="FITBANK_HEADER_LOGO">
+					<subreportParameterExpression><![CDATA[$P{FITBANK_HEADER_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CTRANSACCION">
+					<subreportParameterExpression><![CDATA[$P{CTRANSACCION}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CSUBSISTEMA">
+					<subreportParameterExpression><![CDATA[$P{CSUBSISTEMA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[SubReportCall.getReport($P{REPORT_CONNECTION},"23_HEADER")]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="172" splitType="Stretch">
+			<frame>
+				<reportElement uuid="675f259f-54ab-42e9-b050-d5ad9ba34e08" style="fondofila" x="0" y="167" width="822" height="5"/>
+			</frame>
+			<staticText>
+				<reportElement uuid="31f53ae8-fdea-4f3a-8448-cf18393b6cba" x="0" y="118" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Frecuencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="535daa9b-4170-4000-ae2a-283194ad0c5b" x="0" y="148" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3869ba07-55ea-483e-817c-fa503673c365" x="554" y="133" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Plazo]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="b214c739-6268-4fec-85c3-a10ae7f8eaa2" x="115" y="118" width="148" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select descripcion from TFRECUENCIAS where fhasta= ? " +
+"and cfrecuencia= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{FRECUENCIA}})))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="dd303df7-e355-47ff-97fd-8e308fc2a861" x="554" y="118" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Cargos Adicionales]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="af5e3efb-99e6-4c93-903c-83e3d43af911" x="676" y="118" width="135" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select descripcion from TCARGOSFINANCIEROS " +
+"where fhasta= ? and ccargofinanciero= ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{CARGOSADICIONALES}})))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="df9d66cb-6bf9-4319-8184-636d83c42d1a" x="88" y="148" width="734" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select observaciones from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="e989a8d2-a187-44bf-9ca8-b45ed0452f2d" x="0" y="60" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Contribuyente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f92b20b4-a728-404b-8d70-f5fc30fb7d21" x="0" y="88" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Tipo Dcto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c1703789-2048-4911-8bd9-063c355ab59f" x="0" y="103" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Establecimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b9415ae-1b0e-4258-894d-65ed3485abc7" x="322" y="60" width="80" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Tipo Ident.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1a37817-bdac-44e9-bb4b-aac280e00df4" x="322" y="88" width="80" height="15">
+					<printWhenExpression><![CDATA[new Boolean($P{CTRANSACCION} == "3072")]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Autorización]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d12307f6-ea47-455d-bfdb-6f56ffe5eeda" x="322" y="103" width="80" height="15">
+					<printWhenExpression><![CDATA[new Boolean($P{CTRANSACCION} == "3072")]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Num. Dcto.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="a588aa43-ba79-4620-85a2-39ac2a327d12" x="88" y="88" width="175" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CTIPODOCUMENTOFACTURACION} + " " +
+(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select descripcion from TTIPOSDOCUMENTOFACTURACION where fhasta= ? " +
+"and  ctipodocumentofacturacion= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{CTIPODOCUMENTOFACTURACION}})) )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a7a9142-39bc-4518-bc41-2289526f63ab" x="88" y="103" width="175" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select NUMEROESTABLECIMIENTO||'  Punto  '||NUMEROPUNTOEMISION from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO}})))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="06a62cca-5cf6-4621-9c2c-f02af6e470be" x="402" y="88" width="133" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{AUTORIZACION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="776a5694-1c2f-4b94-b29c-dd06180ac96e" x="402" y="103" width="133" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NDOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4b9e9685-422e-4635-97ca-127e3f81c5c9" x="554" y="60" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Identificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3da5238d-0a49-4bdc-918f-49f59f937d38" x="554" y="88" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fecha Validez]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4872ccd0-82ce-4c3e-8a2c-ab65755c4a05" x="554" y="103" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fecha Factura]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="0a45e24b-57e1-4d6c-b67d-1926fac3d035" x="88" y="60" width="242" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select pr.CTIPOCONTRIBUYENTE ||' - '|| tc.DESCRIPCION " +
+"from tpersona pe,TCUENTASPERSONA cp,tcuentaproveedor pr,ttiposcontribuyente tc" +
+" where pe.CPERSONA=cp.CPERSONA and pr.CTIPOCONTRIBUYENTE=tc.CTIPOCONTRIBUYENTE " +
+"and tc.fhasta=fncfhasta and pe.fhasta=fncfhasta " +
+"and cp.fhasta=fncfhasta and pr.fhasta=fncfhasta  and pr.CCUENTA=cp.CCUENTA and cp.ccuenta= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CCUENTA}})) )]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="4225899e-3758-421c-bf6b-06c7f8229877" x="402" y="60" width="145" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select ti.CTIPOIDENTIFICACION||' - ' ||ti.DESCRIPCION from tpersona " +
+"pe,ttiposidentificacion ti,TCUENTASPERSONA cu where " +
+"pe.CPERSONA=cu.CPERSONA and pe.CTIPOIDENTIFICACION=ti.CTIPOIDENTIFICACION " +
+"and pe.FHASTA=cu.FHASTA and ti.FHASTA=cu.FHASTA and cu.FHASTA= ? " +
+" and cu.CCUENTA= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{CCUENTA}})))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="efdbf532-3c68-48cc-8a0c-4703f0638a56" x="657" y="60" width="100" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select pe.IDENTIFICACION from tpersona " +
+"pe,ttiposidentificacion ti,TCUENTASPERSONA cu where " +
+"pe.CPERSONA=cu.CPERSONA and pe.CTIPOIDENTIFICACION=ti.CTIPOIDENTIFICACION " +
+"and pe.FHASTA=cu.FHASTA and ti.FHASTA=cu.FHASTA and cu.FHASTA= ? " +
+" and cu.CCUENTA= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{CCUENTA}})))]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="1f2891a0-6754-43f9-8f02-d669f47562eb" x="657" y="88" width="100" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(Date)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select fechavalidezdocumento from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO},$P{CPERIODO}})))]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="4a852eda-4c60-466a-91f9-d9b000b1daf7" x="657" y="103" width="100" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(Date)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select fechadocumentofacturacion from TCSOLICITUDPAGO " +
+"where fhasta= ? and numerodocumento= ? and cperiodo = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{NUMERODOCUMENTO}, $P{CPERIODO}})))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c6142d04-37db-43be-b84a-4f84f946a2f5" x="0" y="15" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7320516e-3e33-42e4-8f78-170c867bd5c3" x="0" y="30" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Bodega]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8b142f33-eced-4619-94f6-c330dcb61ff6" x="322" y="15" width="80" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Pto. Trabajo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dcb96614-0958-4eb7-b497-e2f57dceb2ad" x="322" y="30" width="80" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[División]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6d1c2877-d1e9-454c-839d-e5278ea749f7" x="88" y="30" width="151" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CBODEGA} + " " +
+(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select DESCRIPCION from tcodigosbodega where cbodega= ? " +
+"and fhasta= ? and CPERSONA_COMPANIA= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CBODEGA},$P{FHASTA},$P{CIA}})) )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="82ce6576-fa47-4651-bf92-e44fa6b8aac6" x="554" y="30" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6eb567ae-e80c-40b7-b739-88c757b377b2" x="657" y="30" width="154" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"SELECT TJD.CODIGODEPARTAMENTO||' - '||TJD.nombre FROM tnaturaltrabajo TNT, TJURIDICODEPARTAMENTOS TJD "+
+"WHERE TNT.cpersona=? AND TNT.CODIGODEPARTAMENTO=TJD.CODIGODEPARTAMENTO AND TJD.cpersona=? AND TNT.FHASTA= ? AND TJD.FHASTA=? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CPERSONA},$P{CIA},$P{FHASTA},$P{FHASTA}})) )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="daf8b686-99a5-4aa8-ae7d-e9aa3b576d1d" x="402" y="30" width="133" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"SELECT TJD.CODIGODIVISION||' - '||TJD.nombre FROM tnaturaltrabajo TNT, tjuridicodivisiones TJD "+
+"WHERE TNT.cpersona=? AND TNT.CODIGODIVISION=TJD.CODIGODIVISION AND TJD.cpersona=? AND TNT.FHASTA= ? AND TJD.FHASTA= ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CPERSONA},$P{CIA},$P{FHASTA},$P{FHASTA}})) )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f95ba7b7-aacc-49c2-b7bf-bdd1e08b2b6c" x="0" y="45" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ccbef040-793c-45b3-aaef-33a70af7598b" x="322" y="45" width="80" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Rep. Legal]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="db0e9b31-e959-46ef-9022-1db50fa0d679" x="88" y="45" width="175" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CCUENTA} + " " +
+(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select pe.NOMBRELEGAL " +
+"from tpersona pe,TCUENTASPERSONA cp,tcuentaproveedor pr,ttiposcontribuyente tc" +
+" where pe.CPERSONA=cp.CPERSONA and pr.CTIPOCONTRIBUYENTE=tc.CTIPOCONTRIBUYENTE " +
+"and tc.fhasta=fncfhasta and pe.fhasta=fncfhasta " +
+"and cp.fhasta=fncfhasta and pr.fhasta=fncfhasta  and pr.CCUENTA=cp.CCUENTA and cp.ccuenta= ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CCUENTA}})) )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8c337ea3-f15a-4402-bc99-a7a1168902cd" x="554" y="45" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Unidad]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8fe9ee67-0f1c-4dbf-b489-e4ad7a29e0c0" x="657" y="45" width="100" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"SELECT TJU.CODIGOUNIDAD||' - '||TJU.nombre FROM tnaturaltrabajo TNT, TJURIDICOUNIDADES TJU "+
+"WHERE TNT.cpersona=? AND TNT.CODIGOUNIDAD=TJU.CODIGOUNIDAD AND TJU.cpersona=? AND TNT.FHASTA= ? AND TJU.FHASTA=? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CPERSONA},$P{CIA},$P{FHASTA},$P{FHASTA}})) )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d6a8581b-0b77-4db9-a7c0-3ac9e17c13eb" x="402" y="45" width="133" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select tp.CPERSONA||' - '||tp.NOMBRELEGAL from TPERSONAVINCULACIONES tv,tpersona tp "+
+"where tv.CPERSONA=tp.CPERSONA and tv.fhasta= ? and tp.cpersona= ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{FHASTA},$P{CPERSONA}})) )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="db9abdea-d46b-41d9-bb17-ef2a732ad004" x="322" y="0" width="80" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="5e6b8970-05ec-46dd-8db8-0772823827bc" x="88" y="0" width="154" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a65478ec-1d93-4abb-ad35-37ec084d737a" x="0" y="0" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Numero Orden]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ab28d218-f975-44c4-8778-5e656586676d" x="554" y="0" width="98" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Solicictado Por]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="51051b53-d924-480e-b360-355df13f6804" x="402" y="0" width="133" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="a9f03ef2-6c1d-42d4-9b07-956576889abd" x="657" y="0" width="154" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CPERSONA} + " - "+
+(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select nombrelegal from TPERSONA where cpersona= ? "+
+"and fhasta= ?",
+SQLUtil.getInstance().getParameters(new Object[]{$P{CPERSONA},$P{FHASTA}})) )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="726c8ea6-877a-475a-a1ce-d3fbfb33d49f" x="88" y="118" width="27" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FRECUENCIA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bc6902f7-80bc-4f9c-9e1d-fad2eeda6529" x="657" y="118" width="19" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CARGOSADICIONALES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a998b94f-04c2-4dbf-ba4c-9b785c8ab2fa" x="693" y="133" width="103" height="15"/>
+				<textElement>
+					<font size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[dias]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="5175b3cc-288a-4fc6-a716-6e78927f5cd7" x="657" y="133" width="30" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PLAZO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="32900a22-59f3-4df2-8042-68504c0507d8" x="0" y="133" width="88" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Forma de Pago]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="630ef3d8-8171-47d1-880e-f4332cef4f53" x="88" y="133" width="27" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CFORMAPAGOCOMPRAS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1a7147ee-e03b-4005-905f-d3a82e19214c" x="115" y="133" width="148" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(String)(SQLUtil.getInstance().getValue($P{REPORT_CONNECTION},
+"select descripcion from TFORMASPAGOCOMPRAS where cidioma= ? " +
+"and cformapagocompras = ? " +
+"and fhasta = ? ",
+SQLUtil.getInstance().getParameters(new Object[]{$P{IDM},$P{CFORMAPAGOCOMPRAS},$P{FHASTA}})))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a6d1dbfc-7e57-40b0-b1f3-1a1c4b35a3d4" x="402" y="15" width="409" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPUNTOTRABAJO_VAR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="08494485-5ee4-4144-b820-4c7aabac8ba5" x="88" y="15" width="234" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CSUCURSAL_VAR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="a18695df-d52d-4b4c-bc3a-5cc49facd9ce" x="562" y="35" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[% RF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8c7bf0b0-82e9-45c4-b9e3-eaeca5a79284" x="627" y="35" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[RF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="02407b4c-b19c-4219-b54f-8947cc651f60" x="6" y="0" width="110" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2ab403bc-8b9a-4093-bfd2-f0ab2eb9f639" x="692" y="35" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[% RIVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8c082ae3-231c-4064-a11c-9b75d39249b6" x="417" y="0" width="90" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Marca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="90d6f65a-e1f8-46ce-b76d-3910a8dd2a40" x="335" y="0" width="82" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Unidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0e48725f-aa39-4fab-9631-13d1cb29ff64" x="628" y="0" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[% Desc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1f32f471-42b6-49c1-b0fe-63ee6b10c497" x="507" y="0" width="56" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="990bbeb2-8267-415c-a48f-caa0a78ea952" x="758" y="0" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5c42dae1-6c61-42c5-bd5a-ff1e5fcf13f0" x="693" y="0" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Desc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8c0abdd1-d4f7-4579-8d7a-fa261038dda0" x="497" y="35" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[ICE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8bfb4a5c-da60-48a1-8e5c-9658b304672d" x="432" y="35" width="65" height="15"/>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[% ICE]]></text>
+			</staticText>
+			<frame>
+				<reportElement uuid="9fd1bb5f-7bcc-42d3-bc03-509e425ab45f" style="fondofila" x="0" y="65" width="822" height="5"/>
+			</frame>
+			<staticText>
+				<reportElement uuid="199c9dea-f0f1-4de6-a2b3-85c6d2b9c6d2" x="563" y="0" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[P. Unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e0a6175b-a039-465c-8d15-402d7c97a1b5" x="121" y="0" width="213" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="06a8d0ac-8e56-4eb6-b9c5-4454b18db3f8" x="6" y="15" width="110" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CCUENTA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="53040e70-7462-4f86-b43b-b290a34cec04" x="121" y="15" width="213" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4ababf3a-4ecb-461e-bd37-bd7d3a10aace" x="335" y="15" width="82" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{UNIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3a498328-b0af-482e-8d2f-808ea8ab75b1" x="417" y="15" width="90" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{MARCA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="3bcb88ca-0574-420e-981a-0f4f70a6436f" x="507" y="15" width="56" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{CANTIDAD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="6b49e1a5-a69d-4190-86fa-04debb01b302" x="563" y="15" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PRECIOUNITARIO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="1a93a361-14f6-411e-bc83-0679fcb72e2d" x="693" y="15" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{DESCUENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="0db3aeef-33ca-4db5-91d5-d017a01fc9fc" x="758" y="15" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="2478fe65-8f36-45d3-ad96-7efc4b680132" x="432" y="50" width="65" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{PICE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="304b6ba2-1bbc-4a4b-9c88-bfcc150eee0f" x="497" y="50" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{ICE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="12c75324-6b07-4de4-8171-1ec2cc827f43" x="562" y="50" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PRF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="b6ce71e0-edac-477f-b5fd-fe5c62b56eea" x="627" y="50" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{RF}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="291dd038-c2dd-4ec6-80b8-9f18b978c2bf" x="692" y="50" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PRIVA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="a97eff30-5883-4fe8-a6af-e933a6843d1a" x="757" y="35" width="65" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[ RIVA]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="1745929c-7bfc-4810-ba93-12212f1ab66b" x="757" y="50" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{RIVA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="299b0ac5-861e-430b-9b7c-24730070d3a3" x="628" y="15" width="65" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new BigDecimal($F{DESCUENTO}.floatValue()*100/($F{CANTIDAD}.intValue()*$F{PRECIOUNITARIO}.floatValue()))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0e266ad6-a817-43b1-b96d-df5c96e6764b" x="6" y="50" width="426" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{OBSERVACIONES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="138dd93f-df0a-4f61-9b80-93856bc8a995" x="6" y="35" width="110" height="15"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="false" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Observaciones]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band/>
+	</lastPageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

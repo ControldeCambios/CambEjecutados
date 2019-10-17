@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webPage version="6">
+  <properties joinQuirk="1" postQuery="1" sub="00" tra="0107">
+    <title>INGRESO Y MANTENIMIENTO DE DEPARTAMENTOS</title>
+    <references>
+      <reference alias="tdepid0"
+        class="com.fitbank.webpages.data.Reference" table="TDEPARTAMENTOSID"/>
+      <reference alias="tdepartamentos0"
+        class="com.fitbank.webpages.data.Reference" table="TDEPARTAMENTOS">
+        <dependencies>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CPERSONA_COMPANIA" fromAlias="tdepid0" fromField="CPERSONA_COMPANIA"/>
+          <item class="com.fitbank.webpages.data.Dependency"
+            field="CDEPARTAMENTO" fromAlias="tdepid0" fromField="CDEPARTAMENTO"/>
+        </dependencies>
+      </reference>
+    </references>
+  </properties>
+  <containers>
+    <container clo="T" cssClass="table-group" max="10" win="10">
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="buscar" tex="Buscar:"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1Idioma_CRITERION" w="77" z="1">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CIDIOMA" type="CRITERION"/>
+        <attribute nom="lon">3</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1CodDepartamento_CRITERION" w="110" x="2" z="1">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CDEPARTAMENTO" type="CRITERION"/>
+        <attribute nom="lon">3</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1Desc_CRITERION" w="280" x="2" z="1">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="NOMBRE" type="CRITERION"/>
+        <attribute nom="lon">60</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="EtiqFondo" tex="Idioma (*)" w="50" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="EtiqFondo" tex="Código (*)" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1CodDepartamento_ORDER" w="10" z="2">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CDEPARTAMENTO" type="ORDER"/>
+        <attribute nom="lon">5</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Order"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="EtiqFondo" tex="Descripción (*)" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1Desc_ORDER" w="10" z="2">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="NOMBRE" type="ORDER"/>
+        <attribute nom="lon">22</attribute>
+        <assistant class="com.fitbank.webpages.assistants.Order"/>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="EtiqFondo" tex="Autorizador" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label"
+        cssClass="EtiqFondo" tex="Caducar" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.Label" z="2"/>
+      <widget class="com.fitbank.webpages.widgets.HeaderSeparator"/>
+      <widget class="com.fitbank.webpages.widgets.Label"/>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F1Idioma"
+        w="60" x="1">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CIDIOMA" type="RECORD"/>
+        <attribute nom="lon">3</attribute>
+        <attribute nom="req">1</attribute>
+        <assistant class="com.fitbank.webpages.assistants.ListOfValues" pagina="1">
+          <references>
+            <item alias="tidiomas0"
+              class="com.fitbank.webpages.data.Reference" table="TIDIOMAS"/>
+          </references>
+          <fields>
+            <item alias="tidiomas0" autoQuery="true"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              elementName="F1Idioma" field="CIDIOMA" title="Código" type="RECORD"/>
+            <item alias="tidiomas0"
+              class="com.fitbank.webpages.assistants.lov.LOVField"
+              field="DESCRIPCION" title="Descripción" type="RECORD"/>
+          </fields>
+        </assistant>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input"
+        tex="F1CodDepartamento" w="110" x="2">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="CDEPARTAMENTO" type="RECORD"/>
+        <attribute nom="lon">3</attribute>
+        <attribute nom="req">1</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.NumberFormatter" format="0"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.Input" tex="F1Desc"
+        w="280" x="2">
+        <dataSource alias="tdepartamentos0"
+          class="com.fitbank.webpages.data.DataSource" comparator="LIKE"
+          field="NOMBRE" type="RECORD"/>
+        <attribute nom="lon">60</attribute>
+        <attribute nom="req">1</attribute>
+        <behaviors>
+          <item class="com.fitbank.webpages.formatters.UpperCaseFormatter"/>
+        </behaviors>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.CheckBox" tex="F5Check">
+        <dataSource alias="tdepid0"
+          class="com.fitbank.webpages.data.DataSource" field="AUTORIZA" type="RECORD"/>
+      </widget>
+      <widget class="com.fitbank.webpages.widgets.DeleteRecord"
+        tex="F2Caducar" x="2">
+        <attribute nom="alias">tdepartamentos0</attribute>
+      </widget>
+    </container>
+  </containers>
+</webPage>

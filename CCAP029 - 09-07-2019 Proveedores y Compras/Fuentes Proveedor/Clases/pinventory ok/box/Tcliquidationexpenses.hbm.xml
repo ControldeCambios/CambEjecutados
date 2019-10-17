@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.inventory.box' auto-import='true'>
+<class name='Tcliquidationexpenses' table='TCLIQUIDACIONGASTOS' >
+<composite-id name='pk' class='TcliquidationexpensesKey'>
+	<!-- CODIGO DE PERSONA DE LA COMPANIA-->
+	<key-property name='cpersona_compania' column='CPERSONA_COMPANIA' type='java.lang.Integer'/>
+
+	<!-- NUMERO DE DOCUMENTO DE LA LIQUIDACION DE GASTOS-->
+	<key-property name='numerodocumento' column='NUMERODOCUMENTO' type='java.lang.String'/>
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE-->
+	<key-property name='cperiodo' column='CPERIODO' type='java.lang.String'/>
+
+	<!-- FECHA HASTA LA QUE ESTA VIGENTE EL REGISTRO-->
+	<key-property name='fhasta' column='FHASTA' type='java.sql.Timestamp'/>
+
+</composite-id>
+<!-- OPTIMISTIC LOCKING-->
+<version name='versioncontrol' column='VERSIONCONTROL'/>
+	<!-- CODIGO DE LA SUCURSAL-->
+	<property name='csucursal' column='CSUCURSAL' type='java.lang.Integer'  not-null='true' />
+
+	<!-- CODIGO DEL PUNTO DE TRABAJO-->
+	<property name='cpuntotrabajo' column='CPUNTOTRABAJO' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DEL TIPO DOCUMENTO DE INVENTARIOS-->
+	<property name='ctipodocumentoinventario' column='CTIPODOCUMENTOINVENTARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- SECUENCIA NUMERIDA DE LA LIQUIDACION DE GASTOS-->
+	<property name='secuencia' column='SECUENCIA' type='java.lang.Long'  not-null='true' />
+
+	<!-- CODIGO DE ESTATUS DEL TIPO DE DOCUMENTO DE INVENTARIO-->
+	<property name='cestatusdocumento' column='CESTATUSDOCUMENTO' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DE USUARIO QUE GRABA LA LIQUIDACION DE GASTOS-->
+	<property name='cusuario' column='CUSUARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- OBSERVACIONES DE LA LIQUIDACION DE GASTOS-->
+	<property name='observaciones' column='OBSERVACIONES' type='java.lang.String'  not-null='false' />
+
+	<!-- CODIGO DEL BENEFICIARIO-->
+	<property name='ccuenta_beneficiario' column='CCUENTA_BENEFICIARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- VALOR DEL CHEQUE DE LA LIQUIDACION DE GASTOS-->
+	<property name='valor' column='VALOR' type='java.math.BigDecimal'  not-null='false' />
+
+	<!-- CODIGO DE LA CUENTA CONTABLE AUXILIAR DE LA CUENTA MAYOR ESCOGIDA EN EL TIPO DE LIQUIDACION-->
+	<property name='ccuentaauxliquidacion' column='CCUENTAAUXLIQUIDACION' type='java.lang.String'  not-null='true' />
+
+	<!-- FECHA DESDE LA QUE ESTA VIGENTE EL REGISTRO-->
+	<property name='fdesde' column='FDESDE' type='java.sql.Timestamp'  not-null='true' />
+
+	<!-- CODIGO DEL TIPO DE LIQUIDACION (FONDOS VIATICOS FV, CAJA CHICA CC, ETC.) -->
+	<property name='ctipoliquidacion' column='CTIPOLIQUIDACION' type='java.lang.String'  not-null='false' />
+
+	<!-- CUENTA DE LA CAJA CHICA-->
+	<property name='cuentacaja' column='CUENTACAJA' type='java.lang.String'  not-null='false' />
+
+</class>
+</hibernate-mapping>

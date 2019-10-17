@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.inventory.csPRe' auto-import='true'>
+<class name='TcsolPayReqid' table='TCSOLICITUDPAGOID' >
+<composite-id name='pk' class='TcsolPayReqidKey'>
+	<!-- CODIGO DE PERSONA DE LA COMPANIA-->
+	<key-property name='cpersona_compania' column='CPERSONA_COMPANIA' type='java.lang.Integer'/>
+
+	<!-- NUMERO DE DOCUMENTO DE LA SOLICITUD DE PAGO-->
+	<key-property name='numerodocumento' column='NUMERODOCUMENTO' type='java.lang.String'/>
+
+	<!-- CODIGO DEL PERIODO DEL EJERCICIO CONTABLE-->
+	<key-property name='cperiodo' column='CPERIODO' type='java.lang.String'/>
+
+</composite-id>
+	<!-- CODIGO DE LA SUCURSAL-->
+	<property name='csucursal' column='CSUCURSAL' type='java.lang.Integer'  not-null='true' />
+
+	<!-- CODIGO DEL PUNTO DE TRABAJO-->
+	<property name='cpuntotrabajo' column='CPUNTOTRABAJO' type='java.lang.String'  not-null='true' />
+
+	<!-- CODIGO DEL TIPO DOCUMENTO DE INVENTARIOS-->
+	<property name='ctipodocumentoinventario' column='CTIPODOCUMENTOINVENTARIO' type='java.lang.String'  not-null='true' />
+
+	<!-- SECUENCIA NUMERIDA DE LA SOLICITUD DE PAGO-->
+	<property name='secuencia' column='SECUENCIA' type='java.lang.Long'  not-null='true' />
+
+</class>
+</hibernate-mapping>

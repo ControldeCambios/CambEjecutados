@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC '-//Hibernate/Hibernate Mapping DTD 3.0//EN' 'http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd' >
+<hibernate-mapping package='com.fitbank.hb.persistence.gene' auto-import='true'>
+<class name='Tdepartmentid' table='TDEPARTAMENTOSID' >
+<composite-id name='pk' class='TdepartmentidKey'>
+	<!-- CODIGO DE LA COMPANIA-->
+	<key-property name='cpersona_compania' column='CPERSONA_COMPANIA' type='java.lang.Integer'/>
+
+	<!-- CODIGO DEL DEPARTAMENTO COMO: 1= CREDITO, 2 = VENTANILLAS-->
+	<key-property name='cdepartamento' column='CDEPARTAMENTO' type='java.lang.Integer'/>
+
+</composite-id>
+	<!-- -->
+	<property name='autoriza' column='AUTORIZA' type='java.lang.String'  not-null='false' />
+
+</class>
+</hibernate-mapping>

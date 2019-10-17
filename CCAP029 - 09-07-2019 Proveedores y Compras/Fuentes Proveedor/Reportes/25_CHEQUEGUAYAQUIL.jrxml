@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="25_CHEQUEGUAYAQUIL" pageWidth="524" pageHeight="793" whenNoDataType="NoDataSection" columnWidth="524" leftMargin="0" rightMargin="0" topMargin="2" bottomMargin="0" uuid="4361e058-852c-427c-b559-c4be6aaf598e">
+	<property name="ireport.zoom" value="0.9090909090909105"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="cm"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="cm"/>
+	<parameter name="FITBANK_HEADER_LOGO" class="java.lang.String"/>
+	<parameter name="NUMEROCHEQUE" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FHASTA" class="java.sql.Timestamp"/>
+	<parameter name="CIA" class="java.lang.String"/>
+	<parameter name="CSUCURSAL" class="java.lang.String"/>
+	<parameter name="COFICINA" class="java.lang.String"/>
+	<parameter name="NUMEROMENSAJE" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["-46255ceca153e7cfd61fa4175"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="MONTO" class="java.math.BigDecimal"/>
+	<parameter name="NOMBRELEGAL" class="java.lang.String"/>
+	<parameter name="NUMEROAUTORIZACION" class="java.lang.String"/>
+	<parameter name="PUNTOTRABAJO" class="java.lang.String"/>
+	<parameter name="CUENTABANCO" class="java.lang.String"/>
+	<parameter name="NOMBREBANCO" class="java.lang.String"/>
+	<parameter name="CIPROVEEDOR" class="java.lang.String"/>
+	<parameter name="CPERIODO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    TM.CODIGOCONTABLE,
+    SUM(TM.VALORMONEDAOFICIAL) AS VALORMONEDAOFICIAL,
+    TM.DEBITOCREDITO,
+    (
+        SELECT
+            ESTRUCTURACODIGO
+        FROM
+            TCATALOGOCUENTAS
+        WHERE
+            CODIGOCONTABLE=TM.CODIGOCONTABLE
+        AND CPERSONA_COMPANIA=$P{CIA}
+        AND FHASTA=$P{FHASTA}) AS ESTRUCTURACODIGO,
+    (
+        SELECT
+            NOMBRECUENTA
+        FROM
+            TCUENTACONTABLE
+        WHERE
+            CODIGOCONTABLE=TM.CODIGOCONTABLE
+        AND CPERSONA_COMPANIA=$P{CIA}
+        AND FHASTA=$P{FHASTA}) AS DETALLE,
+    (
+        SELECT
+            TC.NOMBRE
+        FROM
+            TCIUDADES TC
+        WHERE
+            TC.FHASTA =FNCFHASTA
+        AND TC.CPAIS ='EC'
+        AND TC.CCIUDAD=
+            (
+                SELECT
+                    CCIUDAD
+                FROM
+                    TOFICINASSUCURSAL
+                WHERE
+                    CSUCURSAL=$P{CSUCURSAL}
+                AND COFICINA = $P{COFICINA})
+        AND CPROVINCIA=
+            (
+                SELECT
+                    CPROVINCIA
+                FROM
+                    TOFICINASSUCURSAL
+                WHERE
+                    CSUCURSAL=$P{CSUCURSAL}
+                AND COFICINA = $P{COFICINA})) AS CIUDAD,
+    (
+        SELECT
+            DESCRIPCION
+        FROM
+            TPUNTOSTRABAJO
+        WHERE
+            CSUCURSAL = $P{CSUCURSAL}
+        AND CPUNTOTRABAJO = $P{PUNTOTRABAJO}
+        AND FHASTA= $P{FHASTA})AGENCIA,
+    (
+        SELECT
+            NOMBRELEGAL
+        FROM
+            TPERSONA
+        WHERE
+            CPERSONA='2'
+        AND FHASTA=$P{FHASTA}) AS NOMBREBANCO,
+    (
+        SELECT
+            OBSERVACIONES
+        FROM
+            TCPAGOS
+        WHERE
+            NUMERODOCUMENTO=$P{NUMEROAUTORIZACION}
+        AND FHASTA=$P{FHASTA}
+        AND CPERIODO = $P{CPERIODO}) AS OBSERVACION,
+    NULL                       AS NOMBRELEGAL,
+    TM.FVALOR
+FROM
+    TMOVIMIENTOS TM
+WHERE
+    TM.DEBITOCREDITO IN ('D',
+                         'C')
+AND NUMEROMENSAJE=$P{NUMEROMENSAJE}
+AND NUMERODOCUMENTO = $P{NUMEROCHEQUE}
+GROUP BY
+    TM.CODIGOCONTABLE,
+    TM.DEBITOCREDITO,
+    TM.FVALOR
+ORDER BY
+    TM.DEBITOCREDITO DESC]]>
+	</queryString>
+	<field name="CODIGOCONTABLE" class="java.lang.String"/>
+	<field name="VALORMONEDAOFICIAL" class="java.math.BigDecimal"/>
+	<field name="DEBITOCREDITO" class="java.lang.String"/>
+	<field name="ESTRUCTURACODIGO" class="java.lang.String"/>
+	<field name="DETALLE" class="java.lang.String"/>
+	<field name="CIUDAD" class="java.lang.String"/>
+	<field name="AGENCIA" class="java.lang.String"/>
+	<field name="NOMBREBANCO" class="java.lang.String"/>
+	<field name="OBSERVACION" class="java.lang.String"/>
+	<field name="NOMBRELEGAL" class="java.lang.String"/>
+	<field name="FVALOR" class="java.sql.Timestamp"/>
+	<variable name="FECHA" class="java.lang.String">
+		<variableExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd",new Locale("es", "ES")).format($F{FVALOR})]]></variableExpression>
+	</variable>
+	<variable name="CENTAVOS" class="java.math.BigDecimal" resetType="None">
+		<variableExpression><![CDATA[new BigDecimal($P{MONTO}.doubleValue()-$P{MONTO}.intValue()).equals(new BigDecimal(0))?(new BigDecimal(0)):new BigDecimal(new BigDecimal($P{MONTO}.doubleValue()-$P{MONTO}.intValue()).setScale(2, RoundingMode.HALF_UP).toString().substring(2,4))]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<group name="Observaciones" keepTogether="true">
+		<groupFooter>
+			<band height="220">
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.grid.JSSGridBagLayout"/>
+				<property name="com.jaspersoft.studio.unit.height" value="cm"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="56" y="170" width="437" height="50" backcolor="#FFFFFF" uuid="b315d622-2b16-47ab-af2c-7e9cf1e624d4">
+						<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+						<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+					</reportElement>
+					<box leftPadding="15"/>
+					<textElement verticalAlignment="Top">
+						<font size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OBSERVACION}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="339" y="133" width="75" height="27" backcolor="#FFFFFF" uuid="65405408-438a-4752-b35f-46b2a2a008f7"/>
+					<box rightPadding="15"/>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DEBITOCREDITO}.equals("C")?$F{VALORMONEDAOFICIAL}:""]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="413" y="133" width="80" height="27" backcolor="#FFFFFF" uuid="8991d9bb-0407-4d47-a80d-c62b5becfcde"/>
+					<box rightPadding="15"/>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font size="10" pdfFontName="Helvetica"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DEBITOCREDITO}.equals("C")?$F{VALORMONEDAOFICIAL}:""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="161">
+			<property name="com.jaspersoft.studio.unit.height" value="cm"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="110" y="64" width="240" height="15" backcolor="#CC0000" uuid="c1c7e67f-4ee4-4ce3-bad5-23ba0017dbd5">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRELEGAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="358" y="63" width="101" height="15" backcolor="#CC0000" uuid="d3f80ac3-c12c-46f5-a821-4ec4b1a960fe">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{MONTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="62" y="112" width="281" height="15" backcolor="#CC0000" uuid="6d16021d-80cf-4ca3-a292-58f6912d410e">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIUDAD} + ", "+new SimpleDateFormat("yyyy-MM-dd",new Locale("es", "ES")).format($F{FVALOR})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="107" y="85" width="384" height="15" backcolor="#CC0033" uuid="ecf06de5-2f14-4c3c-8393-a1fff49396fd">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new com.fitbank.common.ConvertNumberToLetter().toLetras((long)$P{MONTO}.longValue())+($V{CENTAVOS}.equals(new BigDecimal(0))?"00":$V{CENTAVOS})+"/100 Dólares"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="277" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="cm"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="295" y="186" width="63" height="20" backcolor="#FFFFFF" uuid="669f9457-9a22-4388-9895-1bb73cecffca">
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+				</reportElement>
+				<box leftPadding="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NUMEROCHEQUE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="160" y="186" width="135" height="20" backcolor="#FFFFFF" uuid="e471807b-e615-445d-bca4-fa7cc1b4d7af">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<box leftPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBREBANCO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="60" y="186" width="100" height="20" backcolor="#FFFFFF" uuid="cda87771-e25c-4c6c-8ee8-c7ffa0e0d7f5">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<box leftPadding="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CUENTABANCO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="367" y="185" width="98" height="20" backcolor="#FFFFFF" uuid="efa6c44f-7bd3-4ee2-9ee9-8e4756f59c15">
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<box leftPadding="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AGENCIA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="133" y="222" width="240" height="15" backcolor="#CC0000" uuid="c50ce1dd-ca29-4f61-841a-1c8310b19338">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRELEGAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="413" y="133" width="100" height="15" backcolor="#CC0000" uuid="2c957ca0-97fe-4b02-a323-acc422887ba5">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy-MM-dd",new Locale("es", "ES")).format($F{FVALOR})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="411" y="220" width="101" height="15" backcolor="#CC0000" uuid="02ce7bbe-bac5-4bd8-b520-7dc5ef18b80a">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+					<property name="com.jaspersoft.studio.unit.y" value="cm"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{CIPROVEEDOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="56" y="0" width="77" height="20" backcolor="#FFFFFF" uuid="4e8ca7ea-1929-47d4-8ec9-7c6a3d33daa3">
+					<property name="com.jaspersoft.studio.unit.x" value="cm"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTRUCTURACODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="339" y="0" width="75" height="20" backcolor="#FFFFFF" uuid="2a74430f-c237-4d0c-8c5a-69ccf1d6abb8"/>
+				<box rightPadding="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEBITOCREDITO}.equals("D")?$F{VALORMONEDAOFICIAL}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="414" y="0" width="79" height="20" backcolor="#FFFFFF" uuid="d49b00b2-b5db-4151-a040-fbc4af7dba8a"/>
+				<box rightPadding="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DEBITOCREDITO}.equals("C")?$F{VALORMONEDAOFICIAL}:""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="133" y="0" width="187" height="20" backcolor="#FFFFFF" uuid="f97017b9-3544-48a6-9f2c-7c9cbfbb93b1"/>
+				<box leftPadding="15"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isStrikeThrough="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DETALLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="20">
+			<staticText>
+				<reportElement x="0" y="0" width="523" height="20" uuid="63fd3ed2-66bd-4eb8-b702-c08677d67e03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO SE HA ENCONTRADO INFORMACIÓN]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>
